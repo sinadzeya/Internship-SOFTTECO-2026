@@ -59,11 +59,11 @@ const quizData = [
         question: "What did artist Han van Meegeren do to prove the judge wrong during his 1945 treason trial, where he was accused of selling a national treasure (Johannes Vermeer's work) to the Nazis?",
         options: [
             "He confessed to being an Allied Powers spy",
-            "He painted a new \"Vermeer\" forgery in front of the authorities in the exact style of the sold work",
+            "He painted a new \"Vermeer\" in front of the authorities in the exact style of the sold piece, proving that he was its author",
             "He brought the real, original painting into the courtroom to show the sold one was a fake",
             "He showed a secret receipt signed by Adolf Hitler proving it was a trade"
         ],
-        correctAnswer: "He painted a new \"Vermeer\" forgery in front of the authorities in the exact style of the sold work"
+        correctAnswer:  "He painted a new \"Vermeer\" in front of the authorities in the exact style of the sold piece, proving that he was its author"
     },
     {
         id: 7,
@@ -138,41 +138,85 @@ function getQuestionById(id) {
 }
 
 function selectOption(button, option) {
-    currentOption = option;
-    button.style.color = "red";
-}
+    const buttons = document.querySelectorAll("#choices .button");
+    buttons.forEach(button => {
+        button.classList.remove("selected");
+    })
 
-document.getElementById("submitButton").addEventListener("click", submitOption);
+    currentOption = option;
+    const submitBtn = document.getElementById("submitButton");
+    submitBtn.disabled = false;
+    button.classList.add("selected")
+}
 
 function finishQuiz() {
     document.getElementById("quizScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "block";
+    document.getElementById("finalScreen").style.display = "flex";
     document.getElementById("points").textContent = "Your score is " + currentPointCount + "!"
 }
 
 function submitOption() {
-    if (currentOption == currentQuestion.correctAnswer) {
+    const selectedButton = document.querySelector("#choices .button.selected");
+    const allButtons = document.querySelectorAll("#choices .button");
+    const submitBtn = document.getElementById("submitButton");
+    const nextBtn = document.getElementById("nextButton");
+
+    if (!selectedButton) return;
+
+    if (currentOption === currentQuestion.correctAnswer) {
         currentPointCount++;
+    } else {
+        selectedButton.classList.add("wrong");
     }
 
-    if (currentQuestionNumber != quizData.length) {
-        currentQuestionNumber++;
-        currentQuestion = fetchCurrentQuestion();
-        showQuestion();
-    } else {
-        finishQuiz();
-    }
+    allButtons.forEach(button => {
+        if (button.textContent === currentQuestion.correctAnswer) {
+            button.classList.add("correct");
+        }
+    })
+
+    submitBtn.style.display = "none";
+    nextBtn.style.display = "flex";
+
+    const buttons = document.querySelectorAll("#choices .button");
+    buttons.forEach(button => {
+        button.disabled = true;
+    })
 }
 
+
 function showQuestion() {
+    const submitBtn = document.getElementById("submitButton");
+    const nextBtn = document.getElementById("nextButton");
+
+    submitBtn.style.display = "block";
+    submitBtn.disabled = true;
+    if (nextBtn) {
+        nextBtn.style.display = "none";
+    }
+
+    const steps = document.querySelectorAll(".stepper-container .step");
+
+    steps.forEach((step, index) => {
+        const questionNumber = index + 1;
+        step.classList.remove("completed", "active");
+
+        if (questionNumber < currentQuestionNumber) {
+            step.classList.add("completed");
+        } else if (questionNumber === currentQuestionNumber) {
+            step.classList.add("active");
+        }
+    });
+
     document.getElementById("question").textContent = currentQuestion.question;
-    document.getElementById("number").textContent = currentQuestionNumber;
+
     const choicesDiv = document.getElementById("choices");
     choicesDiv.innerHTML = "";
     const options = shuffleArray([...currentQuestion.options]);
 
     options.forEach((option, index) => {
         const button = document.createElement("button");
+        button.classList.add("button");
         button.textContent = option;
         button.id = `option-${index}`;
         button.addEventListener("click", () => {
@@ -186,17 +230,43 @@ function fetchCurrentQuestion() {
     return getQuestionById(currentQuestionsOrder[currentQuestionNumber - 1]);
 }
 
-document.getElementById("startButton").addEventListener("click", startQuiz);
-document.getElementById("restartButton").addEventListener("click", startQuiz);
-
 function startQuiz() {
     resetQuiz();
     currentQuestion = fetchCurrentQuestion();
+
     document.getElementById("finalScreen").style.display = "none";
     document.getElementById("startScreen").style.display = "none";
-    document.getElementById("quizScreen").style.display = "block";
+    document.getElementById("quizScreen").style.display = "flex";
+
+    const stepperContainerDiv = document.querySelector(".stepper-container");
+
+    if (stepperContainerDiv) {
+        const oldSteps = stepperContainerDiv.querySelectorAll(".step");
+        oldSteps.forEach(step => step.remove());
+
+        defaultOrder.forEach(q => {
+            const number = document.createElement("div");
+            number.classList.add("step");
+            number.textContent = q;
+            stepperContainerDiv.appendChild(number);
+        });
+    }
+
     showQuestion();
 }
+
+document.getElementById("startButton").addEventListener("click", startQuiz);
+document.getElementById("restartButton").addEventListener("click", startQuiz);
+document.getElementById("submitButton").addEventListener("click", submitOption);
+document.getElementById("nextButton").addEventListener("click", () => {
+    currentQuestionNumber++;
+    currentQuestion = fetchCurrentQuestion();
+    if (currentQuestionNumber !== quizData.length + 1) {
+        showQuestion();
+    } else {
+        finishQuiz();
+    }
+});
 
 
 

@@ -1,0 +1,206 @@
+@font-face {
+    font-family: 'Brasley';
+    src: url('fonts/Brasley_Medium.otf') format('opentype');
+}
+
+:root {
+    --main-color: rgb(89, 179, 222);
+    --main-color-6: rgba(89, 179, 222, 0.6);
+    --main-color-5: rgba(89, 179, 222, 0.5);
+    --main-color-4: rgba(89, 179, 222, 0.4);
+    --main-color-3: rgba(89, 179, 222, 0.3);
+    --wrong: rgb(199, 42, 28);
+    --wrong-3: rgba(199, 42, 28, 0.3);
+    --correct: rgb(81, 178, 56);
+    --correct-3: rgba(81, 178, 56, 0.3);
+    --gray: rgb(201, 201, 201);
+}
+
+#startScreen, #quizScreen, #finalScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100vh;
+    width: 100%;
+    text-align: center;
+}
+
+#startScreen, #finalScreen {
+    justify-content: center;
+}
+
+#startButton, #restartButton {
+    background: var(--main-color);
+    border: none;
+
+    font-family: 'Brasley', sans-serif;
+    color: white;
+    text-align: center;
+    font-size: 50px;
+    line-height: 1.5;
+
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+
+    box-shadow:
+            0 0 15px var(--main-color-6),
+            0 0 40px var(--main-color-5),
+            0 0 70px var(--main-color-4);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#question {
+    display: block;
+    background-color: var(--main-color);
+
+    padding: 40px;
+    width: 100%;
+
+    font-family: 'Brasley', sans-serif;
+    color: white;
+    font-size: 23px;
+    line-height: 1.3;
+}
+
+#choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#choices button, #choices button.selected {
+    background-color: white;
+    border: 1px solid var(--main-color);
+    border-radius: 8px;
+
+    padding: 30px 20px;
+    margin-top: 35px;
+    margin-left: 40px;
+    width: 550px;
+
+    font-family: 'Brasley', sans-serif;
+    color: var(--main-color);
+    font-size: 15px;
+    font-weight: 500;
+
+    box-sizing: border-box;
+}
+
+#choices button.selected {
+    background-color: var(--main-color);
+    border: 1px solid var(--main-color);
+    color: white;
+}
+
+#choices button:hover {
+    background-color: var(--main-color-3);
+    border: 1px solid var(--main-color);
+    color: var(--main-color);
+}
+
+#choices button.wrong {
+    background-color: var(--wrong-3);
+    border: 1px solid var(--wrong);
+    color: var(--wrong);
+}
+
+#choices button.correct {
+    background-color: var(--correct-3);
+    border: 1px solid var(--correct);
+    color: var(--correct);
+}
+
+#submitButton, #submitButton:hover, #nextButton {
+    justify-content: center;
+
+    background-color: var(--main-color);
+    border: 2px solid var(--main-color);
+    border-radius: 8px;
+
+    padding: 15px 20px;
+    margin-top: 50px;
+    width: 170px;
+
+    font-family: 'Brasley', sans-serif;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#submitButton:disabled {
+    background-color: var(--gray);
+    border: 2px solid var(--gray);
+    cursor: not-allowed;
+}
+
+#submitButton:hover {
+    box-shadow: 0 0 15px var(--main-color-3);
+    transition: box-shadow 0.3s ease;
+}
+
+.stepper-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.progress-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--gray);
+    z-index: 1;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid var(--main-color);
+    color: var(--main-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: 'Brasley', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.step.completed {
+    border-color: var(--gray);
+    color: var(--gray);
+}
+
+.step.active {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+    color: white;
+}
+
+#points {
+    font-family: 'Brasley', sans-serif;
+    font-size: 60px;
+    font-weight: 500;
+    color: var(--main-color);
+}
+
+#restartButton {
+    width: 300px;
+    height: 300px;
+}
+
