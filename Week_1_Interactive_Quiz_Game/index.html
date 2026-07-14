@@ -8,23 +8,29 @@
 </head>
 
 <body>
-    <div id="startScreen">
-        <button id="startButton">Start<br>The Quiz!</button>
+    <div class="start-screen">
+        <button class="action-button start-button">
+            <span class="button-text">Start<br>The Quiz!</span>
+        </button>
     </div>
 
-    <div id="quizScreen" style="display: none;">
+    <div class="quiz-screen" style="display: none;">
         <div class="stepper-container">
             <div class="progress-line"></div>
         </div>
-        <h1 id="question"></h1>
-        <div id="choices"></div>
-        <button id="submitButton" type="button" disabled>Submit</button>
-        <button id="nextButton" style="display: none;">Next</button>
+        <div class="question-container">
+            <div class="question"></div>
+        </div>
+        <div class="choices"></div>
+        <button class="submit-button" type="button" disabled>Submit</button>
+        <button class="next-button" style="display: none;">Next</button>
     </div>
 
-    <div id="finalScreen" style="display: none;">
-        <h1 id="points"></h1>
-        <button id="restartButton">Start<br>Again</button>
+    <div class="final-screen" style="display: none;">
+        <h1 class="points"></h1>
+        <button class="action-button restart-button">
+            <span class="button-text">Start<br>Again</span>
+        </button>
     </div>
 
     <script src="index.js"></script>
