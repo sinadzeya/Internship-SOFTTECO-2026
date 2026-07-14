@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Brasley';
-    src: url('fonts/Brasley_Medium.otf') format('opentype');
+    font-family: 'Poppins';
+    src: url('fonts/Poppins-Regular.ttf') format('opentype');
 }
 
 :root {
@@ -34,14 +34,17 @@
     background: var(--main-color);
     border: none;
 
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: white;
     text-align: center;
-    font-size: 50px;
+    font-weight: 400;
+    font-size: 96px;
     line-height: 1.5;
 
-    width: 320px;
-    height: 320px;
+    width: 36.1875rem;   /* 579px */
+    height: 36.1875rem;  /* 579px */
+    top: 8.125rem;       /* 130px */
+    left: 26.9375rem;    /* 431px */
     border-radius: 50%;
 
     box-shadow:
@@ -60,7 +63,7 @@
     padding: 40px;
     width: 100%;
 
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: white;
     font-size: 23px;
     line-height: 1.3;
@@ -82,7 +85,7 @@
     margin-left: 40px;
     width: 550px;
 
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: var(--main-color);
     font-size: 15px;
     font-weight: 500;
@@ -125,7 +128,7 @@
     margin-top: 50px;
     width: 170px;
 
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: white;
     font-size: 20px;
     font-weight: 500;
@@ -175,7 +178,7 @@
     justify-content: center;
     align-items: center;
 
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -193,7 +196,7 @@
 }
 
 #points {
-    font-family: 'Brasley', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 60px;
     font-weight: 500;
     color: var(--main-color);
