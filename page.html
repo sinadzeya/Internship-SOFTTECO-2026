@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Art History Quiz Web Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="startScreen">
+        <button id="startButton">Start<br>The Quiz!</button>
+    </div>
+
+    <div id="quizScreen" style="display: none;">
+        <div class="stepper-container">
+            <div class="progress-line"></div>
+        </div>
+        <h1 id="question"></h1>
+        <div id="choices"></div>
+        <button id="submitButton" type="button" disabled>Submit</button>
+        <button id="nextButton" style="display: none;">Next</button>
+    </div>
+
+    <div id="finalScreen" style="display: none;">
+        <h1 id="points"></h1>
+        <button id="restartButton">Start<br>Again</button>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
