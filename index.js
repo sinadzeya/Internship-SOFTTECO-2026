@@ -138,28 +138,28 @@ function getQuestionById(id) {
 }
 
 function selectOption(button, option) {
-    const buttons = document.querySelectorAll("#choices .button");
+    const buttons = document.querySelectorAll(".choices .button");
     buttons.forEach(button => {
         button.classList.remove("selected");
     })
 
     currentOption = option;
-    const submitBtn = document.getElementById("submitButton");
+    const submitBtn = document.querySelector(".submit-button");
     submitBtn.disabled = false;
     button.classList.add("selected")
 }
 
 function finishQuiz() {
-    document.getElementById("quizScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "flex";
-    document.getElementById("points").textContent = "Your score is " + currentPointCount + "!"
+    document.querySelector(".quiz-screen").style.display = "none";
+    document.querySelector(".final-screen").style.display = "flex";
+    document.querySelector(".points").textContent = "Your score is " + currentPointCount + "!"
 }
 
 function submitOption() {
-    const selectedButton = document.querySelector("#choices .button.selected");
-    const allButtons = document.querySelectorAll("#choices .button");
-    const submitBtn = document.getElementById("submitButton");
-    const nextBtn = document.getElementById("nextButton");
+    const selectedButton = document.querySelector(".choices .button.selected");
+    const allButtons = document.querySelectorAll(".choices .button");
+    const submitBtn = document.querySelector(".submit-button");
+    const nextBtn = document.querySelector(".next-button");
 
     if (!selectedButton) return;
 
@@ -186,8 +186,8 @@ function submitOption() {
 
 
 function showQuestion() {
-    const submitBtn = document.getElementById("submitButton");
-    const nextBtn = document.getElementById("nextButton");
+    const submitBtn = document.querySelector(".submit-button");
+    const nextBtn = document.querySelector(".next-button");
 
     submitBtn.style.display = "block";
     submitBtn.disabled = true;
@@ -208,9 +208,9 @@ function showQuestion() {
         }
     });
 
-    document.getElementById("question").textContent = currentQuestion.question;
+    document.querySelector(".question").textContent = currentQuestion.question;
 
-    const choicesDiv = document.getElementById("choices");
+    const choicesDiv = document.querySelector(".choices");
     choicesDiv.innerHTML = "";
     const options = shuffleArray([...currentQuestion.options]);
 
@@ -234,9 +234,9 @@ function startQuiz() {
     resetQuiz();
     currentQuestion = fetchCurrentQuestion();
 
-    document.getElementById("finalScreen").style.display = "none";
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("quizScreen").style.display = "flex";
+    document.querySelector(".final-screen").style.display = "none";
+    document.querySelector(".start-screen").style.display = "none";
+    document.querySelector(".quiz-screen").style.display = "flex";
 
     const stepperContainerDiv = document.querySelector(".stepper-container");
 
@@ -255,10 +255,10 @@ function startQuiz() {
     showQuestion();
 }
 
-document.getElementById("startButton").addEventListener("click", startQuiz);
-document.getElementById("restartButton").addEventListener("click", startQuiz);
-document.getElementById("submitButton").addEventListener("click", submitOption);
-document.getElementById("nextButton").addEventListener("click", () => {
+document.querySelector(".start-button").addEventListener("click", startQuiz);
+document.querySelector(".restart-button").addEventListener("click", startQuiz);
+document.querySelector(".submit-button").addEventListener("click", submitOption);
+document.querySelector(".next-button").addEventListener("click", () => {
     currentQuestionNumber++;
     currentQuestion = fetchCurrentQuestion();
     if (currentQuestionNumber !== quizData.length + 1) {
