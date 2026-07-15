@@ -314,6 +314,11 @@ html {
         left: 45.0rem;
     }
 
+    .restart-button {
+        width: 34.0rem;
+        height: 34.0rem;
+    }
+
     .action-button .button-text {
         font-size: 4.8rem;
     }
