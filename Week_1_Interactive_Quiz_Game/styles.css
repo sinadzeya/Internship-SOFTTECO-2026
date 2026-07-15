@@ -275,3 +275,24 @@ html {
     padding-bottom: 6.0rem;
 }
 
+
+@media (max-width: 768px) {
+
+    .action-button {
+        width: 49.8rem;
+        height: 49.8rem;
+    }
+
+    .restart-button {
+        width: 34.0rem;
+        height: 34.0rem;
+    }
+
+    .action-button .button-text {
+        font-size: 7.2rem;
+    }
+
+    .restart-button .button-text {
+        font-size: 4.8rem;
+    }
+}
