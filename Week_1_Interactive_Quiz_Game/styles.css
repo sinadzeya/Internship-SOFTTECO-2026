@@ -276,7 +276,7 @@ html {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 430px) {
 
     .action-button {
         width: 49.8rem;
