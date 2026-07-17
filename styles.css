@@ -84,13 +84,18 @@ html {
     line-height: 1.5;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
 .restart-button .button-text {
+    width: 19.0rem;
+    height: 19.2rem;
+
     font-size: 6.4rem;
 }
+
 
 .stepper-container {
     display: flex;
