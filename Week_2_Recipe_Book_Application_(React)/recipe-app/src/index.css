@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'JustMeAgainDownHere';
+    src: url('fonts/JustMeAgainDownHere.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: url('fonts/NunitoSans.ttf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;  /* Default browser font is 16px: (16px * 0.625 = 10px) */
+}
+
+:root {
+    --red: rgba(210, 12, 12, 1);
+    --light-red: rgba(210, 12, 12, 0.1);
+
+    --green: rgba(4, 177, 0, 1);
+    --dark-green: rgba(22, 137, 20, 1);
+    --light-green: rgba(4, 177, 0, 0.1);
+
+    --orange: rgba(255, 153, 0, 1);
+    --dark-orange: rgba(198, 95, 0, 1);
+    --light-orange: rgba(255, 153, 0, 0.1);
+
+    --blue: rgba(36, 79, 233, 1);
+    --light-blue: rgba(36, 79, 233, 0.2);
+}
