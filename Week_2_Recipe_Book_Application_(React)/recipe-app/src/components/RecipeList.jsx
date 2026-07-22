@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import {fetchRecipes} from '../api/recipeApi.js'
 
 const Difficulty = {
@@ -16,10 +17,17 @@ export function RecipeList({initialKeyword = ''}) {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
+    const navigate = useNavigate();
+
     const handleSearchChange = (e) => {
         setKeyword(e.target.value);
         setCurrentPage(0);
         setRecipes([]);
+    };
+
+    const handleSelectRecipe = (recipe) => {
+        setSelectedRecipe(recipe);
+        navigate(`/recipes/${recipe.id}`);
     };
 
     useEffect(() => {
@@ -45,7 +53,6 @@ export function RecipeList({initialKeyword = ''}) {
         return recipe.difficulty === filter;
     });
 
-
     return (
         <div>
 
@@ -56,30 +63,15 @@ export function RecipeList({initialKeyword = ''}) {
             />
 
             <div className="filter-buttons">
-                <button
-                    className={filter === Difficulty.All ? 'active' : ''}
-                    onClick={() => setFilter(Difficulty.All)}
-                >
-                    All
-                </button>
-                <button
-                    className={filter === Difficulty.Easy ? 'active' : ''}
-                    onClick={() => setFilter(Difficulty.Easy)}
-                >
-                    Easy
-                </button>
-                <button
-                    className={filter === Difficulty.Medium ? 'active' : ''}
-                    onClick={() => setFilter(Difficulty.Medium)}
-                >
-                    Medium
-                </button>
-                <button
-                    className={filter === Difficulty.Hard ? 'active' : ''}
-                    onClick={() => setFilter(Difficulty.Hard)}
-                >
-                    Hard
-                </button>
+                {Object.values(Difficulty).map((level) => (
+                    <button
+                        key={level}
+                        className={filter === level ? 'active' : ''}
+                        onClick={() => setFilter(level)}
+                    >
+                        {level}
+                    </button>
+                ))}
             </div>
 
             {loading ? (
@@ -89,7 +81,7 @@ export function RecipeList({initialKeyword = ''}) {
                     {filteredRecipes.map((recipe) => (
                         <li
                             key={recipe.id}
-                            onClick={() => setSelectedRecipe(recipe)}
+                            onClick={() => handleSelectRecipe(recipe)}
                         >
                             <h3>{recipe.name}</h3>
                             <p>Difficulty: {recipe.difficulty}</p>
@@ -99,11 +91,11 @@ export function RecipeList({initialKeyword = ''}) {
             )}
 
             <button
-                onClick={() => setCurrentPage(currentPage + 1)}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                disabled={loading}
             >
-                Load more
+                {loading ? 'Loading...' : 'Load more'}
             </button>
-
         </div>
     );
 

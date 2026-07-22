@@ -27,14 +27,18 @@ export const fetchRecipes = async (searchKeyword = '', currentPage = 0, limit = 
     }
 };
 
-// Fetch recipes by tag
-export const getRecipesByTag = async (tag) => {
+// Fetch recipe by id
+export const fetchRecipeById = async (recipeId) => {
     try {
-        const response = await fetch(`${baseUrl}/tag/${encodeURIComponent(tag)}`);
+        const response = await fetch(`${baseUrl}/${recipeId}`);
+        if (!response.ok) throw new Error('Network response was not ok');
+
         const data = await response.json();
-        return data;
+        return data || [];
+
     } catch (error) {
-        console.error('Error fetching recipes:', error);
+        console.error('Error fetching recipe:', error);
+        return [];
     }
-};
+}
 
