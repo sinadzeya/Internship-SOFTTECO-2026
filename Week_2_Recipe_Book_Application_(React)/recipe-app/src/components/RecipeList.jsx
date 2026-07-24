@@ -13,7 +13,6 @@ export function RecipeList({initialKeyword = ''}) {
     const [filter, setFilter] = useState(Difficulty.All);
     const [keyword, setKeyword] = useState(initialKeyword);
     const [recipes, setRecipes] = useState([]);
-    const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
@@ -26,7 +25,6 @@ export function RecipeList({initialKeyword = ''}) {
     };
 
     const handleSelectRecipe = (recipe) => {
-        setSelectedRecipe(recipe);
         navigate(`/recipes/${recipe.id}`);
     };
 
