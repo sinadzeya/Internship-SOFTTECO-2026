@@ -1,62 +1,60 @@
-import React, {useState, useEffect} from 'react';
-import {fetchRecipeById} from '../api/recipeApi.js'
-import {useParams, useNavigate} from "react-router-dom";
+import React, {useEffect} from 'react';
+import {useNavigate, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchRecipeById} from "../store/recipeSlice.js";
 
 export function RecipeDetails() {
-    const { id } = useParams();
+    const {id} = useParams();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [recipe, setRecipe] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const {selectedRecipe, selectedRecipeLoading} = useSelector(
+        (state) => state.recipes
+    );
 
     useEffect(() => {
-        setLoading(true);
-        fetchRecipeById(id)
-            .then((data) => {
-                setRecipe(data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
-    }, [id]);
+        dispatch(fetchRecipeById(id));
 
-    if (loading) return <p>Loading recipe details...</p>;
-    if (!recipe) return <p>Recipe not found.</p>;
+    }, [dispatch, id]);
+
+    if (selectedRecipeLoading) return <p>Loading recipe details...</p>;
+    if (!selectedRecipe) return <p>Recipe not found</p>;
 
     return (
         <div className="recipe-details">
             <button onClick={() => navigate(-1)}>Go back</button>
 
-            <img src={recipe.image} alt={recipe.name} />
+            <img src={selectedRecipe.image} alt={selectedRecipe.name}/>
 
             <div className="tags">
-                {Array.isArray(recipe.tags)
-                    ? recipe.tags.map((item, index) => <li key={index}>{item}</li>)
-                    : <li>{recipe.tags}</li>
+                {Array.isArray(selectedRecipe.tags)
+                    ? selectedRecipe.tags.map((item, index) => <li key={index}>{item}</li>)
+                    : <li>{selectedRecipe.tags}</li>
                 }
             </div>
 
-            <h2>{recipe.name}</h2>
+            <h2>{selectedRecipe.name}</h2>
 
             <div className="metadata">
-                <p>Level: {recipe.difficulty}</p>
-                <p>Servings: {recipe.servings}</p>
-                <p>Cuisine: {recipe.cuisine}</p>
-                <p>Cooking Time: {recipe.cookTimeMinutes}</p>
+                <p>Level: {selectedRecipe.difficulty}</p>
+                <p>Servings: {selectedRecipe.servings}</p>
+                <p>Cuisine: {selectedRecipe.cuisine}</p>
+                <p>Cooking Time: {selectedRecipe.cookTimeMinutes}</p>
             </div>
 
             <div className="ingredients">
                 <h3>Ingredients</h3>
-                <ul>
-                    {Array.isArray(recipe.ingredients)
-                        ? recipe.ingredients.map((item, index) => <li key={index}>{item}</li>)
-                        : <li>{recipe.ingredients}</li>
+                <div className="tags">
+                    {Array.isArray(selectedRecipe.tags)
+                        ? selectedRecipe.tags.map((item, index) => <span key={index} className="tag">{item}</span>)
+                        : <span className="tag">{selectedRecipe.tags}</span>
                     }
-                </ul>
+                </div>
             </div>
 
             <div className="instructions">
                 <h3>Instructions</h3>
-                <p>{recipe.instructions}</p>
+                <p>{selectedRecipe.instructions}</p>
             </div>
 
         </div>

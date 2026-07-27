@@ -1,50 +1,32 @@
-import React, {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
-import {fetchRecipes} from '../api/recipeApi.js'
+import React, {useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {setFilter, setKeyword, incrementPage, fetchRecipes, Difficulty} from '../store/recipeSlice.js';
 
-const Difficulty = {
-    All: 'All',
-    Easy: 'Easy',
-    Medium: 'Medium',
-    Hard: 'Hard'
-};
 
-export function RecipeList({initialKeyword = ''}) {
-    const [filter, setFilter] = useState(Difficulty.All);
-    const [keyword, setKeyword] = useState(initialKeyword);
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
-
+export function RecipeList() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const {filter, keyword, recipes, loading, currentPage} = useSelector(
+        (state) => state.recipes
+    );
+
     const handleSearchChange = (e) => {
-        setKeyword(e.target.value);
-        setCurrentPage(0);
-        setRecipes([]);
+        dispatch(setKeyword(e.target.value));
     };
 
     const handleSelectRecipe = (recipe) => {
         navigate(`/recipes/${recipe.id}`);
     };
 
+    const handleLoadMore = () => {
+        dispatch(incrementPage());
+    };
+
     useEffect(() => {
-        let isMounted = true;
-        setLoading(true);
-
-        fetchRecipes(keyword, currentPage).then((newRecipes) => {
-            if (isMounted) {
-                setRecipes((prevRecipes) =>
-                    currentPage === 0 ? newRecipes : [...prevRecipes, ...newRecipes]
-                );
-                setLoading(false);
-            }
-        });
-
-        return () => {
-            isMounted = false;
-        };
-    }, [keyword, currentPage]);
+        dispatch(fetchRecipes());
+    }, [dispatch, keyword, currentPage]);
 
     const filteredRecipes = recipes.filter((recipe) => {
         if (filter === Difficulty.All) return true;
@@ -65,14 +47,14 @@ export function RecipeList({initialKeyword = ''}) {
                     <button
                         key={level}
                         className={filter === level ? 'active' : ''}
-                        onClick={() => setFilter(level)}
+                        onClick={() => dispatch(setFilter(level))}
                     >
                         {level}
                     </button>
                 ))}
             </div>
 
-            {loading ? (
+            {loading && recipes.length === 0 ? (
                 <p>Loading recipes...</p>
             ) : (
                 <ul>
@@ -89,13 +71,13 @@ export function RecipeList({initialKeyword = ''}) {
             )}
 
             <button
-                onClick={() => setCurrentPage((prev) => prev + 1)}
+                type="button"
+                onClick={handleLoadMore}
                 disabled={loading}
             >
                 {loading ? 'Loading...' : 'Load more'}
             </button>
         </div>
     );
-
 }
 

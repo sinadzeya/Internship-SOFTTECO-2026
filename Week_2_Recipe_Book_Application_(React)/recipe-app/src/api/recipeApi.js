@@ -1,25 +1,23 @@
+import axios from "axios";
+
 const baseUrl = 'https://dummyjson.com/recipes'
 
 // Fetch recipes by keyword
 export const fetchRecipes = async (searchKeyword = '', currentPage = 0, limit = 6) => {
     try {
         const skip = currentPage * limit;
-        const endpoint = searchKeyword.trim() ? `${baseUrl}/search` : baseUrl;
+        const trimmedKeyword = searchKeyword.trim();
+        const endpoint = trimmedKeyword ? `${baseUrl}/search` : baseUrl;
 
-        const params = new URLSearchParams({
-            limit: limit.toString(),
-            skip: skip.toString()
+        const response = await axios.get(endpoint, {
+            params: {
+                limit,
+                skip,
+                ...(trimmedKeyword && {q: trimmedKeyword})
+            }
         });
 
-        if (searchKeyword.trim()) {
-            params.append('q', searchKeyword.trim());
-        }
-
-        const response = await fetch(`${endpoint}?${params.toString()}`);
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.json();
-        return data.recipes || [];
+        return response.data.recipes || [];
 
     } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -30,11 +28,9 @@ export const fetchRecipes = async (searchKeyword = '', currentPage = 0, limit = 
 // Fetch recipe by id
 export const fetchRecipeById = async (recipeId) => {
     try {
-        const response = await fetch(`${baseUrl}/${recipeId}`);
-        if (!response.ok) throw new Error('Network response was not ok');
+        const response = await axios.get(`${baseUrl}/${recipeId}`);
 
-        const data = await response.json();
-        return data || [];
+        return response.data || null;
 
     } catch (error) {
         console.error('Error fetching recipe:', error);
