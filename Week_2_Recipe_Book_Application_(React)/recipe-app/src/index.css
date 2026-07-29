@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 @font-face {
     font-family: 'JustMeAgainDownHere';
     src: url('fonts/JustMeAgainDownHere.ttf') format('truetype');
@@ -6,6 +8,11 @@
 @font-face {
     font-family: 'NunitoSans';
     src: url('fonts/NunitoSans.ttf') format('truetype');
+}
+
+@theme {
+    --font-justme: 'JustMeAgainDownHere';
+    --font-nunito: 'NunitoSans';
 }
 
 * {
@@ -18,6 +25,9 @@ html {
 }
 
 :root {
+    --black: rgba(0, 0, 0, 1);
+    --white: rgba(255, 255, 255, 1);
+
     --red: rgba(210, 12, 12, 1);
     --light-red: rgba(210, 12, 12, 0.1);
 
@@ -27,7 +37,9 @@ html {
 
     --orange: rgba(255, 153, 0, 1);
     --dark-orange: rgba(198, 95, 0, 1);
+    --mid-orange: rgba(255, 153, 0, 0.3);
     --light-orange: rgba(255, 153, 0, 0.1);
+
 
     --blue: rgba(36, 79, 233, 1);
     --light-blue: rgba(36, 79, 233, 0.2);

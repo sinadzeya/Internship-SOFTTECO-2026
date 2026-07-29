@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchRecipeById} from "../store/recipeSlice.js";
+import {fetchRecipeById} from "../src/store/recipeSlice.js";
 
 export function RecipeDetails() {
     const {id} = useParams();
