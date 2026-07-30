@@ -4,7 +4,7 @@ import React from "react";
 
 export function FilterButtons({filter, onFilterChange, className = '', ...props}) {
 
-    const baseStyles = "w-[10.0rem] md:w-[11.0rem] text-[var(--black)] text-[1.6rem] md:text-[2.0rem] font-nunito border rounded-[1rem] font-normal";
+    const baseStyles = "w-[10.0rem] h-[3.0rem] md:w-[11.0rem] md:h-[3.5rem] text-[var(--black)] text-[1.6rem] md:text-[2.0rem] font-nunito border rounded-[1rem] font-normal";
 
     return (
         <div

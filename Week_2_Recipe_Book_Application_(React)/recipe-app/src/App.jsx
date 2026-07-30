@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { RecipeList } from '../pages/RecipeList.jsx';
-import { RecipeDetails } from '../pages/RecipeDetails.jsx';
+import { RecipeList } from './pages/RecipeList.jsx';
+import { RecipeDetails } from './pages/RecipeDetails.jsx';
 import './App.css';
 
 function App() {

@@ -21,7 +21,7 @@ export function TopDivImage({title, className = '', ...props}) {
                         src={logo}
                         alt="A white hand-drawn style icon of a bowl with a spoon and a whisk inside"
                     />
-                    <h1 className="text-[var(--white)] text-[4.8rem] md:text-[9.6rem] font-justme">
+                    <h1 className="text-[var(--white)] text-[4.8rem] md:text-[9.6rem] font-justme font-normal">
                         {title}
                     </h1>
                 </div>

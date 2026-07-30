@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {setFilter, setKeyword, incrementPage, fetchRecipes, Difficulty} from '../src/store/recipeSlice.js';
-import {SearchInput} from "../src/components/SearchInput.jsx";
-import {MainDivContainer} from "../src/components/MainDivContainer.jsx";
-import {TopDivImage} from "../src/components/TopDivImage.jsx";
-import {FilterButtons} from "../src/components/FilterButtons.jsx";
-import {RecipeDivCard} from "../src/components/RecipeDivCard.jsx";
+import {setFilter, setKeyword, incrementPage, fetchRecipes, Difficulty} from '../store/recipeSlice.js';
+import {SearchInput} from "../components/SearchInput.jsx";
+import {MainDivContainer} from "../components/MainDivContainer.jsx";
+import {TopDivImage} from "../components/TopDivImage.jsx";
+import {FilterButtons} from "../components/FilterButtons.jsx";
+import {RecipeDivCard} from "../components/RecipeDivCard.jsx";
+import {LoadButton} from "../components/LoadButton.jsx";
 
 
 export function RecipeList() {
@@ -45,7 +46,7 @@ export function RecipeList() {
 
             <div className="w-full flex flex-col md:flex-row items-center justify-between gap-[4.0rem]">
 
-                <SearchInput className="md:!ml-[5.5rem]" value={keyword} onChange={handleSearchChange} />
+                <SearchInput className="md:!mt-[2.0rem] md:!ml-[5.5rem]" value={keyword} onChange={handleSearchChange}/>
 
                 <FilterButtons
                     className="md:!mr-[5.5rem]"
@@ -55,23 +56,20 @@ export function RecipeList() {
 
             </div>
 
-
             <RecipeDivCard
-                className="md:!px-[5.0rem]"
+                className="md:!pt-[2.0rem] md:!px-[5.0rem]"
                 loading={loading}
                 recipes={recipes}
                 filteredRecipes={filteredRecipes}
                 handleSelectRecipe={handleSelectRecipe}
             />
 
+            <LoadButton
+                className="!pb-[5.0rem] md:!pb-[10.0rem] !pt-[5.0rem]"
+                loading={loading}
+                handleLoadMore={handleLoadMore}
+            />
 
-            <button
-                type="button"
-                onClick={handleLoadMore}
-                disabled={loading}
-            >
-                {loading ? 'Loading...' : 'Load more'}
-            </button>
         </MainDivContainer>
     );
 }
