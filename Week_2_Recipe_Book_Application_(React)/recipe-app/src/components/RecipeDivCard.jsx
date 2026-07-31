@@ -10,9 +10,7 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, handleSelectRe
     const baseStyles = "relative w-full max-w-[33.3rem] h-[51.2rem] md:max-w-[42.0rem] md:h-[58.5rem] text-[var(--black)] border rounded-[1rem]";
 
 
-    return loading && recipes.length === 0 ? (
-        <p>Loading recipes...</p>
-    ) : (
+    return (
         <ul className={cn(className, "relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-items-center gap-y-[6.7rem] md:gap-x-[4.0rem] md:gap-y-[5.0rem] w-full")}>
             {filteredRecipes.map((recipe) => (
                 <li

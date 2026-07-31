@@ -8,6 +8,7 @@ import {TopDivImage} from "../components/TopDivImage.jsx";
 import {FilterButtons} from "../components/FilterButtons.jsx";
 import {RecipeDivCard} from "../components/RecipeDivCard.jsx";
 import {LoadButton} from "../components/LoadButton.jsx";
+import {MessageDiv} from "../components/MessageDiv.jsx";
 
 
 export function RecipeList() {
@@ -56,13 +57,25 @@ export function RecipeList() {
 
             </div>
 
-            <RecipeDivCard
-                className="md:!pt-[2.0rem] md:!px-[5.0rem]"
-                loading={loading}
-                recipes={recipes}
-                filteredRecipes={filteredRecipes}
-                handleSelectRecipe={handleSelectRecipe}
-            />
+            {loading && recipes.length === 0 ? (
+                <MessageDiv
+                    message="Loading recipes..."
+                    colour="var(--black)"
+                />
+            ) : !loading && filteredRecipes.length === 0 ? (
+                <MessageDiv
+                    message="No recipes found for the selected filter"
+                    colour="var(--red)"
+                />
+            ) : (
+                <RecipeDivCard
+                    className="md:!pt-[2.0rem] md:!px-[5.0rem]"
+                    loading={loading}
+                    recipes={recipes}
+                    filteredRecipes={filteredRecipes}
+                    handleSelectRecipe={handleSelectRecipe}
+                />
+            )}
 
             <LoadButton
                 className="!pb-[5.0rem] md:!pb-[10.0rem] !pt-[5.0rem]"
