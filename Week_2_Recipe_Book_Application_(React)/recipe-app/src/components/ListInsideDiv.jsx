@@ -5,7 +5,7 @@ export function ListInsideDiv({name, recipe, recipeName, className = '', ...prop
     const items = recipe[recipeName];
 
     return (
-        <div className={cn("relative w-[35.3rem] md:w-[66.0rem] flex flex-col !pb-[4.0rem]", className)} {...props}>
+        <div className={cn("relative max-w-[35.3rem] md:max-w-[66.0rem] mx-auto flex flex-col !pb-[4.0rem]", className)} {...props}>
             <h3 className="w-full text-left !pl-[2.0rem] !pt-[1.6rem] !pb-[1.5rem] md:!pb-[2.5rem] text-[4.0rem] md:text-[6.4rem] text-[var(--black)] font-normal font-justme">{name}</h3>
 
             {Array.isArray(items) ? (

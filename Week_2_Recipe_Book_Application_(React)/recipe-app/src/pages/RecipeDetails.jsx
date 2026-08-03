@@ -44,34 +44,33 @@ export function RecipeDetails() {
 
             </div>
 
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 items-start">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch md:gap-x-[7.5rem]">
 
-                <div className="flex flex-col justify-center md:justify-start">
+                <div className="flex flex-col justify-center items-center md:items-start h-full">
 
                     <img
-                        className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] !ml-[2rem] md:!ml-[5rem] border object-cover"
+                        className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] md:!ml-[5rem] border object-cover"
                         src={selectedRecipe.image} alt={selectedRecipe.name}/>
 
                 </div>
 
-                <div className="md:relative flex flex-col md:!ml-[7.5rem] md:!mt-[4.5rem] md:!mr-[5rem]">
+                <div className="md:relative flex flex-col md:!mt-[4.5rem] md:!mr-[5rem]">
 
                     <TagsDiv recipe={selectedRecipe}
-                             className="gap-[1.0rem] top-[40.4rem] md:top-[0rem] left-[2.0rem] md:left-[0rem]"/>
+                             className="gap-[1.0rem] !mt-[4.0rem] md:!mt-[0rem] !ml-[2.0rem] md:!ml-[0rem]"/>
 
-                    <h3 className="w-full text-left !px-[2.0rem] md:!px-[0rem] !pt-[7.6rem] md:!pt-[2.6rem] text-[4.8rem] md:text-[8.0rem] text-[var(--black)] font-normal font-justme">{selectedRecipe.name}</h3>
+                    <h3 className="w-full text-left !px-[2.0rem] md:!px-[0rem] !pt-[1.0rem] md:!pt-[2.6rem] text-[4.8rem] md:text-[8.0rem] text-[var(--black)] font-normal font-justme">{selectedRecipe.name}</h3>
 
-                    <div className="!ml-[2.0rem] md:!mr-[19.5rem] md:!ml-[0rem]">
+                    <div className="flex flex-col gap-[1.6rem] !mt-[3.0rem] md:!mt-[4.0rem] !ml-[2.0rem] md:max-w-[40.0rem] md:!ml-[0rem]">
 
                         <ImgNameTagDiv
-                            className="top-[3rem] md:top-[4rem]"
                             name="Level"
                             logo={levelLogo}
                             recipe={selectedRecipe}
                             recipeName="difficulty"
                             colour="var(--dark-orange)"
                             bgColour="var(--light-orange)"
-                            tagWidth="8.5rem"
+                            minTagWidth="8.5rem"
                             imgLeftMob="0rem"
                             imgLeftDesc="0rem"
                             pLeftMob="3.8rem"
@@ -79,13 +78,12 @@ export function RecipeDetails() {
                         />
 
                         <ImgNameTagDiv
-                            className="top-[7.6rem] md:top-[8.6rem]"
                             name="Servings"
                             logo={servingsLogo}
                             recipe={selectedRecipe}
                             recipeName="servings"
                             colour="var(--dark-orange)"
-                            tagWidth="5rem"
+                            minTagWidth="5rem"
                             imgLeftMob="0rem"
                             imgLeftDesc="0rem"
                             pLeftMob="3.8rem"
@@ -93,13 +91,12 @@ export function RecipeDetails() {
                         />
 
                         <ImgNameTagDiv
-                            className="top-[12.2rem] md:top-[13.2rem]"
                             name="Cuisine"
                             logo={cuisineLogo}
                             recipe={selectedRecipe}
                             recipeName="cuisine"
                             colour="var(--red)"
-                            tagWidth="8.5rem"
+                            minTagWidth="8.5rem"
                             imgLeftMob="0rem"
                             imgLeftDesc="0rem"
                             pLeftMob="3.8rem"
@@ -107,14 +104,13 @@ export function RecipeDetails() {
                         />
 
                         <ImgNameTagDiv
-                            className="top-[16.8rem] md:top-[17.8rem]"
                             name="Cooking Time"
                             logo={cookingTimeLogo}
                             recipe={selectedRecipe}
                             recipeName="cookTimeMinutes"
                             colour="var(--blue)"
                             addText="min"
-                            tagWidth="8.5rem"
+                            minTagWidth="8.5rem"
                             imgLeftMob="0rem"
                             imgLeftDesc="0rem"
                             pLeftMob="3.8rem"
@@ -129,9 +125,9 @@ export function RecipeDetails() {
 
 
             <div
-                className="relative top-[25.0rem] md:top-[8rem] !ml-[2.0rem] md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem]">
+                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full items-center">
 
-                <div className="flex flex-col order-1 md:order-2">
+                <div className="flex flex-col order-1 md:order-2 items-center md:items-start">
                     <BulletListInsideBorderDiv
                         name="Ingredients"
                         recipe={selectedRecipe}
@@ -139,7 +135,7 @@ export function RecipeDetails() {
                     />
                 </div>
 
-                <div className="flex flex-col order-2 md:order-1">
+                <div className="flex flex-col order-2 md:order-1 items-center md:items-start">
                     <ListInsideDiv
                         name="Instructions"
                         recipe={selectedRecipe}

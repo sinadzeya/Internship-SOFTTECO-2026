@@ -6,10 +6,9 @@ export function LogoDiv({title, className = '', ...props }) {
 
     return (
         <div
-            className={cn("w-full", className)}
+            className={cn("w-full flex items-center justify-center", className)}
             {...props}
         >
-            <div className="w-full flex items-center">
 
                 <div className="flex-1 h-[0.2rem] bg-[var(--black)] rounded-r-lg rounded-l-lg"/>
 
@@ -25,8 +24,6 @@ export function LogoDiv({title, className = '', ...props }) {
                 </div>
 
                 <div className="hidden md:block flex-1 h-[0.2rem] bg-[var(--black)] rounded-l-lg"/>
-
-            </div>
 
         </div>
     );
