@@ -32,6 +32,10 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, handleSelectRe
                         recipeName="cuisine"
                         colour="var(--red)"
                         tagWidth="8.5rem"
+                        imgLeftMob="1.7rem"
+                        imgLeftDesc="2.0rem"
+                        pLeftMob="5.1rem"
+                        pLeftDesc="5.4rem"
                     />
 
                     <ImgNameTagDiv
@@ -43,6 +47,10 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, handleSelectRe
                         colour="var(--blue)"
                         addText="min"
                         tagWidth="8.5rem"
+                        imgLeftMob="1.7rem"
+                        imgLeftDesc="2.0rem"
+                        pLeftMob="5.1rem"
+                        pLeftDesc="5.4rem"
                     />
 
                     <p className={cn(

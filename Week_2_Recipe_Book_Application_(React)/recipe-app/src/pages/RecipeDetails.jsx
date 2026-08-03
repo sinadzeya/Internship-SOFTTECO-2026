@@ -61,7 +61,7 @@ export function RecipeDetails() {
 
                     <h3 className="w-full text-left !px-[2.0rem] md:!px-[0rem] !pt-[7.6rem] md:!pt-[2.6rem] text-[4.8rem] md:text-[8.0rem] text-[var(--black)] font-normal font-justme">{selectedRecipe.name}</h3>
 
-                    <div className="md:!mr-[19.5rem]">
+                    <div className="!ml-[2.0rem] md:!mr-[19.5rem] md:!ml-[0rem]">
 
                         <ImgNameTagDiv
                             className="top-[3rem] md:top-[4rem]"
@@ -72,6 +72,10 @@ export function RecipeDetails() {
                             colour="var(--dark-orange)"
                             bgColour="var(--light-orange)"
                             tagWidth="8.5rem"
+                            imgLeftMob="0rem"
+                            imgLeftDesc="0rem"
+                            pLeftMob="3.8rem"
+                            pLeftDesc="3.8rem"
                         />
 
                         <ImgNameTagDiv
@@ -82,6 +86,10 @@ export function RecipeDetails() {
                             recipeName="servings"
                             colour="var(--dark-orange)"
                             tagWidth="5rem"
+                            imgLeftMob="0rem"
+                            imgLeftDesc="0rem"
+                            pLeftMob="3.8rem"
+                            pLeftDesc="3.8rem"
                         />
 
                         <ImgNameTagDiv
@@ -92,6 +100,10 @@ export function RecipeDetails() {
                             recipeName="cuisine"
                             colour="var(--red)"
                             tagWidth="8.5rem"
+                            imgLeftMob="0rem"
+                            imgLeftDesc="0rem"
+                            pLeftMob="3.8rem"
+                            pLeftDesc="3.8rem"
                         />
 
                         <ImgNameTagDiv
@@ -103,6 +115,10 @@ export function RecipeDetails() {
                             colour="var(--blue)"
                             addText="min"
                             tagWidth="8.5rem"
+                            imgLeftMob="0rem"
+                            imgLeftDesc="0rem"
+                            pLeftMob="3.8rem"
+                            pLeftDesc="3.8rem"
                         />
 
                     </div>
