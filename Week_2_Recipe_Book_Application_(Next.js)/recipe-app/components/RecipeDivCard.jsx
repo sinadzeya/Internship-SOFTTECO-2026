@@ -1,6 +1,6 @@
-import {cn} from "../utils/cn.js";
-import cookingTimeLogo from "../public/images/cooking-time-logo.png"
-import cuisineLogo from "../public/images/cuisine-logo.png"
+import {cn} from "@/utils/cn.js";
+import cookingTimeLogo from "@/public/images/cooking-time-logo.png"
+import cuisineLogo from "@/public/images/cuisine-logo.png"
 import {TagsDiv} from "./TagsDiv.jsx";
 import {ImgNameTagDiv} from "./ImgNameTagDiv.jsx";
 

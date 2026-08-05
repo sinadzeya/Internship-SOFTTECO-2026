@@ -4,20 +4,20 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams, useRouter} from 'next/navigation';
 import {useEffect} from 'react';
 
-import {fetchRecipeById} from "../../../store/recipeSlice";
-import {MainDivContainer} from "../../../components/MainDivContainer";
-import {MessageDiv} from "../../../components/MessageDiv";
-import {NavButton} from "../../../components/NavButton";
-import {LogoDiv} from "../../../components/LogoDiv";
-import {TagsDiv} from "../../../components/TagsDiv";
-import {ImgNameTagDiv} from "../../../components/ImgNameTagDiv";
-import {BulletListInsideBorderDiv} from "../../../components/BulletListInsideBorderDiv";
-import {ListInsideDiv} from "../../../components/ListInsideDiv";
+import {fetchRecipeById} from "@/store/recipeSlice";
+import {MainDivContainer} from "@/components/MainDivContainer";
+import {MessageDiv} from "@/components/MessageDiv";
+import {NavButton} from "@/components/NavButton";
+import {LogoDiv} from "@/components/LogoDiv";
+import {TagsDiv} from "@/components/TagsDiv";
+import {ImgNameTagDiv} from "@/components/ImgNameTagDiv";
+import {BulletListInsideBorderDiv} from "@/components/BulletListInsideBorderDiv";
+import {ListInsideDiv} from "@/components/ListInsideDiv";
 
-import cuisineLogo from "../../../public/images/cuisine-logo.png";
-import cookingTimeLogo from "../../../public/images/cooking-time-logo.png";
-import servingsLogo from "../../../public/images/servings-logo.png";
-import levelLogo from "../../../public/images/level-logo.png";
+import cuisineLogo from "@/public/images/cuisine-logo.png";
+import cookingTimeLogo from "@/public/images/cooking-time-logo.png";
+import servingsLogo from "@/public/images/servings-logo.png";
+import levelLogo from "@/public/images/level-logo.png";
 
 
 export default function RecipeDetails() {

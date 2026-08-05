@@ -4,14 +4,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 
-import {Difficulty, fetchRecipes, incrementPage, setFilter, setKeyword} from "../store/recipeSlice";
-import {MainDivContainer} from "../components/MainDivContainer";
-import {TopDivImage} from "../components/TopDivImage";
-import {SearchInput} from "../components/SearchInput";
-import {FilterButtons} from "../components/FilterButtons";
-import {MessageDiv} from "../components/MessageDiv";
-import {RecipeDivCard} from "../components/RecipeDivCard";
-import {LoadButton} from "../components/LoadButton";
+import {Difficulty, fetchRecipes, incrementPage, setFilter, setKeyword} from "@/store/recipeSlice";
+import {MainDivContainer} from "@/components/MainDivContainer";
+import {TopDivImage} from "@/components/TopDivImage";
+import {SearchInput} from "@/components/SearchInput";
+import {FilterButtons} from "@/components/FilterButtons";
+import {MessageDiv} from "@/components/MessageDiv";
+import {RecipeDivCard} from "@/components/RecipeDivCard";
+import {LoadButton} from "@/components/LoadButton";
 
 
 export default function RecipeList() {

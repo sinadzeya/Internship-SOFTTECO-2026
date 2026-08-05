@@ -1,6 +1,6 @@
-import {cn} from "../utils/cn.js";
-import mainImage from "../public/images/main-image.png";
-import logo from "../public/images/logo.svg";
+import {cn} from "@/utils/cn.js";
+import mainImage from "@/public/images/main-image.png";
+import logo from "@/public/images/logo.svg";
 
 export function TopDivImage({title, className = '', ...props}) {
 

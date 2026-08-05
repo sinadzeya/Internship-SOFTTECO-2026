@@ -1,4 +1,4 @@
-import {cn} from "../utils/cn.js";
+import {cn} from "@/utils/cn.js";
 
 export function BulletListInsideBorderDiv({name, recipe, recipeName, className = '', ...props}) {
     const items = recipe[recipeName];

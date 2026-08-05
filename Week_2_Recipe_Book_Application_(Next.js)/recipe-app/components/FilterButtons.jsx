@@ -1,5 +1,5 @@
-import {cn} from "../utils/cn.js";
-import {Difficulty} from "../store/recipeSlice.js";
+import {cn} from "@/utils/cn.js";
+import {Difficulty} from "@/store/recipeSlice.js";
 
 export function FilterButtons({filter, onFilterChange, className = '', ...props}) {
 

@@ -1,5 +1,5 @@
-import {cn} from '../utils/cn';
-import loupe from "../public/images/loupe-logo.png";
+import {cn} from '@/utils/cn';
+import loupe from "@/public/images/loupe-logo.png";
 
 export function SearchInput({value, onChange, className = '', ...props}) {
 

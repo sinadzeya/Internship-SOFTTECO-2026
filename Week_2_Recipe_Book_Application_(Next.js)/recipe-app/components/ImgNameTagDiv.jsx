@@ -1,4 +1,4 @@
-import {cn} from "../utils/cn.js";
+import {cn} from "@/utils/cn.js";
 
 export function ImgNameTagDiv({
                                   name, logo, recipe, recipeName, colour, minTagWidth,

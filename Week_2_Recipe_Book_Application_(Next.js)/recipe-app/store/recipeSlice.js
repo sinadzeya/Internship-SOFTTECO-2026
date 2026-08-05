@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {fetchRecipes as fetchRecipesApi} from '../api/recipeApi.js';
-import {fetchRecipeById as fetchRecipeByIdApi} from '../api/recipeApi.js';
+import {fetchRecipes as fetchRecipesApi} from '@/api/recipeApi.js';
+import {fetchRecipeById as fetchRecipeByIdApi} from '@/api/recipeApi.js';
 
 export const Difficulty = {
     All: 'All',
