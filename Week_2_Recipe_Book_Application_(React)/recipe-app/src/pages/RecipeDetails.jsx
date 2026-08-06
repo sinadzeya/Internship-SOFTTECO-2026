@@ -125,7 +125,7 @@ export function RecipeDetails() {
 
 
             <div
-                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-[calc(100%-5rem)] items-center">
+                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-5rem)] items-center">
 
                 <div className="flex flex-col order-1 md:order-2 items-center md:items-start">
                     <BulletListInsideBorderDiv
