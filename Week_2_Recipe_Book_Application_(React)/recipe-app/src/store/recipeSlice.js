@@ -32,7 +32,7 @@ const recipeSlice = createSlice({
         recipes: [],
         loading: false,
         currentPage: 0,
-        selectedRecipe: [],
+        selectedRecipe: null,
         selectedRecipeLoading: false,
     },
     reducers: {
