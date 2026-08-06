@@ -36,9 +36,9 @@ export function RecipeDetails() {
         <MainDivContainer>
 
             <div
-                className="w-full flex items-center !pt-[2.0rem] !pr-[3.0rem] !pl-[2.0rem] !pb-[3.0rem] md:!pt-[4.6rem] md:!pr-[0.0rem] md:!pl-[5.0rem] md:!pb-[4.0rem]">
+                className="relative w-full flex items-center !pt-[2.0rem] md:!pt-[4.6rem] !pb-[3.0rem] md:!pb-[4.0rem]">
 
-                <NavButton className="!mr-[1.0rem] md:!mr-[3.3rem]" onClick={() => navigate(`/recipes`)}/>
+                <NavButton className="absolute left-[2.0rem] md:left-[5.0rem] z-10 bg-white" onClick={() => navigate(`/recipes`)}/>
 
                 <LogoDiv title="Recipe Book"/>
 
@@ -125,7 +125,7 @@ export function RecipeDetails() {
 
 
             <div
-                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full items-center">
+                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-[calc(100%-5rem)] items-center">
 
                 <div className="flex flex-col order-1 md:order-2 items-center md:items-start">
                     <BulletListInsideBorderDiv
