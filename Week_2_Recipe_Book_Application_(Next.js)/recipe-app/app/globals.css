@@ -15,13 +15,9 @@
     --font-nunito: 'NunitoSans';
 }
 
-* {
-    margin: 0;
-    padding: 0;
-}
 
 html {
-    font-size: 62.5%;  /* Default browser font is 16px: (16px * 0.625 = 10px) */
+    font-size: 62.5%; /* Default browser font is 16px: (16px * 0.625 = 10px) */
 }
 
 :root {
