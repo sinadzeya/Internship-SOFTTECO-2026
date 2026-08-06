@@ -38,7 +38,7 @@ export function RecipeDetails() {
             <div
                 className="w-full flex items-center !pt-[2.0rem] !pr-[3.0rem] !pl-[2.0rem] !pb-[3.0rem] md:!pt-[4.6rem] md:!pr-[0.0rem] md:!pl-[5.0rem] md:!pb-[4.0rem]">
 
-                <NavButton className="!mr-[1.0rem] md:!mr-[3.3rem]" onClick={() => navigate(-1)}/>
+                <NavButton className="!mr-[1.0rem] md:!mr-[3.3rem]" onClick={() => navigate(`/recipes`)}/>
 
                 <LogoDiv title="Recipe Book"/>
 

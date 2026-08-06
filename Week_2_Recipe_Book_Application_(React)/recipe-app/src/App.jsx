@@ -9,6 +9,7 @@ function App() {
         <div className="app-container">
             <Routes>
                 <Route path="/" element={<RecipeList />} />
+                <Route path="/recipes" element={<RecipeList />} />
                 <Route path="/recipes/:id" element={<RecipeDetails />} />
             </Routes>
         </div>
