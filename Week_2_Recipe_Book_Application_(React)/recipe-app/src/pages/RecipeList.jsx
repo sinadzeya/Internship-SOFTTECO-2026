@@ -47,10 +47,10 @@ export function RecipeList() {
 
             <div className="w-full flex flex-col md:flex-row items-center justify-between gap-[4.0rem]">
 
-                <SearchInput className="md:!mt-[2.0rem] md:!ml-[5.5rem]" value={keyword} onChange={handleSearchChange}/>
+                <SearchInput className="md:mt-[2.0rem] md:ml-[5.5rem]" value={keyword} onChange={handleSearchChange}/>
 
                 <FilterButtons
-                    className="md:!mr-[5.5rem]"
+                    className="md:mr-[5.5rem]"
                     filter={filter}
                     onFilterChange={(level) => dispatch(setFilter(level))}
                 />
@@ -69,7 +69,7 @@ export function RecipeList() {
                 />
             ) : (
                 <RecipeDivCard
-                    className="md:!pt-[2.0rem] md:!px-[5.0rem]"
+                    className="md:pt-[2.0rem] md:px-[5.0rem]"
                     loading={loading}
                     recipes={recipes}
                     filteredRecipes={filteredRecipes}
@@ -78,7 +78,7 @@ export function RecipeList() {
             )}
 
             <LoadButton
-                className="!pb-[5.0rem] md:!pb-[10.0rem] !pt-[5.0rem]"
+                className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
                 loading={loading}
                 handleLoadMore={handleLoadMore}
             />

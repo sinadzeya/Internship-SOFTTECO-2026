@@ -16,7 +16,7 @@ export function ImgNameTagDiv({
             <p style={{"--p-left-mob": pLeftMob, "--p-left-desc": pLeftDesc}}
                className="absolute left-[var(--p-left-mob)] md:left-[var(--p-left-desc)] text-[2.0rem] text-[var(--black)] font-normal font-nunito">{name}</p>
             <div style={{color: colour, background: bgColour, minWidth: minTagWidth}}
-                 className="absolute right-[1.8rem] md:right-[2.0rem] !px-[1.0rem] h-[2.6rem] text-center text-[1.6rem] font-nunito border rounded-[1rem] font-normal">{recipe[recipeName]} {addText}</div>
+                 className="absolute right-[1.8rem] md:right-[2.0rem] px-[1.0rem] h-[2.6rem] text-center text-[1.6rem] font-nunito border rounded-[1rem] font-normal">{recipe[recipeName]} {addText}</div>
         </div>
     );
 }

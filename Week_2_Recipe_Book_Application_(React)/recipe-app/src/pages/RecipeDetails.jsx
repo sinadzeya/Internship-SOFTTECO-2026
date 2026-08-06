@@ -36,7 +36,7 @@ export function RecipeDetails() {
         <MainDivContainer>
 
             <div
-                className="relative w-full flex items-center !pt-[2.0rem] md:!pt-[4.6rem] !pb-[3.0rem] md:!pb-[4.0rem]">
+                className="relative w-full flex items-center pt-[2.0rem] md:pt-[4.6rem] pb-[3.0rem] md:pb-[4.0rem]">
 
                 <NavButton className="absolute left-[2.0rem] md:left-[5.0rem] z-10 bg-white" onClick={() => navigate(`/recipes`)}/>
 
@@ -49,19 +49,19 @@ export function RecipeDetails() {
                 <div className="flex flex-col justify-center items-center md:items-start h-full">
 
                     <img
-                        className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] md:!ml-[5rem] border object-cover"
+                        className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] md:ml-[5rem] border object-cover"
                         src={selectedRecipe.image} alt={selectedRecipe.name}/>
 
                 </div>
 
-                <div className="md:relative flex flex-col md:!mt-[4.5rem] md:!mr-[5rem]">
+                <div className="md:relative flex flex-col md:mt-[4.5rem] md:mr-[5rem]">
 
                     <TagsDiv recipe={selectedRecipe}
-                             className="gap-[1.0rem] !mt-[4.0rem] md:!mt-[0rem] !ml-[2.0rem] md:!ml-[0rem]"/>
+                             className="gap-[1.0rem] mt-[4.0rem] md:mt-[0rem] ml-[2.0rem] md:ml-[0rem]"/>
 
-                    <h3 className="w-full text-left !px-[2.0rem] md:!px-[0rem] !pt-[1.0rem] md:!pt-[2.6rem] text-[4.8rem] md:text-[8.0rem] text-[var(--black)] font-normal font-justme">{selectedRecipe.name}</h3>
+                    <h3 className="w-full text-left px-[2.0rem] md:px-[0rem] pt-[1.0rem] md:pt-[2.6rem] text-[4.8rem] md:text-[8.0rem] text-[var(--black)] font-normal font-justme">{selectedRecipe.name}</h3>
 
-                    <div className="flex flex-col gap-[1.6rem] !mt-[3.0rem] md:!mt-[4.0rem] !ml-[2.0rem] md:max-w-[40.0rem] md:!ml-[0rem]">
+                    <div className="flex flex-col gap-[1.6rem] mt-[3.0rem] md:mt-[4.0rem] ml-[2.0rem] md:max-w-[40.0rem] md:ml-[0rem]">
 
                         <ImgNameTagDiv
                             name="Level"
@@ -125,7 +125,7 @@ export function RecipeDetails() {
 
 
             <div
-                className="relative top-[5.2rem] md:top-[8rem] md:!mb-[15.5rem] mx-auto md:!ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-5rem)] items-center">
+                className="relative top-[5.2rem] md:top-[8rem] md:mb-[15.5rem] mx-auto md:ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-5rem)] items-center">
 
                 <div className="flex flex-col order-1 md:order-2 items-center md:items-start">
                     <BulletListInsideBorderDiv
