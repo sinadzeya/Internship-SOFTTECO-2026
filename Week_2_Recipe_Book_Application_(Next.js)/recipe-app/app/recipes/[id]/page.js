@@ -1,18 +1,18 @@
 'use client';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {useParams, useRouter} from 'next/navigation';
+import {useParams} from 'next/navigation';
 import {useEffect} from 'react';
 
 import {fetchRecipeById} from "@/store/recipeSlice";
-import {MainDivContainer} from "@/components/MainDivContainer";
-import {MessageDiv} from "@/components/MessageDiv";
-import {NavButton} from "@/components/NavButton";
-import {LogoDiv} from "@/components/LogoDiv";
-import {TagsDiv} from "@/components/TagsDiv";
-import {ImgNameTagDiv} from "@/components/ImgNameTagDiv";
-import {BulletListInsideBorderDiv} from "@/components/BulletListInsideBorderDiv";
-import {ListInsideDiv} from "@/components/ListInsideDiv";
+import {MainDivContainer} from "@/components/ui/MainDivContainer";
+import {MessageDiv} from "@/components/ui/MessageDiv";
+import {NavButton} from "@/components/ui/NavButton";
+import {LogoDiv} from "@/components/ui/LogoDiv";
+import {TagsDiv} from "@/components/ui/TagsDiv";
+import {ImgNameTagDiv} from "@/components/ui/ImgNameTagDiv";
+import {BulletListInsideBorderDiv} from "@/components/ui/BulletListInsideBorderDiv";
+import {ListInsideDiv} from "@/components/ui/ListInsideDiv";
 
 import cuisineLogo from "@/public/images/cuisine-logo.png";
 import cookingTimeLogo from "@/public/images/cooking-time-logo.png";
@@ -23,7 +23,6 @@ import levelLogo from "@/public/images/level-logo.png";
 export default function RecipeDetails() {
     const {id} = useParams();
     const dispatch = useDispatch();
-    const router = useRouter();
 
     const {selectedRecipe, selectedRecipeLoading} = useSelector(
         (state) => state.recipes
@@ -43,7 +42,7 @@ export default function RecipeDetails() {
             <div
                 className="w-full flex items-center !pt-[2.0rem] !pr-[3.0rem] !pl-[2.0rem] !pb-[3.0rem] md:!pt-[4.6rem] md:!pr-[0.0rem] md:!pl-[5.0rem] md:!pb-[4.0rem]">
 
-                <NavButton className="!mr-[1.0rem] md:!mr-[3.3rem]" onClick={() => router.back()}/>
+                <NavButton className="!mr-[1.0rem] md:!mr-[3.3rem]"/>
 
                 <LogoDiv title="Recipe Book"/>
 
