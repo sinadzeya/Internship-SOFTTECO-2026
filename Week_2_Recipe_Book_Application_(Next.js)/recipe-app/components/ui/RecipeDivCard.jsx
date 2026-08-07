@@ -14,10 +14,11 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, className = ''
             {filteredRecipes.map((recipe) => (
                 <li
                     key={recipe.id}
-                    className={baseStyles} {...props}
+                    className={baseStyles}
                 >
                     <Link
                         href={`/recipes/${recipe.id}`}
+                        {...props}
                     >
                         <img className="w-full h-[22.0rem] md:h-[26.0rem] object-cover rounded-t-[1rem] border-b"
                              src={recipe.image} alt={recipe.name}></img>

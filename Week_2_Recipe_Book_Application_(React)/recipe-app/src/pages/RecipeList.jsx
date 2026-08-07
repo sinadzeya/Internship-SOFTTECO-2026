@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {setFilter, setKeyword, incrementPage, fetchRecipes, Difficulty} from '../store/recipeSlice.js';
 import {SearchInput} from "../components/SearchInput.jsx";
@@ -13,7 +12,6 @@ import {MessageDiv} from "../components/MessageDiv.jsx";
 
 export function RecipeList() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const {filter, keyword, recipes, loading, currentPage} = useSelector(
         (state) => state.recipes
@@ -21,10 +19,6 @@ export function RecipeList() {
 
     const handleSearchChange = (e) => {
         dispatch(setKeyword(e.target.value));
-    };
-
-    const handleSelectRecipe = (recipe) => {
-        navigate(`/recipes/${recipe.id}`);
     };
 
     const handleLoadMore = () => {
@@ -73,7 +67,6 @@ export function RecipeList() {
                     loading={loading}
                     recipes={recipes}
                     filteredRecipes={filteredRecipes}
-                    handleSelectRecipe={handleSelectRecipe}
                 />
             )}
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchRecipeById} from "../store/recipeSlice.js";
 import {MainDivContainer} from "../components/MainDivContainer.jsx";
@@ -18,7 +18,6 @@ import {MessageDiv} from "../components/MessageDiv.jsx";
 export function RecipeDetails() {
     const {id} = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const {selectedRecipe, selectedRecipeLoading} = useSelector(
         (state) => state.recipes
@@ -38,7 +37,7 @@ export function RecipeDetails() {
             <div
                 className="relative w-full flex items-center pt-[2.0rem] md:pt-[4.6rem] pb-[3.0rem] md:pb-[4.0rem]">
 
-                <NavButton className="absolute left-[2.0rem] md:left-[5.0rem] z-10 bg-white" onClick={() => navigate(`/recipes`)}/>
+                <NavButton className="absolute left-[2.0rem] md:left-[5.0rem] z-10 bg-white"/>
 
                 <LogoDiv title="Recipe Book"/>
 
