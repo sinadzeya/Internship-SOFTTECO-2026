@@ -1,11 +1,11 @@
 import {cn} from "@/utils/cn.js";
 import cookingTimeLogo from "@/public/images/cooking-time-logo.png"
 import cuisineLogo from "@/public/images/cuisine-logo.png"
-import {TagsDiv} from "./TagsDiv.jsx";
-import {ImgNameTagDiv} from "./ImgNameTagDiv.jsx";
+import {Tags} from "./Tags.jsx";
+import {ImgNameTag} from "./ImgNameTag.jsx";
 import Link from "next/link";
 
-export function RecipeDivCard({loading, recipes, filteredRecipes, className = '', ...props}) {
+export function RecipeCard({loading, recipes, filteredRecipes, className = '', ...props}) {
 
     const baseStyles = "relative flex flex-col w-full max-w-[33.3rem] md:max-w-[42.0rem] h-full text-[var(--black)] border rounded-[1rem] pb-[2.0rem]";
 
@@ -23,7 +23,7 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, className = ''
                         <img className="w-full h-[22.0rem] md:h-[26.0rem] object-cover rounded-t-[1rem] border-b"
                              src={recipe.image} alt={recipe.name}></img>
 
-                        <TagsDiv recipe={recipe} className="gap-[1.0rem] mt-[2.0rem] mx-[2.0rem]"/>
+                        <Tags recipe={recipe} className="gap-[1.0rem] mt-[2.0rem] mx-[2.0rem]"/>
 
                         <div className="flex-1 flex flex-col justify-between">
 
@@ -31,7 +31,7 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, className = ''
 
                             <div className="flex flex-col my-[2rem] md:mb-[4.0rem] gap-[1.6rem]">
 
-                                <ImgNameTagDiv
+                                <ImgNameTag
                                     name="Cuisine"
                                     logo={cuisineLogo.src}
                                     recipe={recipe}
@@ -44,7 +44,7 @@ export function RecipeDivCard({loading, recipes, filteredRecipes, className = ''
                                     pLeftDesc="5.4rem"
                                 />
 
-                                <ImgNameTagDiv
+                                <ImgNameTag
                                     name="Cooking Time"
                                     logo={cookingTimeLogo.src}
                                     recipe={recipe}

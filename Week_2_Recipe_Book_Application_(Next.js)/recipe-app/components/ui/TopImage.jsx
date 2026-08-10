@@ -2,7 +2,7 @@ import {cn} from "@/utils/cn.js";
 import mainImage from "@/public/images/main-image.png";
 import logo from "@/public/images/logo.svg";
 
-export function TopDivImage({title, className = '', ...props}) {
+export function TopImage({title, className = '', ...props}) {
 
     const baseStyles = "w-full h-[16.0rem] md:h-[33.6rem] flex items-center justify-center bg-cover bg-center border border-black";
 

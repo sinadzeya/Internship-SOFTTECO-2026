@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn.js";
 
-export function TagsDiv({recipe, className = '', ...props}) {
+export function Tags({recipe, className = '', ...props}) {
     return (
         <div className={cn("flex flex-wrap", className)} {...props}>
             {Array.isArray(recipe.tags)

@@ -1,7 +1,7 @@
 import {cn} from "@/utils/cn.js";
 import logoBlack from "@/public/images/logo-black.svg";
 
-export function LogoDiv({title, className = '', ...props }) {
+export function Logo({title, className = '', ...props }) {
 
     return (
         <div

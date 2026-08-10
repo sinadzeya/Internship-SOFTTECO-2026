@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn.js";
 
-export function MainDivContainer({children, className = '', ...props}) {
+export function MainContainer({children, className = '', ...props}) {
 
     const baseStyles = "w-full flex flex-col items-start";
 

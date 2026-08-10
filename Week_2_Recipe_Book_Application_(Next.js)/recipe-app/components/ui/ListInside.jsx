@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn.js";
 
-export function ListInsideDiv({name, recipe, recipeName, className = '', ...props}) {
+export function ListInside({name, recipe, recipeName, className = '', ...props}) {
     const items = recipe[recipeName];
 
     return (

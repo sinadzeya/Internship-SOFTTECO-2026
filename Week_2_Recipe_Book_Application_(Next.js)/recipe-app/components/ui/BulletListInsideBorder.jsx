@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn.js";
 
-export function BulletListInsideBorderDiv({name, recipe, recipeName, className = '', ...props}) {
+export function BulletListInsideBorder({name, recipe, recipeName, className = '', ...props}) {
     const items = recipe[recipeName];
 
     return (

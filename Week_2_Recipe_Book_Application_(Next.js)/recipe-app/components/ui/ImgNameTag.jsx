@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn.js";
 
-export function ImgNameTagDiv({
+export function ImgNameTag({
                                   name, logo, recipe, recipeName, colour, minTagWidth,
                                   imgLeftMob = "1.7rem",
                                   imgLeftDesc = "2.0rem",

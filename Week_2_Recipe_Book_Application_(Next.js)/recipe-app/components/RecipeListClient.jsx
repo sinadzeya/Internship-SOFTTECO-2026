@@ -4,13 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from "react";
 
 import {Difficulty, fetchRecipes, incrementPage, setFilter, setKeyword} from "@/store/recipeSlice";
-import {MainDivContainer} from "@/components/ui/MainDivContainer";
-import {TopDivImage} from "@/components/ui/TopDivImage";
-import {SearchInput} from "@/components/ui/SearchInput";
-import {FilterButtons} from "@/components/ui/FilterButtons";
-import {MessageDiv} from "@/components/ui/MessageDiv";
-import {RecipeDivCard} from "@/components/ui/RecipeDivCard";
-import {LoadButton} from "@/components/ui/LoadButton";
+import {MainContainer, TopImage, SearchInput, FilterButtons, Message, RecipeCard, LoadButton} from "@/components/ui";
 
 
 export default function RecipeList() {
@@ -40,9 +34,9 @@ export default function RecipeList() {
     });
 
     return (
-        <MainDivContainer className="gap-[4.0rem]">
+        <MainContainer className="gap-[4.0rem]">
 
-            <TopDivImage title="Recipe Book"/>
+            <TopImage title="Recipe Book"/>
 
             <div className="w-full flex flex-col md:flex-row items-center justify-between gap-[4.0rem]">
 
@@ -67,7 +61,7 @@ export default function RecipeList() {
                     colour="var(--red)"
                 />
             ) : (
-                <RecipeDivCard
+                <RecipeCard
                     className="md:pt-[2.0rem] md:px-[5.0rem]"
                     loading={loading}
                     recipes={recipes}
@@ -81,6 +75,6 @@ export default function RecipeList() {
                 handleLoadMore={handleLoadMore}
             />
 
-        </MainDivContainer>
+        </MainContainer>
     );
 }
