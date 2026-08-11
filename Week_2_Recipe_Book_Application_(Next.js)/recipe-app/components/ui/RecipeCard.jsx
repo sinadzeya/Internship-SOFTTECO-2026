@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import {cn} from "@/utils/cn.js";
 import cookingTimeLogo from "@/public/images/cooking-time-logo.png"
 import cuisineLogo from "@/public/images/cuisine-logo.png"
@@ -20,8 +22,15 @@ export function RecipeCard({loading, recipes, filteredRecipes, className = '', .
                         href={`/recipes/${recipe.id}`}
                         {...props}
                     >
-                        <img className="w-full h-[22.0rem] md:h-[26.0rem] object-cover rounded-t-[1rem] border-b"
-                             src={recipe.image} alt={recipe.name}></img>
+
+                        <div className="relative w-full h-[22.0rem] md:h-[26.0rem] border-b">
+                            <Image
+                                src={recipe.image}
+                                alt={recipe.name}
+                                fill
+                                className="object-cover rounded-t-[1rem]"
+                            />
+                        </div>
 
                         <Tags recipe={recipe} className="gap-[1.0rem] mt-[2.0rem] mx-[2.0rem]"/>
 
@@ -33,7 +42,7 @@ export function RecipeCard({loading, recipes, filteredRecipes, className = '', .
 
                                 <ImgNameTag
                                     name="Cuisine"
-                                    logo={cuisineLogo.src}
+                                    logo={cuisineLogo}
                                     recipe={recipe}
                                     recipeName="cuisine"
                                     colour="var(--red)"
@@ -46,7 +55,7 @@ export function RecipeCard({loading, recipes, filteredRecipes, className = '', .
 
                                 <ImgNameTag
                                     name="Cooking Time"
-                                    logo={cookingTimeLogo.src}
+                                    logo={cookingTimeLogo}
                                     recipe={recipe}
                                     recipeName="cookTimeMinutes"
                                     colour="var(--blue)"
@@ -64,7 +73,7 @@ export function RecipeCard({loading, recipes, filteredRecipes, className = '', .
 
 
                         <p className={cn(
-                            "w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-center text-[1.6rem] border rounded-[1rem] font-normal",
+                            "flex items-center justify-center w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-[1.6rem] border rounded-[1rem] font-normal",
                             recipe.difficulty === "Easy" && "text-[var(--dark-green)] bg-[var(--light-green)]",
                             recipe.difficulty === "Medium" && "text-[var(--dark-orange)] bg-[var(--light-orange)]",
                             recipe.difficulty === "Hard" && "text-[var(--red)] bg-[var(--light-red)]"

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import {cn} from '@/utils/cn';
 import loupe from "@/public/images/loupe-logo.png";
 
@@ -7,8 +9,8 @@ export function SearchInput({value, onChange, className = '', ...props}) {
 
     return (
         <div className={cn("relative flex items-center self-center md:self-start", className)}>
-            <img
-                src={loupe.src}
+            <Image
+                src={loupe}
                 alt="A black icon of a loupe"
                 className="absolute left-[2.0rem] w-[2.5rem] h-[2.5rem]"
             />

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import {cn} from "@/utils/cn.js";
 
 export function ImgNameTag({
@@ -9,9 +11,9 @@ export function ImgNameTag({
                               }) {
     return (
         <div className={cn("relative w-full h-[3.0rem] flex flex-row", className)} {...props}>
-            <img style={{"--img-left-mob": imgLeftMob, "--img-left-desc": imgLeftDesc}}
+            <Image style={{"--img-left-mob": imgLeftMob, "--img-left-desc": imgLeftDesc}}
                  className="absolute w-[3.0rem] h-[3.0rem] left-[var(--img-left-mob)] md:left-[var(--img-left-desc)]"
-                 src={logo} alt={`${name} logo`}></img>
+                 src={logo} alt={`${name} logo`}/>
             <p style={{"--p-left-mob": pLeftMob, "--p-left-desc": pLeftDesc}}
                className="absolute left-[var(--p-left-mob)] md:left-[var(--p-left-desc)] text-[2.0rem] text-[var(--black)] font-normal font-nunito">{name}</p>
             <div style={{color: colour, background: bgColour, minWidth: minTagWidth}}

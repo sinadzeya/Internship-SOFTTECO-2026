@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'next/navigation';
 import {useEffect} from 'react';
@@ -27,7 +29,7 @@ export default function RecipeDetails() {
     }, [dispatch, id]);
 
     if (selectedRecipeLoading) return <Message message="Loading recipe details..." colour="var(--black)"/>
-    if (!selectedRecipe) return <Message message="Recipe not found" colour="var(--red)"/>
+    if (!selectedRecipe || Object.keys(selectedRecipe).length === 0) return <Message message="Recipe not found" colour="var(--red)"/>
 
     return (
         <MainContainer>
@@ -41,17 +43,21 @@ export default function RecipeDetails() {
 
             </div>
 
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch md:gap-x-[7.5rem]">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch md:gap-x-[7.5rem] md:px-[5.0rem]">
 
                 <div className="flex flex-col justify-center items-center md:items-start h-full">
 
-                    <img
-                        className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] md:ml-[5rem] border object-cover"
-                        src={selectedRecipe.image} alt={selectedRecipe.name}/>
+                    <div className="relative w-full h-full max-w-[35.3rem] md:max-w-[66.0rem] aspect-[35.3/26.6] border overflow-hidden">
+                        <Image
+                            fill
+                            src={selectedRecipe.image}
+                            alt={selectedRecipe.name}
+                            className="w-full h-full object-cover"/>
+                    </div>
 
                 </div>
 
-                <div className="md:relative flex flex-col md:mt-[4.5rem] md:mr-[5rem]">
+                <div className="flex flex-col md:mt-[4.5rem]">
 
                     <Tags recipe={selectedRecipe}
                              className="gap-[1.0rem] mt-[4.0rem] md:mt-[0rem] ml-[2.0rem] md:ml-[0rem]"/>
@@ -63,7 +69,7 @@ export default function RecipeDetails() {
 
                         <ImgNameTag
                             name="Level"
-                            logo={levelLogo.src}
+                            logo={levelLogo}
                             recipe={selectedRecipe}
                             recipeName="difficulty"
                             colour="var(--dark-orange)"
@@ -77,7 +83,7 @@ export default function RecipeDetails() {
 
                         <ImgNameTag
                             name="Servings"
-                            logo={servingsLogo.src}
+                            logo={servingsLogo}
                             recipe={selectedRecipe}
                             recipeName="servings"
                             colour="var(--dark-orange)"
@@ -90,7 +96,7 @@ export default function RecipeDetails() {
 
                         <ImgNameTag
                             name="Cuisine"
-                            logo={cuisineLogo.src}
+                            logo={cuisineLogo}
                             recipe={selectedRecipe}
                             recipeName="cuisine"
                             colour="var(--red)"
@@ -103,7 +109,7 @@ export default function RecipeDetails() {
 
                         <ImgNameTag
                             name="Cooking Time"
-                            logo={cookingTimeLogo.src}
+                            logo={cookingTimeLogo}
                             recipe={selectedRecipe}
                             recipeName="cookTimeMinutes"
                             colour="var(--blue)"
@@ -125,7 +131,7 @@ export default function RecipeDetails() {
             <div
                 className="relative top-[5.2rem] md:top-[8rem] md:mb-[15.5rem] mx-auto md:ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-10rem)] items-center">
 
-                <div className="flex flex-col order-1 md:order-2 items-center md:items-start">
+                <div className="flex flex-col order-1 md:order-2 items-center md:items-start px-[2.0rem] md:px-[0rem]">
                     <BulletListInsideBorder
                         name="Ingredients"
                         recipe={selectedRecipe}

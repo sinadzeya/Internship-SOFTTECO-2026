@@ -10,15 +10,16 @@ export const metadata = {
 
 export default async function RootLayout({children}) {
 
-    const initialRecipes = await fetchRecipesApi('', 0);
+    const initialData = await fetchRecipesApi('', 0);
 
     const initialReduxState = {
         recipes: {
             filter: Difficulty.All,
             keyword: '',
-            recipes: initialRecipes,
+            recipes: initialData.recipes,
             loading: false,
             currentPage: 0,
+            totalRecipes: initialData.total,
             selectedRecipe: null,
             selectedRecipeLoading: false,
         },

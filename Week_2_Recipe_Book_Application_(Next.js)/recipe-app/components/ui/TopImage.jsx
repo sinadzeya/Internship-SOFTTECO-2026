@@ -1,6 +1,7 @@
 import {cn} from "@/utils/cn.js";
 import mainImage from "@/public/images/main-image.png";
 import logo from "@/public/images/logo.svg";
+import Image from "next/image";
 
 export function TopImage({title, className = '', ...props}) {
 
@@ -17,8 +18,8 @@ export function TopImage({title, className = '', ...props}) {
                 <div className="flex-1 h-[0.3rem] bg-[var(--white)] rounded-r-lg"/>
 
                 <div className="shrink-0 flex items-center gap-[1.0rem]">
-                    <img
-                        src={logo.src}
+                    <Image
+                        src={logo}
                         alt="A white hand-drawn style icon of a bowl with a spoon and a whisk inside"
                     />
                     <h1 className="text-[var(--white)] text-[4.8rem] md:text-[9.6rem] font-justme font-normal">

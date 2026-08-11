@@ -17,11 +17,17 @@ export const fetchRecipes = async (searchKeyword = '', currentPage = 0, limit = 
             }
         });
 
-        return response.data.recipes || [];
+        return {
+            recipes: response.data.recipes || [],
+            total: response.data.total || 0
+        };
 
     } catch (error) {
         console.error('Error fetching recipes:', error);
-        return [];
+        return {
+            recipes: [],
+            total: 0
+        };
     }
 };
 

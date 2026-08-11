@@ -1,5 +1,6 @@
 import {cn} from "@/utils/cn.js";
 import logoBlack from "@/public/images/logo-black.svg";
+import Image from 'next/image';
 
 export function Logo({title, className = '', ...props }) {
 
@@ -14,11 +15,16 @@ export function Logo({title, className = '', ...props }) {
                 </div>
 
                 <div className="shrink-0 flex items-center">
-                    <img
-                        className="w-[4.0rem] h-[4.634rem] ml-[2.0rem] mr-[2.0rem] md:w-[8.0rem] md:h-[8.0rem] md:mr-[0rem]"
-                        src={logoBlack.src}
-                        alt="A black hand-drawn style icon of a bowl with a spoon and a whisk inside"
-                    />
+
+                    <div className="w-[4.0rem] h-[4.634rem] ml-[2.0rem] mr-[2.0rem] md:w-[8.0rem] md:h-[8.0rem] md:mr-[0rem">
+                        <Image
+                            width={800}
+                            height={800}
+                            src={logoBlack}
+                            alt="A black hand-drawn style icon of a bowl with a spoon and a whisk inside"
+                        />
+                    </div>
+
                     <h1 className="hidden md:block mr-[2.0rem] text-[var(--black)] text-[4.0rem] font-justme font-normal">
                         {title}
                     </h1>

@@ -10,7 +10,7 @@ import {MainContainer, TopImage, SearchInput, FilterButtons, Message, RecipeCard
 export default function RecipeList() {
     const dispatch = useDispatch();
 
-    const {filter, keyword, recipes, loading, currentPage} = useSelector(
+    const {filter, keyword, recipes, loading, currentPage, totalRecipes} = useSelector(
         (state) => state.recipes
     );
 
@@ -23,9 +23,7 @@ export default function RecipeList() {
     };
 
     useEffect(() => {
-        if (currentPage > 0 || keyword !== '') {
-            dispatch(fetchRecipes());
-        }
+        dispatch(fetchRecipes());
     }, [dispatch, keyword, currentPage]);
 
     const filteredRecipes = recipes.filter((recipe) => {
@@ -51,29 +49,36 @@ export default function RecipeList() {
             </div>
 
             {loading && recipes.length === 0 ? (
-                <MessageDiv
+                <Message
                     message="Loading recipes..."
                     colour="var(--black)"
                 />
-            ) : loading && filteredRecipes.length === 0 ? (
-                <MessageDiv
+            ) : !loading && filteredRecipes.length === 0 ? (
+                <Message
                     message="No recipes found for the selected filter"
                     colour="var(--red)"
                 />
             ) : (
-                <RecipeCard
-                    className="md:pt-[2.0rem] md:px-[5.0rem]"
-                    loading={loading}
-                    recipes={recipes}
-                    filteredRecipes={filteredRecipes}
-                />
+                <>
+                    <RecipeCard
+                        className={`md:pt-[2.0rem] md:px-[5.0rem] ${
+                            recipes.length >= totalRecipes ? "pb-[5.0rem] md:pb-[10.0rem]" : ""
+                        }`}
+                        loading={loading}
+                        recipes={recipes}
+                        filteredRecipes={filteredRecipes}
+                    />
+
+                    {recipes.length < totalRecipes && (
+                        <LoadButton
+                            className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
+                            loading={loading}
+                            handleLoadMore={handleLoadMore}
+                        />
+                    )}
+                </>
             )}
 
-            <LoadButton
-                className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
-                loading={loading}
-                handleLoadMore={handleLoadMore}
-            />
 
         </MainContainer>
     );
