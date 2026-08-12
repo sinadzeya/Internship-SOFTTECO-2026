@@ -1,42 +1,40 @@
 @import "tailwindcss";
 
 @font-face {
-    font-family: 'JustMeAgainDownHere';
-    src: url('../public/fonts/JustMeAgainDownHere.ttf') format('truetype');
+	font-family: "JustMeAgainDownHere";
+	src: url("../public/fonts/JustMeAgainDownHere.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'NunitoSans';
-    src: url('../public/fonts/NunitoSans.ttf') format('truetype');
+	font-family: "NunitoSans";
+	src: url("../public/fonts/NunitoSans.ttf") format("truetype");
 }
 
 @theme {
-    --font-justme: 'JustMeAgainDownHere';
-    --font-nunito: 'NunitoSans';
+	--font-justme: "JustMeAgainDownHere";
+	--font-nunito: "NunitoSans";
 }
 
-
 html {
-    font-size: 62.5%; /* Default browser font is 16px: (16px * 0.625 = 10px) */
+	font-size: 62.5%; /* Default browser font is 16px: (16px * 0.625 = 10px) */
 }
 
 :root {
-    --black: rgba(0, 0, 0, 1);
-    --white: rgba(255, 255, 255, 1);
+	--black: rgba(0, 0, 0, 1);
+	--white: rgba(255, 255, 255, 1);
 
-    --red: rgba(210, 12, 12, 1);
-    --light-red: rgba(210, 12, 12, 0.1);
+	--red: rgba(210, 12, 12, 1);
+	--light-red: rgba(210, 12, 12, 0.1);
 
-    --green: rgba(4, 177, 0, 1);
-    --dark-green: rgba(22, 137, 20, 1);
-    --light-green: rgba(4, 177, 0, 0.1);
+	--green: rgba(4, 177, 0, 1);
+	--dark-green: rgba(22, 137, 20, 1);
+	--light-green: rgba(4, 177, 0, 0.1);
 
-    --orange: rgba(255, 153, 0, 1);
-    --dark-orange: rgba(198, 95, 0, 1);
-    --mid-orange: rgba(255, 153, 0, 0.3);
-    --light-orange: rgba(255, 153, 0, 0.1);
+	--orange: rgba(255, 153, 0, 1);
+	--dark-orange: rgba(198, 95, 0, 1);
+	--mid-orange: rgba(255, 153, 0, 0.3);
+	--light-orange: rgba(255, 153, 0, 0.1);
 
-
-    --blue: rgba(36, 79, 233, 1);
-    --light-blue: rgba(36, 79, 233, 0.2);
+	--blue: rgba(36, 79, 233, 1);
+	--light-blue: rgba(36, 79, 233, 0.2);
 }

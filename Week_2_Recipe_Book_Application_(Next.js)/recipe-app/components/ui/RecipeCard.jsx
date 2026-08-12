@@ -1,88 +1,98 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import {cn} from "@/utils/cn.js";
-import cookingTimeLogo from "@/public/images/cooking-time-logo.png"
-import cuisineLogo from "@/public/images/cuisine-logo.png"
-import {Tags} from "./Tags.jsx";
-import {ImgNameTag} from "./ImgNameTag.jsx";
+import { cn } from "@/utils/cn.js";
+import cookingTimeLogo from "@/public/images/cooking-time-logo.png";
+import cuisineLogo from "@/public/images/cuisine-logo.png";
+import { Tags } from "./Tags.jsx";
+import { ImgNameTag } from "./ImgNameTag.jsx";
 import Link from "next/link";
 
-export function RecipeCard({loading, recipes, filteredRecipes, className = '', ...props}) {
+export function RecipeCard({
+	loading,
+	recipes,
+	filteredRecipes,
+	className = "",
+	...props
+}) {
+	const baseStyles =
+		"relative flex flex-col w-full max-w-[33.3rem] md:max-w-[42.0rem] h-full text-[var(--black)] border rounded-[1rem] pb-[2.0rem]";
 
-    const baseStyles = "relative flex flex-col w-full max-w-[33.3rem] md:max-w-[42.0rem] h-full text-[var(--black)] border rounded-[1rem] pb-[2.0rem]";
+	return (
+		<ul
+			className={cn(
+				className,
+				"relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch justify-items-center gap-y-[6.7rem] md:gap-x-[4.0rem] md:gap-y-[5.0rem] w-full",
+			)}
+		>
+			{filteredRecipes.map((recipe) => (
+				<li key={recipe.id} className={baseStyles}>
+					<Link href={`/recipes/${recipe.id}`} {...props}>
+						<div className="relative w-full h-[22.0rem] md:h-[26.0rem] border-b">
+							<Image
+								src={recipe.image}
+								alt={recipe.name}
+								fill
+								sizes="(min-width: 768px) 42rem, 33.3rem"
+								className="object-cover rounded-t-[1rem]"
+							/>
+						</div>
 
-    return (
-        <ul className={cn(className, "relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch justify-items-center gap-y-[6.7rem] md:gap-x-[4.0rem] md:gap-y-[5.0rem] w-full")}>
-            {filteredRecipes.map((recipe) => (
-                <li
-                    key={recipe.id}
-                    className={baseStyles}
-                >
-                    <Link
-                        href={`/recipes/${recipe.id}`}
-                        {...props}
-                    >
+						<Tags
+							recipe={recipe}
+							className="gap-[1.0rem] mt-[2.0rem] mx-[2.0rem]"
+						/>
 
-                        <div className="relative w-full h-[22.0rem] md:h-[26.0rem] border-b">
-                            <Image
-                                src={recipe.image}
-                                alt={recipe.name}
-                                fill
-                                className="object-cover rounded-t-[1rem]"
-                            />
-                        </div>
+						<div className="flex-1 flex flex-col justify-between">
+							<h3 className="mx-[2rem] mt-[1rem] md:mt-[2.4rem] text-center md:text-left text-[4.0rem] text-[var(--black)] font-normal font-justme">
+								{recipe.name}
+							</h3>
 
-                        <Tags recipe={recipe} className="gap-[1.0rem] mt-[2.0rem] mx-[2.0rem]"/>
+							<div className="flex flex-col my-[2rem] md:mb-[4.0rem] gap-[1.6rem]">
+								<ImgNameTag
+									name="Cuisine"
+									logo={cuisineLogo}
+									recipe={recipe}
+									recipeName="cuisine"
+									colour="var(--red)"
+									minTagWidth="8.5rem"
+									imgLeftMob="1.7rem"
+									imgLeftDesc="2.0rem"
+									pLeftMob="5.1rem"
+									pLeftDesc="5.4rem"
+								/>
 
-                        <div className="flex-1 flex flex-col justify-between">
+								<ImgNameTag
+									name="Cooking Time"
+									logo={cookingTimeLogo}
+									recipe={recipe}
+									recipeName="cookTimeMinutes"
+									colour="var(--blue)"
+									addText="min"
+									minTagWidth="8.5rem"
+									imgLeftMob="1.7rem"
+									imgLeftDesc="2.0rem"
+									pLeftMob="5.1rem"
+									pLeftDesc="5.4rem"
+								/>
+							</div>
+						</div>
 
-                            <h3 className="mx-[2rem] mt-[1rem] md:mt-[2.4rem] text-center md:text-left text-[4.0rem] text-[var(--black)] font-normal font-justme">{recipe.name}</h3>
-
-                            <div className="flex flex-col my-[2rem] md:mb-[4.0rem] gap-[1.6rem]">
-
-                                <ImgNameTag
-                                    name="Cuisine"
-                                    logo={cuisineLogo}
-                                    recipe={recipe}
-                                    recipeName="cuisine"
-                                    colour="var(--red)"
-                                    minTagWidth="8.5rem"
-                                    imgLeftMob="1.7rem"
-                                    imgLeftDesc="2.0rem"
-                                    pLeftMob="5.1rem"
-                                    pLeftDesc="5.4rem"
-                                />
-
-                                <ImgNameTag
-                                    name="Cooking Time"
-                                    logo={cookingTimeLogo}
-                                    recipe={recipe}
-                                    recipeName="cookTimeMinutes"
-                                    colour="var(--blue)"
-                                    addText="min"
-                                    minTagWidth="8.5rem"
-                                    imgLeftMob="1.7rem"
-                                    imgLeftDesc="2.0rem"
-                                    pLeftMob="5.1rem"
-                                    pLeftDesc="5.4rem"
-                                />
-
-                            </div>
-
-                        </div>
-
-
-                        <p className={cn(
-                            "flex items-center justify-center w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-[1.6rem] border rounded-[1rem] font-normal",
-                            recipe.difficulty === "Easy" && "text-[var(--dark-green)] bg-[var(--light-green)]",
-                            recipe.difficulty === "Medium" && "text-[var(--dark-orange)] bg-[var(--light-orange)]",
-                            recipe.difficulty === "Hard" && "text-[var(--red)] bg-[var(--light-red)]"
-                        )}>
-                            {recipe.difficulty}
-                        </p>
-                    </Link>
-                </li>
-            ))}
-        </ul>
-    );
+						<p
+							className={cn(
+								"flex items-center justify-center w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-[1.6rem] border rounded-[1rem] font-normal",
+								recipe.difficulty === "Easy" &&
+									"text-[var(--dark-green)] bg-[var(--light-green)]",
+								recipe.difficulty === "Medium" &&
+									"text-[var(--dark-orange)] bg-[var(--light-orange)]",
+								recipe.difficulty === "Hard" &&
+									"text-[var(--red)] bg-[var(--light-red)]",
+							)}
+						>
+							{recipe.difficulty}
+						</p>
+					</Link>
+				</li>
+			))}
+		</ul>
+	);
 }

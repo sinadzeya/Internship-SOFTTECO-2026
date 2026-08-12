@@ -1,15 +1,11 @@
-import {cn} from "@/utils/cn.js";
+import { cn } from "@/utils/cn.js";
 
-export function MainContainer({children, className = '', ...props}) {
+export function MainContainer({ children, className = "", ...props }) {
+	const baseStyles = "w-full flex flex-col items-start";
 
-    const baseStyles = "w-full flex flex-col items-start";
-
-    return (
-        <div
-            className={cn(baseStyles, className)}
-            {...props}
-        >
-            {children}
-        </div>
-    );
+	return (
+		<div className={cn(baseStyles, className)} {...props}>
+			{children}
+		</div>
+	);
 }
