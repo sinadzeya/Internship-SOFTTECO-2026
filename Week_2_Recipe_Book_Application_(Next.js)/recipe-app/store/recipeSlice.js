@@ -58,6 +58,12 @@ const recipeSlice = createSlice({
 		incrementPage: (state) => {
 			state.currentPage += 1;
 		},
+		setInitialRecipes: (state, action) => {
+			state.recipes = action.payload.recipes;
+			state.totalRecipes = action.payload.total;
+			state.loading = false;
+			state.currentPage = 0;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -94,5 +100,6 @@ const recipeSlice = createSlice({
 	},
 });
 
-export const { setFilter, setKeyword, incrementPage } = recipeSlice.actions;
+export const { setFilter, setKeyword, incrementPage, setInitialRecipes } =
+	recipeSlice.actions;
 export default recipeSlice.reducer;
