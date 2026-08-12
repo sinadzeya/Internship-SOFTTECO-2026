@@ -1,82 +1,87 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {setFilter, setKeyword, incrementPage, fetchRecipes, Difficulty} from '../store/recipeSlice.js';
-import {SearchInput} from "../components/SearchInput.jsx";
-import {MainDivContainer} from "../components/MainDivContainer.jsx";
-import {TopDivImage} from "../components/TopDivImage.jsx";
-import {FilterButtons} from "../components/FilterButtons.jsx";
-import {RecipeDivCard} from "../components/RecipeDivCard.jsx";
-import {LoadButton} from "../components/LoadButton.jsx";
-import {MessageDiv} from "../components/MessageDiv.jsx";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
+import {
+	setFilter,
+	setKeyword,
+	incrementPage,
+	fetchRecipes,
+	Difficulty,
+} from "../store/recipeSlice.js";
+
+import {
+	SearchInput,
+	MainContainer,
+	TopImage,
+	FilterButtons,
+	RecipeCard,
+	LoadButton,
+	Message,
+} from "../components/index.js";
 
 export function RecipeList() {
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    const {filter, keyword, recipes, loading, currentPage} = useSelector(
-        (state) => state.recipes
-    );
+	const { filter, keyword, recipes, loading, currentPage } = useSelector(
+		(state) => state.recipes,
+	);
 
-    const handleSearchChange = (e) => {
-        dispatch(setKeyword(e.target.value));
-    };
+	const handleSearchChange = (e) => {
+		dispatch(setKeyword(e.target.value));
+	};
 
-    const handleLoadMore = () => {
-        dispatch(incrementPage());
-    };
+	const handleLoadMore = () => {
+		dispatch(incrementPage());
+	};
 
-    useEffect(() => {
-        dispatch(fetchRecipes());
-    }, [dispatch, keyword, currentPage]);
+	useEffect(() => {
+		dispatch(fetchRecipes());
+	}, [dispatch, keyword, currentPage]);
 
-    const filteredRecipes = recipes.filter((recipe) => {
-        if (filter === Difficulty.All) return true;
-        return recipe.difficulty === filter;
-    });
+	const filteredRecipes = recipes.filter((recipe) => {
+		if (filter === Difficulty.All) return true;
+		return recipe.difficulty === filter;
+	});
 
-    return (
-        <MainDivContainer className="gap-[4.0rem]">
+	return (
+		<MainContainer className="gap-[4.0rem]">
+			<TopImage title="Recipe Book" />
 
-            <TopDivImage title="Recipe Book"/>
+			<div className="w-full flex flex-col md:flex-row items-center justify-between gap-[4.0rem]">
+				<SearchInput
+					className="md:mt-[2.0rem] md:ml-[5.5rem]"
+					value={keyword}
+					onChange={handleSearchChange}
+				/>
 
-            <div className="w-full flex flex-col md:flex-row items-center justify-between gap-[4.0rem]">
+				<FilterButtons
+					className="md:mr-[5.5rem]"
+					filter={filter}
+					onFilterChange={(level) => dispatch(setFilter(level))}
+				/>
+			</div>
 
-                <SearchInput className="md:mt-[2.0rem] md:ml-[5.5rem]" value={keyword} onChange={handleSearchChange}/>
+			{loading && recipes.length === 0 ? (
+				<Message message="Loading recipes..." colour="var(--black)" />
+			) : !loading && filteredRecipes.length === 0 ? (
+				<Message
+					message="No recipes found for the selected filter"
+					colour="var(--red)"
+				/>
+			) : (
+				<RecipeCard
+					className="md:pt-[2.0rem] md:px-[5.0rem]"
+					loading={loading}
+					recipes={recipes}
+					filteredRecipes={filteredRecipes}
+				/>
+			)}
 
-                <FilterButtons
-                    className="md:mr-[5.5rem]"
-                    filter={filter}
-                    onFilterChange={(level) => dispatch(setFilter(level))}
-                />
-
-            </div>
-
-            {loading && recipes.length === 0 ? (
-                <MessageDiv
-                    message="Loading recipes..."
-                    colour="var(--black)"
-                />
-            ) : !loading && filteredRecipes.length === 0 ? (
-                <MessageDiv
-                    message="No recipes found for the selected filter"
-                    colour="var(--red)"
-                />
-            ) : (
-                <RecipeDivCard
-                    className="md:pt-[2.0rem] md:px-[5.0rem]"
-                    loading={loading}
-                    recipes={recipes}
-                    filteredRecipes={filteredRecipes}
-                />
-            )}
-
-            <LoadButton
-                className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
-                loading={loading}
-                handleLoadMore={handleLoadMore}
-            />
-
-        </MainDivContainer>
-    );
+			<LoadButton
+				className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
+				loading={loading}
+				handleLoadMore={handleLoadMore}
+			/>
+		</MainContainer>
+	);
 }
-
