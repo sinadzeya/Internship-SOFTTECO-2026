@@ -22,9 +22,8 @@ import {
 export function RecipeList() {
 	const dispatch = useDispatch();
 
-	const { filter, keyword, recipes, loading, currentPage } = useSelector(
-		(state) => state.recipes,
-	);
+	const { filter, keyword, recipes, loading, currentPage, totalRecipes } =
+		useSelector((state) => state.recipes);
 
 	const handleSearchChange = (e) => {
 		dispatch(setKeyword(e.target.value));
@@ -69,19 +68,27 @@ export function RecipeList() {
 					colour="var(--red)"
 				/>
 			) : (
-				<RecipeCard
-					className="md:pt-[2.0rem] md:px-[5.0rem]"
-					loading={loading}
-					recipes={recipes}
-					filteredRecipes={filteredRecipes}
-				/>
-			)}
+				<>
+					<RecipeCard
+						className={`md:pt-[2.0rem] md:px-[5.0rem] ${
+							recipes.length >= totalRecipes
+								? "pb-[5.0rem] md:pb-[10.0rem]"
+								: ""
+						}`}
+						loading={loading}
+						recipes={recipes}
+						filteredRecipes={filteredRecipes}
+					/>
 
-			<LoadButton
-				className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
-				loading={loading}
-				handleLoadMore={handleLoadMore}
-			/>
+					{recipes.length < totalRecipes && (
+						<LoadButton
+							className="pb-[5.0rem] md:pb-[10.0rem] pt-[5.0rem]"
+							loading={loading}
+							handleLoadMore={handleLoadMore}
+						/>
+					)}
+				</>
+			)}
 		</MainContainer>
 	);
 }

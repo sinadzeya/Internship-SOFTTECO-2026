@@ -47,16 +47,18 @@ export function RecipeDetails() {
 				<Logo title="Recipe Book" />
 			</div>
 
-			<div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch md:gap-x-[7.5rem]">
+			<div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch md:gap-x-[7.5rem] md:px-[5.0rem]">
 				<div className="flex flex-col justify-center items-center md:items-start h-full">
-					<img
-						className="w-[35.3rem] h-[26.6rem] md:w-[66.0rem] md:h-[46.0rem] md:ml-[5rem] border object-cover"
-						src={selectedRecipe.image}
-						alt={selectedRecipe.name}
-					/>
+					<div className="relative w-full h-full max-w-[35.3rem] md:max-w-[66.0rem] aspect-[35.3/26.6] border overflow-hidden">
+						<img
+							className="w-full h-full object-cover"
+							src={selectedRecipe.image}
+							alt={selectedRecipe.name}
+						/>
+					</div>
 				</div>
 
-				<div className="md:relative flex flex-col md:mt-[4.5rem] md:mr-[5rem]">
+				<div className="flex flex-col md:mt-[4.5rem]">
 					<Tags
 						recipe={selectedRecipe}
 						className="gap-[1.0rem] mt-[4.0rem] md:mt-[0rem] ml-[2.0rem] md:ml-[0rem]"
@@ -124,8 +126,8 @@ export function RecipeDetails() {
 				</div>
 			</div>
 
-			<div className="relative top-[5.2rem] md:top-[8rem] md:mb-[15.5rem] mx-auto md:ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-5rem)] items-center">
-				<div className="flex flex-col order-1 md:order-2 items-center md:items-start">
+			<div className="relative top-[5.2rem] md:top-[8rem] md:mb-[15.5rem] mx-auto md:ml-[5.0rem] grid grid-cols-1 md:grid-cols-2 gap-y-[3.0rem] md:gap-x-[6.0rem] w-full md:w-[calc(100%-10rem)] items-center">
+				<div className="flex flex-col order-1 md:order-2 items-center md:items-start px-[2.0rem] md:px-[0rem]">
 					<BulletListInsideBorder
 						name="Ingredients"
 						recipe={selectedRecipe}

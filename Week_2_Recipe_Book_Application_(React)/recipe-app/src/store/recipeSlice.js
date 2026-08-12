@@ -15,6 +15,15 @@ export const fetchRecipes = createAsyncThunk(
 		const { keyword, currentPage } = getState().recipes;
 		return await fetchRecipesApi(keyword, currentPage);
 	},
+	{
+		condition: (_, { getState }) => {
+			const { recipes = [], totalRecipes = 0, loading } = getState().recipes;
+
+			if (loading) return false;
+
+			return !(totalRecipes > 0 && recipes.length >= totalRecipes);
+		},
+	},
 );
 
 export const fetchRecipeById = createAsyncThunk(
@@ -32,6 +41,7 @@ const recipeSlice = createSlice({
 		recipes: [],
 		loading: false,
 		currentPage: 0,
+		totalRecipes: 0,
 		selectedRecipe: null,
 		selectedRecipeLoading: false,
 	},
@@ -42,6 +52,8 @@ const recipeSlice = createSlice({
 		setKeyword: (state, action) => {
 			state.keyword = action.payload;
 			state.recipes = [];
+			state.currentPage = 0;
+			state.totalRecipes = 0;
 		},
 		incrementPage: (state) => {
 			state.currentPage += 1;
@@ -55,10 +67,14 @@ const recipeSlice = createSlice({
 			.addCase(fetchRecipes.fulfilled, (state, action) => {
 				state.loading = false;
 
+				const incomingRecipes = action.payload?.recipes || [];
+				state.totalRecipes = action.payload?.total || 0;
+
 				const recipesMap = new Map();
 
 				state.recipes.forEach((item) => recipesMap.set(item.id, item));
-				action.payload.forEach((item) => recipesMap.set(item.id, item));
+				incomingRecipes.forEach((item) => recipesMap.set(item.id, item));
+
 				state.recipes = Array.from(recipesMap.values());
 			})
 			.addCase(fetchRecipes.rejected, (state) => {

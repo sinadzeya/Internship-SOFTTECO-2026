@@ -74,7 +74,7 @@ export function RecipeCard({
 
 						<p
 							className={cn(
-								"w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-center text-[1.6rem] border rounded-[1rem] font-normal",
+								"flex items-center justify-center w-[7.4rem] h-[3.0rem] mb-0 ml-[1.75rem] md:ml-[2.0rem] text-[1.6rem] border rounded-[1rem] font-normal",
 								recipe.difficulty === "Easy" &&
 									"text-[var(--dark-green)] bg-[var(--light-green)]",
 								recipe.difficulty === "Medium" &&

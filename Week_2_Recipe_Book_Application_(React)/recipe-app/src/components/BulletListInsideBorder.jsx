@@ -13,7 +13,7 @@ export function BulletListInsideBorder({
 	return (
 		<div
 			className={cn(
-				"relative flex flex-col border rounded-[1rem] pb-[4.0rem]",
+				"relative flex flex-col border rounded-[1rem] pb-[4.0rem] w-full",
 				className,
 			)}
 			{...props}
@@ -22,7 +22,7 @@ export function BulletListInsideBorder({
 				{name}
 			</h3>
 
-			<div className="min-w-[35.3rem] md:min-w-[61.0rem]">
+			<div className="w-full">
 				{Array.isArray(items) ? (
 					<ul className="list-disc list-inside pl-[2.0rem] md:pl-[4.0rem] text-[2.0rem] md:text-[2.4rem] text-[var(--black)] font-nunito font-medium">
 						{items.map((item, index) => (
