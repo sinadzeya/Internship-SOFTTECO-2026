@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: "postgres:latest"
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      - "POSTGRES_DB=${DB_DATABASE}"
+      - "POSTGRES_PASSWORD=${DB_PASSWORD}"
+      - "POSTGRES_USER=${DB_USERNAME}"
+    ports:
+      - '5433:${DB_PORT}'
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
