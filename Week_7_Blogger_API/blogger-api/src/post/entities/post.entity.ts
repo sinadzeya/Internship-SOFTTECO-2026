@@ -18,13 +18,13 @@ export class Post {
   user!: User;
 
   @Column({ type: 'uuid', nullable: false })
-  userId: string;
+  userId!: string;
 
   @Column({ type: 'varchar', length: 150, nullable: false })
-  title: string;
+  title!: string;
 
   @Column({ type: 'text', nullable: false })
-  content: string;
+  content!: string;
 
   @CreateDateColumn()
   createdAt!: Date;

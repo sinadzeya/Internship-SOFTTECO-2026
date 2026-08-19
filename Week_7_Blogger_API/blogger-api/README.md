@@ -49,7 +49,9 @@ DB_DATABASE=your_db_name
 
 # JWT
 JWT_SECRET=your_jwt_secret_key
+JWT_REFRESH_SECRET=your_jwt_refresh_secret_key
 JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
 ```
 
 ### 3. Run the local environment
