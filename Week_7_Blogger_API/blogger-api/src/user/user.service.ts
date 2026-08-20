@@ -20,11 +20,21 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async findOneByEmail(email: string): Promise<User | null> {
+    this.logger.debug('Fetching user by email');
+    return await this.userRepository.findOne({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+      },
+    });
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     this.logger.debug('Start user creation process');
-    const existingUser = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
+    const existingUser = await this.findOneByEmail(createUserDto.email);
 
     if (existingUser) {
       this.logger.warn(
@@ -63,18 +73,6 @@ export class UserService {
     }
 
     return user;
-  }
-
-  async findOneByEmail(email: string): Promise<User | null> {
-    this.logger.debug('Fetching user by email');
-    return await this.userRepository.findOne({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-      },
-    });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {

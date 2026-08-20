@@ -35,7 +35,7 @@ describe('AuthController', () => {
   });
 
   describe('login', () => {
-    it('should pass LoginDto to AuthService.validateUser and return login User', async () => {
+    it('should pass LoginDto to AuthService.validateUser and return login user', async () => {
       const dto: LoginDto = {
         email: 'test@example.com',
         password: 'password123',

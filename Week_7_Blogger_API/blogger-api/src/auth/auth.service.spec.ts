@@ -59,7 +59,7 @@ describe('AuthService', () => {
   });
 
   describe('validateUser', () => {
-    it('should return User, when password is correct', async () => {
+    it('should return user, when password is correct', async () => {
       const mockUser = {
         email: 'test@example.com',
         password: 'hashedPassword',
@@ -93,7 +93,7 @@ describe('AuthService', () => {
       ).rejects.toThrow(UnauthorizedException);
     });
 
-    it('should throw UnauthorizedException, when User does not exist', async () => {
+    it('should throw UnauthorizedException, when user does not exist', async () => {
       mockUserService.findOneByEmail.mockResolvedValue(null);
 
       await expect(
@@ -103,7 +103,7 @@ describe('AuthService', () => {
   });
 
   describe('getTokens', () => {
-    it('should return accessToken and refreshToken for provided User', async () => {
+    it('should return accessToken and refreshToken for provided user', async () => {
       const mockUser = {
         id: '123e4567-e89b-12d3-a456-426614174000',
         email: 'test@example.com',
@@ -132,7 +132,7 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should login provided User, save refreshToken and return accessToken and refreshToken', async () => {
+    it('should login provided user, save refreshToken and return accessToken and refreshToken', async () => {
       const mockUser = {
         id: '123e4567-e89b-12d3-a456-426614174000',
         email: 'test@example.com',
@@ -183,7 +183,7 @@ describe('AuthService', () => {
   });
 
   describe('refreshToken', () => {
-    it('should return new accessToken and refreshToken, when provided refreshToken is correct for User with userId', async () => {
+    it('should return new accessToken and refreshToken, when provided refreshToken is correct for user with userId', async () => {
       const mockOldRefreshToken = 'mocked_old_refresh_token';
 
       const mockUser = {
@@ -227,7 +227,7 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw UnauthorizedException, when User with provided userId does not exist', async () => {
+    it('should throw UnauthorizedException, when user with provided userId does not exist', async () => {
       const mockOldRefreshToken = 'mocked_old_refresh_token';
 
       const mockUser = {
@@ -244,7 +244,7 @@ describe('AuthService', () => {
       expect(mockUserService.findOne).toHaveBeenCalledWith(mockUser.id);
     });
 
-    it('should throw UnauthorizedException, when User with provided userId does not have currentHashedRefreshToken', async () => {
+    it('should throw UnauthorizedException, when user with provided userId does not have currentHashedRefreshToken', async () => {
       const mockOldRefreshToken = 'mocked_old_refresh_token';
 
       const mockUser = {
