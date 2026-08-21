@@ -23,6 +23,14 @@ describe('AppController (e2e)', () => {
       .expect('Welcome to Blogger API!');
   });
 
+  it('GET /posts', () => {
+    return request(app.getHttpServer()).get('/posts').expect(200);
+  });
+
+  it('GET /users', () => {
+    return request(app.getHttpServer()).get('/users').expect(200);
+  });
+
   afterEach(async () => {
     await app.close();
   });

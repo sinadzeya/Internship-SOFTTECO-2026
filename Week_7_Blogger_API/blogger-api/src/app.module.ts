@@ -42,7 +42,7 @@ import { HTTPLoggerMiddleware } from './http-logger.middleware';
           ),
         }),
         new winston.transports.File({
-          filename: '/logs/app.log',
+          filename: 'logs/app.log',
           format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.json(),

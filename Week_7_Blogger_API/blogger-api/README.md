@@ -46,6 +46,7 @@ DB_PORT=5432
 DB_USERNAME=your_db_user
 DB_PASSWORD=your_db_password
 DB_DATABASE=your_db_name
+TEST_DB_DATABASE=your_test_db_name
 
 # JWT
 JWT_SECRET=your_jwt_secret_key
@@ -59,3 +60,4 @@ Navigate to the blogger-api directory and start the application containers:
 ```bash
 docker-compose up --build
 ```
+E2E tests are run automatically using the dedicated api-test container.
