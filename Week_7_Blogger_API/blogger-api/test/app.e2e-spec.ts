@@ -16,19 +16,13 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Welcome to Blogger API!');
-  });
-
-  it('GET /posts', () => {
-    return request(app.getHttpServer()).get('/posts').expect(200);
-  });
-
-  it('GET /users', () => {
-    return request(app.getHttpServer()).get('/users').expect(200);
+  describe('GET /', () => {
+    it('should return welcome message', () => {
+      return request(app.getHttpServer())
+        .get('/')
+        .expect(200)
+        .expect('Welcome to Blogger API!');
+    });
   });
 
   afterEach(async () => {

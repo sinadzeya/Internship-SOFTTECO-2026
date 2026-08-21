@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -75,12 +76,31 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    userId: string,
+  ): Promise<User> {
     this.logger.debug(`Updating user with id: ${id}`);
+
+    if (id !== userId) {
+      this.logger.warn(
+        `Update forbidden: User ${userId} tried to edit user ${id}`,
+      );
+      throw new ForbiddenException('You can only edit your own information');
+    }
+
     const user = await this.findOne(id);
 
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
+      const existingUser = await this.findOneByEmail(updateUserDto.email);
+      if (existingUser) {
+        throw new ConflictException('User with provided email already exists');
+      }
     }
 
     Object.assign(user, updateUserDto);
@@ -101,8 +121,15 @@ export class UserService {
     });
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string, userId: string): Promise<User> {
     this.logger.debug(`Removing user with id: ${id}`);
+    if (id !== userId) {
+      this.logger.warn(
+        `Delete forbidden: User ${userId} tried to delete user ${id}`,
+      );
+      throw new ForbiddenException('You can only delete your own information');
+    }
+
     const user = await this.findOne(id);
 
     const removedUser = await this.userRepository.remove(user);

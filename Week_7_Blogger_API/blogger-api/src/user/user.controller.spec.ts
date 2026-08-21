@@ -82,6 +82,12 @@ describe('UserController', () => {
         bio: 'Updated bio',
       };
 
+      const mockReq = {
+        user: {
+          userId: mockUserId,
+        },
+      } as any;
+
       const mockUpdatedUser = {
         id: mockUserId,
         ...updateUserDto,
@@ -89,11 +95,16 @@ describe('UserController', () => {
 
       mockUserService.update.mockResolvedValue(mockUpdatedUser);
 
-      const result = await controller.update(mockUserId, updateUserDto);
+      const result = await controller.update(
+        mockUserId,
+        updateUserDto,
+        mockReq,
+      );
 
       expect(mockUserService.update).toHaveBeenCalledWith(
         mockUserId,
         updateUserDto,
+        mockUserId,
       );
       expect(result).toEqual(mockUpdatedUser);
     });
@@ -106,11 +117,20 @@ describe('UserController', () => {
         email: 'john.doe@example.com',
       } as User;
 
+      const mockReq = {
+        user: {
+          userId: mockUserId,
+        },
+      } as any;
+
       mockUserService.remove.mockResolvedValue(mockRemovedUser);
 
-      const result = await controller.remove(mockUserId);
+      const result = await controller.remove(mockUserId, mockReq);
 
-      expect(mockUserService.remove).toHaveBeenCalledWith(mockUserId);
+      expect(mockUserService.remove).toHaveBeenCalledWith(
+        mockUserId,
+        mockUserId,
+      );
       expect(result).toEqual(mockRemovedUser);
     });
   });

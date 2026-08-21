@@ -3,7 +3,11 @@ import { UserService } from './user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 describe('UserService', () => {
@@ -211,7 +215,8 @@ describe('UserService', () => {
   });
 
   describe('update', () => {
-    const mockUserId = '123e4567-e89b-12d3-a456-426614174000';
+    const mockUserId = '123e4567-e89b-12d3-a456-426614174001';
+    const mockOtherUserId = '123e4567-e89b-12d3-a456-426614174002';
 
     it('should update and return user without hashing password if password is not provided', async () => {
       const updateUserDto: UpdateUserDto = {
@@ -237,7 +242,11 @@ describe('UserService', () => {
         .mockResolvedValue(mockExistingUser);
       mockUserRepository.save.mockResolvedValue(mockSavedUser);
 
-      const result = await service.update(mockUserId, updateUserDto);
+      const result = await service.update(
+        mockUserId,
+        updateUserDto,
+        mockUserId,
+      );
 
       expect(spyFindOne).toHaveBeenCalledWith(mockUserId);
       expect(mockUserRepository.save).toHaveBeenCalledWith(
@@ -248,6 +257,18 @@ describe('UserService', () => {
         }),
       );
       expect(result).toEqual(mockSavedUser);
+    });
+
+    it('should throw ForbiddenException when user tries to update another user', async () => {
+      const updateUserDto: UpdateUserDto = { username: 'unauthorizedName' };
+
+      await expect(
+        service.update(mockUserId, updateUserDto, mockOtherUserId),
+      ).rejects.toThrow(
+        new ForbiddenException('You can only edit your own information'),
+      );
+
+      expect(mockUserRepository.save).not.toHaveBeenCalled();
     });
 
     it('should hash password and update user when password is provided', async () => {
@@ -271,7 +292,11 @@ describe('UserService', () => {
         .mockResolvedValue(mockExistingUser);
       mockUserRepository.save.mockResolvedValue(mockSavedUser);
 
-      const result = await service.update(mockUserId, updateUserDto);
+      const result = await service.update(
+        mockUserId,
+        updateUserDto,
+        mockUserId,
+      );
 
       expect(spyFindOne).toHaveBeenCalledWith(mockUserId);
       expect(mockUserRepository.save).toHaveBeenCalledWith(
@@ -297,11 +322,41 @@ describe('UserService', () => {
           new NotFoundException(`User with id ${mockUserId} does not exist`),
         );
 
-      await expect(service.update(mockUserId, updateUserDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.update(mockUserId, updateUserDto, mockUserId),
+      ).rejects.toThrow(NotFoundException);
 
       expect(spyFindOne).toHaveBeenCalledWith(mockUserId);
+      expect(mockUserRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw ConflictException when updating email to an already existing email', async () => {
+      const updateUserDto: UpdateUserDto = {
+        email: 'taken@example.com',
+      };
+
+      const mockExistingUser = {
+        id: mockUserId,
+        username: 'johndoe',
+        email: 'john@example.com',
+      } as User;
+
+      const mockOtherUserWithSameEmail = {
+        id: mockOtherUserId,
+        email: 'taken@example.com',
+      } as User;
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockExistingUser);
+      jest
+        .spyOn(service, 'findOneByEmail')
+        .mockResolvedValue(mockOtherUserWithSameEmail);
+
+      await expect(
+        service.update(mockUserId, updateUserDto, mockUserId),
+      ).rejects.toThrow(
+        new ConflictException('User with provided email already exists'),
+      );
+
       expect(mockUserRepository.save).not.toHaveBeenCalled();
     });
   });
@@ -333,7 +388,8 @@ describe('UserService', () => {
   });
 
   describe('remove', () => {
-    const mockUserId = '123e4567-e89b-12d3-a456-426614174000';
+    const mockUserId = '123e4567-e89b-12d3-a456-426614174001';
+    const mockOtherUserId = '123e4567-e89b-12d3-a456-426614174002';
 
     it('should remove and return the user when found', async () => {
       const mockUser = {
@@ -347,11 +403,19 @@ describe('UserService', () => {
         .mockResolvedValue(mockUser);
       mockUserRepository.remove.mockResolvedValue(mockUser);
 
-      const result = await service.remove(mockUserId);
+      const result = await service.remove(mockUserId, mockUserId);
 
       expect(spyFindOne).toHaveBeenCalledWith(mockUserId);
       expect(mockUserRepository.remove).toHaveBeenCalledWith(mockUser);
       expect(result).toEqual(mockUser);
+    });
+
+    it('should throw ForbiddenException when user tries to delete another user', async () => {
+      await expect(service.remove(mockUserId, mockOtherUserId)).rejects.toThrow(
+        new ForbiddenException('You can only delete your own information'),
+      );
+
+      expect(mockUserRepository.remove).not.toHaveBeenCalled();
     });
 
     it('should throw NotFoundException if user to remove does not exist', async () => {
@@ -361,7 +425,7 @@ describe('UserService', () => {
           new NotFoundException(`User with id ${mockUserId} does not exist`),
         );
 
-      await expect(service.remove(mockUserId)).rejects.toThrow(
+      await expect(service.remove(mockUserId, mockUserId)).rejects.toThrow(
         NotFoundException,
       );
 

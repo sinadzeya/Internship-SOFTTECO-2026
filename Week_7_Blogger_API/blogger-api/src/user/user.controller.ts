@@ -6,10 +6,20 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
+interface RequestWithUser extends Request {
+  user: {
+    userId: string;
+    email: string;
+  };
+}
 
 @Controller('users')
 export class UserController {
@@ -25,16 +35,21 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @Req() req: RequestWithUser,
   ) {
-    return this.userService.update(id, updateUserDto);
+    const userId = req.user.userId;
+    return this.userService.update(id, updateUserDto, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string, @Req() req: RequestWithUser) {
+    const userId = req.user.userId;
+    return this.userService.remove(id, userId);
   }
 }

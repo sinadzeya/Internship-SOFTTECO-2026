@@ -60,4 +60,7 @@ Navigate to the blogger-api directory and start the application containers:
 ```bash
 docker-compose up --build
 ```
-E2E tests are run automatically using the dedicated api-test container.
+E2E tests are run automatically using the dedicated api-test container. You can also run them using:
+```bash
+docker compose run --rm api-test npm run test:e2e
+```
