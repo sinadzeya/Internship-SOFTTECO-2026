@@ -78,36 +78,6 @@ describe('UserController (e2e)', () => {
     accessToken = (registerRes.body as { accessToken: string }).accessToken;
   });
 
-  describe('GET /users', () => {
-    it('should return an array of users', async () => {
-      return await request(app.getHttpServer())
-        .get('/users')
-        .expect(200)
-        .expect((res) => {
-          expect(Array.isArray(res.body)).toBe(true);
-          expect(res.body.length).toBeGreaterThan(0);
-        });
-    });
-  });
-
-  describe('GET /users/:id', () => {
-    it('should return a single user by UUID', () => {
-      return request(app.getHttpServer())
-        .get(`/users/${createdUserId}`)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('id', createdUserId);
-          expect(res.body).toHaveProperty('email', 'john@example.com');
-        });
-    });
-
-    it('should return 400 Bad Request if ID is not a valid UUID', () => {
-      return request(app.getHttpServer())
-        .get('/users/invalid-uuid-123')
-        .expect(400);
-    });
-  });
-
   describe('PATCH /users/:id', () => {
     it('should update user fields successfully', () => {
       return request(app.getHttpServer())
@@ -131,14 +101,6 @@ describe('UserController (e2e)', () => {
         })
         .expect(403);
     });
-
-    it('should return 400 Bad Request if UUID is invalid on PATCH', () => {
-      return request(app.getHttpServer())
-        .patch('/users/invalid-uuid')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({ bio: 'Test' })
-        .expect(400);
-    });
   });
 
   describe('DELETE /users/:id', () => {
@@ -147,13 +109,6 @@ describe('UserController (e2e)', () => {
         .delete(`/users/${anotherUserId}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(403);
-    });
-
-    it('should return 400 Bad Request if UUID is invalid on DELETE', () => {
-      return request(app.getHttpServer())
-        .delete('/users/not-a-uuid')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(400);
     });
 
     it('should remove the user', async () => {

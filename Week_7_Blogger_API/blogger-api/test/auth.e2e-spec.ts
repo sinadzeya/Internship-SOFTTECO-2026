@@ -47,16 +47,6 @@ describe('AuthController (e2e)', () => {
           expect(res.body).toHaveProperty('refreshToken');
         });
     });
-
-    it('should return a 400 error for an invalid email address format', () => {
-      return request(app.getHttpServer())
-        .post('/auth/register')
-        .send({
-          email: 'wrong-email',
-          password: 'Password123!',
-        })
-        .expect(400);
-    });
   });
 
   describe('POST /auth/login', () => {

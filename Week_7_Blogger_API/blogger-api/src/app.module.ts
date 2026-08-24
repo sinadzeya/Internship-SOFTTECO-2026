@@ -27,7 +27,7 @@ import { HTTPLoggerMiddleware } from './http-logger.middleware';
         database: configService.getOrThrow<string>('DB_DATABASE'),
         autoLoadEntities: true,
         synchronize: true,
-        logging: true,
+        logging: process.env.NODE_ENV !== 'test',
       }),
     }),
     WinstonModule.forRoot({
