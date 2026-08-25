@@ -27,9 +27,6 @@ export class User {
   @Column({ type: 'varchar', length: 150, nullable: true })
   bio?: string;
 
-  @Column({ type: 'boolean', default: true })
-  isActive!: boolean;
-
   @Column({ type: 'varchar', nullable: true })
   currentHashedRefreshToken?: string | null;
 
