@@ -41,6 +41,10 @@ jobs:
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
+
+      - name: Show PostgreSQL logs
+        if: always()
+        run: docker compose logs postgres
       
       - name: Run E2E tests via Docker
         run: docker compose run --rm api-test
