@@ -39,7 +39,8 @@ jobs:
         run: npm test --if-present
 
       - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
       
       - name: Run E2E tests via Docker
         run: docker compose run --rm api-test
