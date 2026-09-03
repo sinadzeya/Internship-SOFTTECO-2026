@@ -1,0 +1,13 @@
+services:
+  api:
+    build: .
+    container_name: connect-hub
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - ./logs:/logs
+
+volumes:
+  postgres_data:
