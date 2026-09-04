@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class RegisterDto {
+export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(20)
@@ -24,7 +24,7 @@ export class RegisterDto {
   password!: string;
 }
 
-export class LoginDto {
+export class LoginUserDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()

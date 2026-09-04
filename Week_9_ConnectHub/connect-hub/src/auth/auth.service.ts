@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginUserDto, RegisterUserDto } from './dto/auth.dto';
 import { AccessToken } from './types/access-token.type';
 import * as bcrypt from 'bcrypt';
 
@@ -56,8 +56,11 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async login(loginDto: LoginDto): Promise<AccessToken> {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
+  async login(loginUserDto: LoginUserDto): Promise<AccessToken> {
+    const user = await this.validateUser(
+      loginUserDto.email,
+      loginUserDto.password,
+    );
 
     const tokens = await this.getTokens(user);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
@@ -116,9 +119,9 @@ export class AuthService {
     return tokens;
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerUserDto: RegisterUserDto) {
     this.logger.log('Start user registration process');
-    const newUser = await this.userService.create(registerDto);
+    const newUser = await this.userService.create(registerUserDto);
     this.logger.log(`User registered successfully: ${newUser.id}`);
 
     const tokens = await this.getTokens(newUser);

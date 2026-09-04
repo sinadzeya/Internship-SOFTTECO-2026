@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from '../auth/dto/auth.dto';
-import { UpdateUserDto } from '../post/dto/user.dto';
+import { RegisterUserDto } from '../auth/dto/auth.dto';
+import { UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -33,9 +33,9 @@ export class UserService {
     });
   }
 
-  async create(registerDto: RegisterDto): Promise<User> {
+  async create(registerUserDto: RegisterUserDto): Promise<User> {
     this.logger.debug('Start user creation process');
-    const existingUser = await this.findOneByEmail(registerDto.email);
+    const existingUser = await this.findOneByEmail(registerUserDto.email);
 
     if (existingUser) {
       this.logger.warn(
@@ -44,10 +44,10 @@ export class UserService {
       throw new ConflictException('User with provided email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+    const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
 
     const user = this.userRepository.create({
-      ...registerDto,
+      ...registerUserDto,
       password: hashedPassword,
     });
 
@@ -78,8 +78,8 @@ export class UserService {
 
   async update(
     id: string,
-    updateUserDto: UpdateUserDto,
     userId: string,
+    updateUserDto: UpdateUserDto,
   ): Promise<User> {
     this.logger.debug(`Updating user with id: ${id}`);
 

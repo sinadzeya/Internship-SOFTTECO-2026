@@ -8,8 +8,6 @@ import winston from 'winston';
 import { HTTPLoggerMiddleware } from './http-logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { PostController } from './post/post.controller';
-import { PostService } from './post/post.service';
 import { PostModule } from './post/post.module';
 
 @Module({
@@ -59,8 +57,8 @@ import { PostModule } from './post/post.module';
     UserModule,
     PostModule,
   ],
-  controllers: [AppController, PostController],
-  providers: [AppService, PostService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
