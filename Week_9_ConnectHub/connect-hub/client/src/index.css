@@ -2,42 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-/*---break---*/
+
 @custom-variant dark (&:is(.dark *));
 
+/*-------- LandingPage --------*/
 
 [data-layout="page-center"] {
     @apply relative min-h-screen flex flex-col items-center justify-center p-6 space-y-12;
 }
 
-[data-layout="stack-centered"] {
-    @apply text-center max-w-2xl space-y-4 flex flex-col items-center;
-}
-
-
-[data-style~="title-prominent"] {
-    --hero-title-color: var(--tiger-orange);
-    color: var(--hero-title-color);
-    @apply text-4xl font-extrabold tracking-tight sm:text-5xl
-}
-
-[data-style~="subtitle-prominent"] {
-    @apply text-muted-foreground text-lg
-}
-
-[data-layout~="actions-cluster"] {
-    @apply flex justify-center gap-4 pt-2
-}
-
-[data-layout="grid-adaptive"] {
-    @apply grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full;
-}
-
-[data-slot="stack-badge"] {
-    @apply px-4 py-3;
-}
-
-[data-layout="top-nav"] {
+[data-layout="top-right-nav"] {
     @apply absolute top-6 right-6 flex items-center gap-3;
 }
 
@@ -45,21 +19,52 @@
     @apply flex items-center gap-3;
 }
 
-[data-slot="auth-card"] {
-    @apply w-full max-w-md mx-auto;
+[data-layout="stack-centered"] {
+    @apply text-center max-w-2xl space-y-4 flex flex-col items-center;
 }
 
-[data-slot="auth-card"][data-size="lg"] {
-    @apply w-full max-w-2xl mx-auto p-8;
+[data-layout="stack-badge"] {
+    @apply px-4 py-3;
 }
 
+[data-style="title-prominent"] {
+    --hero-title-color: var(--tiger-orange);
+    color: var(--hero-title-color);
+    @apply text-4xl font-extrabold tracking-tight sm:text-5xl
+}
+
+[data-style="subtitle-prominent"] {
+    @apply text-muted-foreground text-lg
+}
+
+[data-layout="actions-cluster"] {
+    @apply flex justify-center gap-4 pt-2
+}
+
+[data-layout="grid-adaptive"] {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full;
+}
+
+/*-------- SignInPage / SingUpPage --------*/
+
+[data-layout="auth-card"] {
+    @apply w-full max-w-md mx-auto space-y-6;
+}
 
 [data-layout="stack-form"] {
     @apply space-y-4;
 }
 
-[data-slot="auth-card"] {
-    @apply space-y-6;
+[data-layout="top-left-nav"] {
+    @apply absolute top-6 left-6 flex items-center gap-3;
+}
+
+[data-layout="icon-leading"] {
+    @apply mr-2 h-4 w-4;
+}
+
+[data-layout="elements-full-width"] {
+    @apply w-full max-w-md space-y-4;
 }
 
 
@@ -68,7 +73,6 @@
 
     --sky-blue: rgba(142, 202, 230, 1);
     --sky-blue-tinted: rgba(247, 251, 253, 1);
-
     --blue-green: rgba(33, 158, 188, 1);
     --deep-space-blue: rgba(2, 48, 71, 1);
     --amber-flame: rgba(255, 183, 3, 1);

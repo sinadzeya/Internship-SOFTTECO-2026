@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { authService, type RegisterUserDto } from '@/services/auth.service';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import axios from 'axios';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 
 export function SignUpPage() {
   const navigate = useNavigate();
@@ -61,57 +63,68 @@ export function SignUpPage() {
   return (
 
     <main data-layout="page-center">
-
-      {error && (
-        <div data-slot="form-error" data-style="error-message">
-          {error}
+      <header data-layout="top-left-nav">
+        <div data-layout="actions-cluster">
+          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft data-layout="icon-leading"/>
+            Back
+          </Button>
         </div>
-      )}
+      </header>
 
-      <Card data-slot="auth-card" data-style="card-elevated">
-        <CardHeader data-slot="card-header">
-          <CardTitle data-slot="card-title">Sign Up</CardTitle>
-          <CardDescription data-slot="card-desc">
+      <div data-layout="elements-full-width">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle/>
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+      <Card data-layout="auth-card">
+        <CardHeader>
+          <CardTitle>Sign Up</CardTitle>
+          <CardDescription>
             Create an account to join ConnectHub
           </CardDescription>
         </CardHeader>
 
-        <CardContent data-slot="card-body">
+        <CardContent>
           <form onSubmit={handleSignUp} data-layout="stack-form">
-            {error && <div data-style="error-message">{error}</div>}
+            {error && <div>{error}</div>}
 
-            <div data-layout="field-group">
-              <label htmlFor="name" data-style="label">
+            <div>
+              <label htmlFor="name">
                 Username
               </label>
               <Input
                 id="username"
                 name="username"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Katty Smith"
                 value={formData.username}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div data-layout="field-group">
-              <label htmlFor="email" data-style="label">
+            <div>
+              <label htmlFor="email">
                 Email
               </label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder="smith.k@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div data-layout="field-group">
-              <label htmlFor="password" data-style="label">
+            <div>
+              <label htmlFor="password">
                 Password
               </label>
               <Input
@@ -127,21 +140,21 @@ export function SignUpPage() {
 
             <Button
               type="submit"
-              data-slot="primary-action"
               disabled={loading}
             >
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
 
-            <p data-style="auth-footer-text">
+            <p>
               Already have an account?{" "}
-              <Button variant="link" size="sm" asChild>
-                <Link to="/login">Sign In</Link>
+              <Button variant="link" size="sm" onClick={() => navigate("/login")}>
+                Sign In
               </Button>
             </p>
           </form>
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 }

@@ -14,6 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import axios from 'axios';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 
 export function SignInPage() {
   const navigate = useNavigate();
@@ -63,42 +65,53 @@ export function SignInPage() {
   return (
 
     <main data-layout="page-center">
-
-      {error && (
-        <div data-slot="form-error" data-style="error-message">
-          {error}
+      <header data-layout="top-left-nav">
+        <div data-layout="actions-cluster">
+          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft data-layout="icon-leading"/>
+            Back
+          </Button>
         </div>
+      </header>
+
+      <div data-layout="elements-full-width">
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle/>
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      <Card data-slot="auth-card" data-style="card-elevated">
-        <CardHeader data-slot="card-header">
-          <CardTitle data-slot="card-title">Sign Up</CardTitle>
-          <CardDescription data-slot="card-desc">
+      <Card data-layout="auth-card">
+        <CardHeader>
+          <CardTitle>Sign Up</CardTitle>
+          <CardDescription>
             Login to find your people with ConnectHub
           </CardDescription>
         </CardHeader>
 
-        <CardContent data-slot="card-body">
+        <CardContent>
           <form onSubmit={handleSignUp} data-layout="stack-form">
-            {error && <div data-style="error-message">{error}</div>}
+            {error && <div >{error}</div>}
 
-            <div data-layout="field-group">
-              <label htmlFor="email" data-style="label">
+            <div>
+              <label htmlFor="email">
                 Email
               </label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder="smith.k@gmail.com"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div data-layout="field-group">
-              <label htmlFor="password" data-style="label">
+            <div>
+              <label htmlFor="password">
                 Password
               </label>
               <Input
@@ -114,7 +127,6 @@ export function SignInPage() {
 
             <Button
               type="submit"
-              data-slot="primary-action"
               disabled={loading}
             >
               {loading ? "Signing in..." : "Sign In"}
@@ -123,6 +135,7 @@ export function SignInPage() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 }

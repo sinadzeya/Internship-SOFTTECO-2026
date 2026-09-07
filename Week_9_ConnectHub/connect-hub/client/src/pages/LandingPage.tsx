@@ -23,95 +23,82 @@ export function LandingPage() {
   };
 
   return (
-    <main
-      data-layout="page-center"
-    >
-      <header data-layout="top-nav">
-        <div data-layout="actions-cluster" data-slot="auth-group">
+    <main data-layout="page-center">
+      <header data-layout="top-right-nav">
+        <div data-layout="actions-cluster">
           {!isAuthenticated ? (
             <>
-              <Button data-slot="secondary-action" size="sm" variant="outline" onClick={() => navigate("/login")}>
+              <Button size="sm" variant="outline" onClick={() => navigate("/login")}>
                 Sign In
               </Button>
-              <Button data-slot="secondary-action" size="sm" variant="outline" onClick={() => navigate("/register")}>
+              <Button size="sm" variant="outline" onClick={() => navigate("/register")}>
                 Sign Up
               </Button>
             </>
           ) : (
-            <Button data-slot="danger-action" size="sm" variant="outline" onClick={handleLogout}>
+            <Button size="sm" variant="outline" onClick={handleLogout}>
               Log Out
             </Button>
           )}
         </div>
       </header>
 
-      <section
-        data-layout="stack-centered"
-      >
-        <Badge data-slot="stack-badge" variant="outline">
+      <section data-layout="stack-centered">
+        <Badge data-layout="stack-badge" variant="outline">
           Welcome w ConnectHub
         </Badge>
 
-        <h1
-          data-style="title-prominent"
-        >
+        <h1 data-style="title-prominent">
           Social discovery platform
         </h1>
 
-        <p
-          data-style="subtitle-prominent"
-        >
+        <p data-style="subtitle-prominent">
           Find people based on your current passions
         </p>
 
-        <div
-          data-layout="actions-cluster"
-        >
-          <Button data-slot="primary-action" size="lg">
+        <div data-layout="actions-cluster">
+          <Button size="lg">
             Start Now
           </Button>
-          <Button data-slot="secondary-action" size="lg" variant="outline">
+          <Button size="lg" variant="outline">
             Learn More
           </Button>
         </div>
       </section>
 
-      <section
-        data-slot="features-grid"
-        data-layout="grid-adaptive"
-      >
-        <Card data-slot="feature-card" data-style="card-elevated">
-          <CardHeader data-slot="card-header">
-            <CardTitle data-slot="card-title">Discover Passions</CardTitle>
-            <CardDescription data-slot="card-desc">
+      <section data-layout="grid-adaptive">
+        <Card>
+          <CardHeader>
+            <CardTitle>Discover Passions</CardTitle>
+            <CardDescription>
               Explore interest-based posts and share what inspires you.
             </CardDescription>
           </CardHeader>
-          <CardContent data-slot="card-body">
+          <CardContent>
             Find like-minded people across categories like books, travel, art, and music.
           </CardContent>
         </Card>
 
-        <Card data-slot="feature-card" data-style="card-elevated">
-          <CardHeader data-slot="card-header">
-            <CardTitle data-slot="card-title">Privacy & Control</CardTitle>
-            <CardDescription data-slot="card-desc">
+        <Card>
+          <CardHeader>
+            <CardTitle>Privacy & Control</CardTitle>
+            <CardDescription>
               Decide who you connect with and what you share.
             </CardDescription>
           </CardHeader>
-          <CardContent data-slot="card-body">
+          <CardContent>
             Take charge of your profile visibility and choose when to share contact details.
           </CardContent>
         </Card>
 
-        <Card data-slot="feature-card" data-style="card-elevated">
-          <CardHeader data-slot="card-header">
-            <CardTitle data-slot="card-title">Modern Design</CardTitle>
-            <CardDescription data-slot="card-desc">
+        <Card>
+          <CardHeader>
+            <CardTitle>Modern Design</CardTitle>
+            <CardDescription>
               A clean, clear, and intuitive experience.
             </CardDescription>
           </CardHeader>
-          <CardContent data-slot="card-body">
+          <CardContent>
             Seamlessly navigate an accessible platform built for genuine social connections.
           </CardContent>
         </Card>
