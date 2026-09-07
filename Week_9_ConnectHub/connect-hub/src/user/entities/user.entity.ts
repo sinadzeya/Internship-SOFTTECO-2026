@@ -16,13 +16,13 @@ export class User {
   id!: string;
 
   @Column({ type: 'varchar', length: 20, nullable: false })
-  username: string;
+  username!: string;
 
   @Column({ type: 'varchar', length: 254, unique: true, nullable: false })
-  email: string;
+  email!: string;
 
   @Column({ type: 'varchar', nullable: false, select: false })
-  password: string;
+  password!: string;
 
   @Column({ type: 'varchar', nullable: true })
   currentRefreshToken?: string | null;

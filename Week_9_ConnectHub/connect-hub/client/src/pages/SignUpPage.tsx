@@ -13,7 +13,9 @@ import {
 import axios from 'axios';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
-import { useAppDispatch, useAppState } from '@/providers/StoreProvider.tsx';
+import { setAccessToken } from '@/lib/axios.ts';
+import { userService } from '@/services/user.service.ts';
+import { useAppDispatch, useAppState } from '@/store/useStore.ts';
 
 export function SignUpPage() {
   const navigate = useNavigate();
@@ -42,11 +44,16 @@ export function SignUpPage() {
     try {
       const response = await authService.register(formData);
 
+      setAccessToken(response.accessToken);
+
+      const userData = await userService.me();
+
       sessionStorage.setItem("refreshToken", response.refreshToken);
 
       dispatch({
         type: "AUTH_SUCCESS",
         payload: {
+          user: userData,
           accessToken: response.accessToken
         },
       });

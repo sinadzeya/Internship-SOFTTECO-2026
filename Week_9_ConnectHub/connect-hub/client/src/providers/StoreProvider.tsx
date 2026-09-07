@@ -1,15 +1,10 @@
 import {
-  createContext,
-  type Dispatch,
   type ReactNode,
-  useContext,
   useEffect,
   useReducer,
 } from 'react';
 import {
-  type AppAction,
   appReducer,
-  type AppState,
   initialState,
 } from '@/store/context.tsx';
 import axios from 'axios';
@@ -22,9 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card.tsx';
-
-const StateContext = createContext<AppState | undefined>(undefined);
-const DispatchContext = createContext<Dispatch<AppAction> | undefined>(undefined);
+import { userService } from '@/services/user.service.ts';
+import { StateContext, DispatchContext } from '@/store/useStore.ts';
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -40,7 +34,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
-        const { data } = await axios.post(
+        const{ data }  = await axios.post(
           `${import.meta.env.API_URL || "http://localhost:3000"}/api/auth/refresh`,
           {},
           {
@@ -48,13 +42,18 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
           }
         );
 
+        setAccessToken(data.accessToken);
+
         if (data.refreshToken) {
           sessionStorage.setItem("refreshToken", data.refreshToken);
         }
 
+        const userData = await userService.me();
+
         dispatch({
           type: "AUTH_SUCCESS",
           payload: {
+            user: userData,
             accessToken: data.accessToken
           },
         });
@@ -75,7 +74,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         <Card data-layout="elements-full-width">
           <CardHeader>
             <CardTitle>ConnectHub</CardTitle>
-            <CardDescription>Initializing session...</CardDescription>
+            <CardDescription>Initialising session...</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <Loader2 className="animate-spin" />
@@ -92,20 +91,4 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       </DispatchContext.Provider>
     </StateContext.Provider>
   );
-};
-
-export const useAppState = (): AppState => {
-  const context = useContext(StateContext);
-  if (!context) {
-    throw new Error("useAppState should be used inside StoreProvider");
-  }
-  return context;
-};
-
-export const useAppDispatch = (): Dispatch<AppAction> => {
-  const context = useContext(DispatchContext);
-  if (!context) {
-    throw new Error("useAppDispatch should be used inside StoreProvider");
-  }
-  return context;
 };

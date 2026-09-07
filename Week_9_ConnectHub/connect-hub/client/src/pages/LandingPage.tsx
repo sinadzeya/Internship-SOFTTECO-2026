@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 import { authService } from '@/services/auth.service.ts';
-import { useAppDispatch, useAppState } from '@/providers/StoreProvider.tsx';
+import { useAppDispatch, useAppState } from '@/store/useStore.ts';
 
 export function LandingPage() {
-  const { user, accessToken } = useAppState();
+  const { accessToken } = useAppState();
   const dispatch = useAppDispatch();
-  const isAuthenticated = Boolean(user || accessToken);
+  const isAuthenticated = Boolean(accessToken);
 
   const navigate = useNavigate();
 

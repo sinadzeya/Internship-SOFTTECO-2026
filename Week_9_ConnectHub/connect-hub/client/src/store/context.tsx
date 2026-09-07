@@ -1,12 +1,10 @@
 import { setAccessToken } from '@/lib/axios.ts';
-
-export interface User {
-  id: string;
-  email: string;
-}
+import type { PostData } from '@/services/post.service.ts';
+import type { UserData } from '@/services/user.service.ts';
 
 export interface AppState {
-  user: User | null;
+  user: UserData | null;
+  posts: PostData[];
   accessToken: string | null;
   loading: boolean;
   isInitializing: boolean;
@@ -15,14 +13,16 @@ export interface AppState {
 
 export type AppAction =
   | { type: "AUTH_START" }
-  | { type: "AUTH_SUCCESS"; payload: { accessToken: string } }
+  | { type: "AUTH_SUCCESS"; payload: { user: UserData, accessToken: string } }
   | { type: "AUTH_FAILURE"; payload: string }
   | { type: "CLEAR_ERROR" }
   | { type: "INIT_FINISH" }
-  | { type: "LOGOUT" };
+  | { type: "LOGOUT" }
+  | {type: "SET_POSTS"; payload: PostData[]};
 
 export const initialState: AppState = {
   user: null,
+  posts: [],
   accessToken: null,
   loading: false,
   isInitializing: true,
@@ -37,6 +37,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       setAccessToken(action.payload.accessToken);
       return {
         ...state,
+        user: action.payload.user,
         accessToken: action.payload.accessToken,
         loading: false,
         isInitializing: false,
@@ -56,9 +57,13 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       setAccessToken(null);
       return {
         ...state,
-        user: null,
         accessToken: null,
         isInitializing: false };
+    case "SET_POSTS":
+      return {
+        ...state,
+        posts: action.payload,
+      };
     default:
       return state;
   }

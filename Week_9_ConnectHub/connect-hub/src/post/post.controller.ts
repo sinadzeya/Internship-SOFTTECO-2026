@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import type { RequestWithUser } from '../auth/types/request-with-user.type';
 
-@Controller('post')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 

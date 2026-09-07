@@ -76,6 +76,10 @@ export class UserService {
     return user;
   }
 
+  async me(user: { userId: string; email: string }) {
+    return await this.findOne(user.userId);
+  }
+
   async update(
     id: string,
     userId: string,

@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { PartialType } from '@nestjs/swagger';
+import { PostCategory } from '../entities/post.entity';
 
 export class CreatePostDto {
   @IsString()
@@ -10,6 +11,10 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   content!: string;
+
+  @IsEnum(PostCategory)
+  @IsNotEmpty()
+  category!: PostCategory;
 }
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {}
