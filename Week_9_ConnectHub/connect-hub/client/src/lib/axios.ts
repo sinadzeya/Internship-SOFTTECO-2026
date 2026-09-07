@@ -7,10 +7,15 @@ export const api = axios.create({
   },
 });
 
+let memoryAccessToken: string | null = null;
+
+export const setAccessToken = (token: string | null) => {
+  memoryAccessToken = token;
+};
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (memoryAccessToken) {
+    config.headers.Authorization = `Bearer ${memoryAccessToken}`;
   }
   return config;
 });

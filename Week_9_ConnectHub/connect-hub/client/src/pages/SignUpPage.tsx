@@ -13,16 +13,19 @@ import {
 import axios from 'axios';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
+import { useAppDispatch, useAppState } from '@/providers/StoreProvider.tsx';
 
 export function SignUpPage() {
   const navigate = useNavigate();
+
+  const { loading, error } = useAppState();
+  const dispatch = useAppDispatch();
+
   const [formData, setFormData] = useState<RegisterUserDto>({
     email: "",
     password: "",
     username: "",
   });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -31,32 +34,42 @@ export function SignUpPage() {
     }));
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+
+    dispatch({ type: "AUTH_START" });
 
     try {
-      await authService.register(formData);
-      navigate("/login");
+      const response = await authService.register(formData);
+
+      sessionStorage.setItem("refreshToken", response.refreshToken);
+
+      dispatch({
+        type: "AUTH_SUCCESS",
+        payload: {
+          accessToken: response.accessToken
+        },
+      });
+
+      navigate("/home");
     } catch (err: unknown) {
-      console.error("Error during Sign Up:", err);
+      console.error('Error during Sign Up:', err);
+
+      let errorMessage = 'An unexpected error occurred.';
 
       if (axios.isAxiosError(err)) {
         const serverMessage = err.response?.data?.message;
 
         if (Array.isArray(serverMessage)) {
-          setError(serverMessage.join(", "));
-        } else if (typeof serverMessage === "string") {
-          setError(serverMessage);
+          errorMessage = serverMessage.join(', ');
+        } else if (typeof serverMessage === 'string') {
+          errorMessage = serverMessage;
         } else {
-          setError("Registration failed. Please try again.");
+          errorMessage = 'Registration failed. Please try again.';
         }
-      } else {
-        setError("An unexpected error occurred.");
       }
-    } finally {
-      setLoading(false);
+
+      dispatch({ type: 'AUTH_FAILURE', payload: errorMessage });
     }
   };
 
@@ -91,7 +104,6 @@ export function SignUpPage() {
 
         <CardContent>
           <form onSubmit={handleSignUp} data-layout="stack-form">
-            {error && <div>{error}</div>}
 
             <div>
               <label htmlFor="name">

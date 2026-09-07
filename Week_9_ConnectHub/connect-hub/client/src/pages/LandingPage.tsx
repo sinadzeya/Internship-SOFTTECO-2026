@@ -9,14 +9,19 @@ import {
 } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 import { authService } from '@/services/auth.service.ts';
+import { useAppDispatch, useAppState } from '@/providers/StoreProvider.tsx';
 
 export function LandingPage() {
-  const isAuthenticated = false;
+  const { user, accessToken } = useAppState();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = Boolean(user || accessToken);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await authService.logout();
+      dispatch({ type: "LOGOUT" });
     } catch (error) {
       console.error("Error during Log Out:", error);
     }
