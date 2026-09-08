@@ -5,10 +5,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*-------- LandingPage --------*/
 
 [data-layout="page-center"] {
     @apply relative min-h-screen flex flex-col items-center justify-center p-6 space-y-12;
+}
+
+[data-layout="page-center-dymanic"] {
+    @apply relative min-h-screen flex flex-col items-center justify-start p-6 space-y-12;
 }
 
 [data-layout="top-right-nav"] {
@@ -44,8 +47,6 @@
 [data-layout="grid-adaptive"] {
     @apply grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full;
 }
-
-/*-------- SignInPage / SingUpPage --------*/
 
 [data-layout="auth-card"] {
     @apply w-full max-w-md mx-auto space-y-6;

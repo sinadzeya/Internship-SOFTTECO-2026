@@ -62,10 +62,10 @@ export function LandingPage() {
         </p>
 
         <div data-layout="actions-cluster">
-          <Button size="lg">
+          <Button size="lg" onClick={() => navigate("/home")}>
             Start Now
           </Button>
-          <Button size="lg" variant="outline">
+          <Button size="lg" variant="outline" onClick={() => navigate("/about")}>
             Learn More
           </Button>
         </div>
