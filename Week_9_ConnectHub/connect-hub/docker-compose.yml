@@ -1,13 +1,25 @@
 services:
   api:
-    build: .
-    container_name: connect-hub
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: connect-hub-api
     env_file:
       - .env
     ports:
       - '${PORT}:${PORT}'
     volumes:
       - ./logs:/logs
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: connect-hub-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
