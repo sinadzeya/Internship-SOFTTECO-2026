@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Post } from '../../post/entities/post.entity';
+import { SocialAccount } from '../../social-account/entities/social-accounts.entity';
+import { SocialAccountAccess } from '../../social-account/entities/social-accounts-access.entity';
 
 @Entity('users')
 export class User {
@@ -26,6 +28,15 @@ export class User {
 
   @Column({ type: 'varchar', nullable: true })
   currentRefreshToken?: string | null;
+
+  @OneToMany(() => SocialAccount, (account) => account.owner)
+  socialAccounts!: SocialAccount[];
+
+  @OneToMany(() => SocialAccountAccess, (access) => access.owner)
+  ownedAccesses!: SocialAccountAccess[];
+
+  @OneToMany(() => SocialAccountAccess, (access) => access.client)
+  clientAccesses!: SocialAccountAccess[];
 
   @CreateDateColumn()
   createdAt!: Date;

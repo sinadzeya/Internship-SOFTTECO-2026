@@ -98,7 +98,10 @@ export const postService = {
    const { data } = await api.get<PostData[]>("/api/posts/");
    return data;
  },
-
+ async fetchPostByUserId(userId: string): Promise<PostData[]> {
+   const { data } = await api.get<PostData[]>(`/api/posts/user/${userId}`);
+   return data;
+ },
  async create(createPostDto: CreatePostDto): Promise<PostData> {
    const { data } = await api.post<PostData>('/api/posts/', createPostDto);
    return data;

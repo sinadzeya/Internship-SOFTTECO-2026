@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { postService } from '@/services/post.service.ts';
 import { Button } from '@/components/ui/button.tsx';
 import { AlertCircle, ArrowLeft, Loader2, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
@@ -20,8 +20,8 @@ import {
 function HomePage() {
   const navigate = useNavigate();
 
-  const { posts, accessToken } = useAppState();
-  const isAuthenticated = Boolean(accessToken);
+  const { user, posts, accessToken } = useAppState();
+  const isAuthenticated = Boolean(accessToken && user);
 
   const hasPostsInStore = posts && posts.length > 0;
   const [loading, setLoading] = useState<boolean>(!hasPostsInStore);
@@ -110,21 +110,30 @@ function HomePage() {
   return (
     <main data-layout="page-center-dymanic">
       <header data-layout="top-left-nav">
-        <div data-layout="actions-cluster" className="flex flex-col md:flex-row items-start md:items-center gap-3">
+        <div
+          data-layout="actions-cluster"
+          className="flex flex-col md:flex-row items-start md:items-center gap-3"
+        >
           <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading"/>
+            <ArrowLeft data-layout="icon-leading" />
             Back
           </Button>
           <div className="hidden md:flex gap-3">
             <Field orientation="horizontal" className="w-full gap-y-3">
-              <Input type="search" placeholder="Search..." className="w-full text-sm font-normal" value={searchQuery}
-                     onChange={(e) => {
-                       const value = e.target.value;
-                       setSearchQuery(value);
-                       if (!value.trim()) {
-                         setActiveQuery('');
-                       }
-                     }} onKeyDown={handleKeyDown}/>
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="w-full text-sm font-normal"
+                value={searchQuery}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchQuery(value);
+                  if (!value.trim()) {
+                    setActiveQuery('');
+                  }
+                }}
+                onKeyDown={handleKeyDown}
+              />
               <Button variant="secondary" onClick={handleSearch}>
                 <Search />
               </Button>
@@ -146,21 +155,25 @@ function HomePage() {
               </SelectContent>
             </Select>
           </div>
-
-
         </div>
       </header>
 
       <div className="flex md:hidden w-full pt-20 justify-center gap-3">
         <Field orientation="horizontal" className="w-full gap-y-3">
-          <Input type="search" placeholder="Search..." className="w-full text-sm font-normal" value={searchQuery}
-                 onChange={(e) => {
-                   const value = e.target.value;
-                   setSearchQuery(value);
-                   if (!value.trim()) {
-                     setActiveQuery('');
-                   }
-                 }} onKeyDown={handleKeyDown}/>
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full text-sm font-normal"
+            value={searchQuery}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchQuery(value);
+              if (!value.trim()) {
+                setActiveQuery('');
+              }
+            }}
+            onKeyDown={handleKeyDown}
+          />
           <Button variant="secondary" onClick={handleSearch}>
             <Search />
           </Button>
@@ -183,21 +196,32 @@ function HomePage() {
         </Select>
       </div>
 
-
       <header data-layout="top-right-nav">
         <div data-layout="actions-cluster">
           {!isAuthenticated ? (
-              <Button size="sm" variant="outline" onClick={() => navigate("/login")}>
-                Sign In
-              </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate('/login')}
+            >
+              Sign In
+            </Button>
           ) : (
             <>
-            <Button size="sm" variant="outline" onClick={() => navigate("/create")}>
-              Create
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => navigate("/profile")}>
-              Profile
-            </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => navigate('/create')}
+              >
+                Create
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => navigate(`/profile/${user?.id}`)}
+              >
+                Profile
+              </Button>
             </>
           )}
         </div>
@@ -211,31 +235,30 @@ function HomePage() {
                 <CardHeader>
                   <CardTitle>{post.title}</CardTitle>
                   <CardDescription>
-                    {post.user.username}
+                    <Link
+                      to={`/profile/${post.user.id}`}
+                      className="hover:underline hover:text-primary cursor-pointer transition-colors"
+                    >
+                      {post.user.username}
+                    </Link>
                   </CardDescription>
                 </CardHeader>
+                <CardContent>{post.content}</CardContent>
                 <CardContent>
-                  {post.content}
-                </CardContent>
-                <CardContent>
-                  <Badge variant="secondary">
-                    {post.category}
-                  </Badge>
+                  <Badge variant="secondary">{post.category}</Badge>
                 </CardContent>
               </Card>
             ))}
           </ul>
         ) : (
           <Alert>
-            <AlertCircle/>
+            <AlertCircle />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>No posts available.</AlertDescription>
           </Alert>
         )}
       </div>
-
     </main>
-
   );
 }
 

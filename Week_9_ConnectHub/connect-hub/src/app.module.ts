@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SocialAccountModule } from './social-account/social-account.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { join } from 'path';
     AuthModule,
     UserModule,
     PostModule,
+    SocialAccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],

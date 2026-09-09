@@ -11,4 +11,8 @@ export const userService = {
     const { data } = await api.get<UserData>("/api/users/me");
     return data;
   },
+  async fetchUserInfo(id: string): Promise<UserData> {
+    const { data } = await api.get<UserData>(`/api/users/${id}`);
+    return data;
+  }
 };
