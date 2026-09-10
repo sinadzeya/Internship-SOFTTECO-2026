@@ -7,6 +7,8 @@ import {
   Req,
   Patch,
   Param,
+  Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SocialAccountService } from './social-account.service';
@@ -15,6 +17,7 @@ import {
   AddSocialAccountDto,
   CreateSocialAccountRequestDto,
   GrantAccessDto,
+  UpdateSocialAccountDto,
 } from './dto/social-account.dto';
 
 @Controller('social-accounts')
@@ -25,6 +28,22 @@ export class SocialAccountController {
   @Post()
   addAccount(@Req() req: RequestWithUser, @Body() dto: AddSocialAccountDto) {
     return this.socialAccountService.addAccount(req.user.userId, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  remove(@Req() req: RequestWithUser, @Param('id', ParseUUIDPipe) id: string) {
+    return this.socialAccountService.remove(req.user.userId, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateSocialAccountDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.socialAccountService.update(req.user.userId, id, dto);
   }
 
   @Get('my')

@@ -15,6 +15,8 @@ export interface CreatePostDto {
   category: PostCategory;
 }
 
+export type UpdatePostDto = Partial<CreatePostDto>;
+
 export const PostCategory = {
   DISCUSSION: 'discussion',
 
@@ -96,6 +98,14 @@ export const POST_CATEGORY_LABELS: Record<PostCategory, string> = {
 export const postService = {
  async fetchAllPosts(): Promise<PostData[]> {
    const { data } = await api.get<PostData[]>("/api/posts/");
+   return data;
+ },
+ async deletePost(postId: string): Promise<PostData> {
+   const { data } = await api.delete<PostData>(`/api/posts/${postId}`);
+   return data;
+ },
+ async updatePost(postId: string, dto: UpdatePostDto): Promise<PostData> {
+   const { data } = await api.patch<PostData>(`/api/posts/${postId}`, dto);
    return data;
  },
  async fetchPostByUserId(userId: string): Promise<PostData[]> {

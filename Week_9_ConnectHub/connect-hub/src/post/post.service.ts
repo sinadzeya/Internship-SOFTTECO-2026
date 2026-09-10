@@ -98,7 +98,7 @@ export class PostService {
 
     const authorId = post.userId || post.user?.id;
 
-    if (authorId !== userId) {
+    if (!authorId || authorId !== userId) {
       this.logger.warn(
         `Delete forbidden: User ${userId} tried to delete post ${id} owned by ${authorId}`,
       );

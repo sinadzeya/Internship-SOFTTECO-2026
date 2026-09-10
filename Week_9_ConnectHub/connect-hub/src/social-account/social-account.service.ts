@@ -13,6 +13,7 @@ import {
   AddSocialAccountDto,
   CreateSocialAccountRequestDto,
   GrantAccessDto,
+  UpdateSocialAccountDto,
 } from './dto/social-account.dto';
 import { SocialAccountRequest } from './entities/social-accounts-request.entity';
 
@@ -40,6 +41,76 @@ export class SocialAccountService {
     this.logger.log(`Social account added successfully for user: ${userId}`);
 
     return savedAccount;
+  }
+
+  async remove(userId: string, accountId: string) {
+    this.logger.debug(`Removing social account with id: ${accountId}`);
+
+    const account = await this.accountRepository.findOne({
+      where: { id: accountId },
+      relations: { owner: true },
+    });
+
+    if (!account) {
+      this.logger.warn(
+        `Delete failed: Social account with id ${accountId} does not exist`,
+      );
+      throw new NotFoundException(
+        `Social account with id ${accountId} does not exist`,
+      );
+    }
+
+    const authorId = account.owner.id;
+
+    if (authorId !== userId) {
+      this.logger.warn(
+        `Delete forbidden: User ${userId} tried to delete social account ${accountId} owned by ${authorId}`,
+      );
+      throw new ForbiddenException(
+        'You can only delete your own social account',
+      );
+    }
+
+    const removedAccount = await this.accountRepository.remove(account);
+    this.logger.debug(`Social account ${accountId} removed successfully`);
+
+    return removedAccount;
+  }
+
+  async update(userId: string, accountId: string, dto: UpdateSocialAccountDto) {
+    this.logger.debug(`Updating social account with id: ${accountId}`);
+
+    const account = await this.accountRepository.findOne({
+      where: { id: accountId },
+      relations: { owner: true },
+    });
+
+    if (!account) {
+      this.logger.warn(
+        `Update failed: Social account with id ${accountId} does not exist`,
+      );
+      throw new NotFoundException(
+        `Social account with id ${accountId} does not exist`,
+      );
+    }
+
+    const authorId = account.owner.id;
+
+    if (authorId !== userId) {
+      this.logger.warn(
+        `Update forbidden: User ${userId} tried to update social account ${accountId} owned by ${authorId}`,
+      );
+      throw new ForbiddenException(
+        'You can only update your own social account',
+      );
+    }
+
+    Object.assign(account, dto);
+
+    const updatedAccount = await this.accountRepository.save(account);
+    this.logger.debug(`Social account ${accountId} updated successfully`);
+
+    return updatedAccount;
   }
 
   async getMyAccounts(userId: string) {

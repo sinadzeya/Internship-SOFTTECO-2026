@@ -5,6 +5,7 @@ import {
   IsUUID,
   Length,
 } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
 export class AddSocialAccountDto {
   @IsString()
@@ -17,6 +18,8 @@ export class AddSocialAccountDto {
   @Length(1, 20)
   accountName!: string;
 }
+
+export class UpdateSocialAccountDto extends PartialType(AddSocialAccountDto) {}
 
 export class GrantAccessDto {
   @IsUUID()

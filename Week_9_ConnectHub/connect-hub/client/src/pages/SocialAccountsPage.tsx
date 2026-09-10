@@ -5,11 +5,15 @@ import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
   type AddSocialAccountDto,
+  type SocialAccountData,
   socialAccountService,
+  type UpdateSocialAccountDto,
 } from '@/services/social-account.service.ts';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Input } from '@/components/ui/input.tsx';
+import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
 
 export function SocialAccountsPage() {
   const navigate = useNavigate();
@@ -25,6 +29,13 @@ export function SocialAccountsPage() {
   const [formData, setFormData] = useState<AddSocialAccountDto>({
     platform: "",
     accountName: "",
+  });
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editSubmitting, setEditSubmitting] = useState<boolean>(false);
+  const [editFormData, setEditFormData] = useState<UpdateSocialAccountDto>({
+    platform: '',
+    accountName: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +60,53 @@ export function SocialAccountsPage() {
       setError('Failed to add contact data. Please try again.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleRemove = async (socialAccountId: string) => {
+    try {
+      await socialAccountService.removeAccount(socialAccountId);
+
+      toast.success('Social account removed successfully');
+
+      await loadData();
+    } catch (err: unknown) {
+      console.error('Error during deletion of the social account:', err);
+
+      if (isAxiosError(err) && err.response) {
+        const message = err.response.data?.message;
+        toast.error(message || 'Failed to delete social account.');
+      } else {
+        toast.error('Failed to delete social account. Please try again.');
+      }
+    }
+  };
+
+  const handleStartEdit = (account: SocialAccountData) => {
+    setEditingId(account.id);
+    setEditFormData({
+      platform: account.platform,
+      accountName: account.accountName,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditFormData({ platform: '', accountName: '' });
+  };
+
+  const handleSaveEdit = async (socialAccountId: string) => {
+    try {
+      setEditSubmitting(true);
+      await socialAccountService.updateAccount(socialAccountId, editFormData);
+      toast.success('Social account updated successfully!');
+      setEditingId(null);
+      await loadData();
+    } catch (err: unknown) {
+      console.error('Error updating account:', err);
+      toast.error('Failed to update account.');
+    } finally {
+      setEditSubmitting(false);
     }
   };
 
@@ -181,15 +239,80 @@ export function SocialAccountsPage() {
           ) : (
             <div className="w-full max-w-xl pt-5 pb-10">
               {socialAccounts?.length > 0 ? (
-                <ul className="flex flex-col justify-center gap-5">
-                  {socialAccounts.map((account) => (
-                    <Card key={account.id}>
-                      <CardHeader>
-                        <CardTitle>{account.platform}</CardTitle>
-                        <CardDescription>{account.accountName}</CardDescription>
-                      </CardHeader>
-                    </Card>
-                  ))}
+                <ul className="flex flex-col justify-center gap-4">
+                  {socialAccounts.map((account) => {
+                    const isEditing = editingId === account.id;
+
+                    return (
+                      <Card key={account.id}>
+                        {isEditing ? (
+
+                          <CardContent className="pt-3 space-y-3">
+                            <div className="flex flex-col gap-1">
+                              <label className="text-xs font-medium">Platform</label>
+                              <Input
+                                value={editFormData.platform}
+                                onChange={(e) =>
+                                  setEditFormData((prev) => ({ ...prev, platform: e.target.value }))
+                                }
+                              />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <label className="text-xs font-medium">Account Name</label>
+                              <Input
+                                value={editFormData.accountName}
+                                onChange={(e) =>
+                                  setEditFormData((prev) => ({ ...prev, accountName: e.target.value }))
+                                }
+                              />
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-2">
+                              <Button
+                                size="sm"
+                                disabled={editSubmitting}
+                                onClick={() => handleSaveEdit(account.id)}
+                              >
+                                {editSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={editSubmitting}
+                                onClick={handleCancelEdit}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </CardContent>
+                        ) : (
+                          <>
+                            <CardHeader>
+                              <CardTitle>{account.platform}</CardTitle>
+                              <CardDescription>{account.accountName}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleStartEdit(account)}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleRemove(account.id)}
+                              >
+                                Remove
+                              </Button>
+                            </CardContent>
+                          </>
+                        )}
+                      </Card>
+                    );
+                  })}
                 </ul>
               ) : (
                 <Alert>

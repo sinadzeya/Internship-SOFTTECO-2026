@@ -13,6 +13,8 @@ export interface AddSocialAccountDto {
   accountName: string;
 }
 
+export type UpdateSocialAccountDto = Partial<AddSocialAccountDto>;
+
 export interface GrantAccessDto {
   clientId: string;
   socialAccountId: string;
@@ -47,6 +49,14 @@ export interface SocialAccountAccessDto {
 export const socialAccountService = {
   async addAccount(dto: AddSocialAccountDto): Promise<SocialAccountData> {
     const { data } = await api.post<SocialAccountData>('/api/social-accounts', dto);
+    return data;
+  },
+  async removeAccount(accountId: string): Promise<SocialAccountData> {
+    const { data } = await api.delete<SocialAccountData>(`/api/social-accounts/${accountId}`);
+    return data;
+  },
+  async updateAccount(accountId: string, dto: UpdateSocialAccountDto): Promise<SocialAccountData> {
+    const { data } = await api.patch<SocialAccountData>(`/api/social-accounts/${accountId}`, dto);
     return data;
   },
   async fetchMyAccounts(): Promise<SocialAccountData[]> {
