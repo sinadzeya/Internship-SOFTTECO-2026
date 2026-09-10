@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Post } from '../../post/entities/post.entity';
 import { SocialAccount } from '../../social-account/entities/social-accounts.entity';
-import { SocialAccountAccess } from '../../social-account/entities/social-accounts-access.entity';
+import { SocialAccountAccess } from '../../social-account/entities/social-accounts-accesses.entity';
 
 @Entity('users')
 export class User {

@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { postService } from '@/services/post.service.ts';
 import { Button } from '@/components/ui/button.tsx';
-import { AlertCircle, ArrowLeft, Loader2, Search } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowUpRight,
+  Loader2,
+  Mail,
+  Search,
+} from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
@@ -16,6 +23,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select.tsx';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog.tsx';
+import {
+  type SocialAccountRequestDto,
+  socialAccountService,
+} from '@/services/social-account.service.ts';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -29,6 +48,9 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeQuery, setActiveQuery] = useState<string>('');
 
+  const [activeRequestsToMe, setActiveRequestsToMe] = useState<SocialAccountRequestDto[]>([]);
+  const [isRequestDialogOpen, setIsRequestDialogOpen] = useState<boolean>(false);
+
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = Array.from(new Set(posts?.map((post) => post.category) || []));
@@ -38,22 +60,30 @@ function HomePage() {
   useEffect(() => {
     let isMounted = true;
     
-    const fetchPosts = async () => {
+    const loadData = async () => {
       if (!hasPostsInStore) {
         setLoading(true);
       }
 
       try {
-        const response = await postService.fetchAllPosts();
 
-        if (isMounted) {
+        const [postsRes, activeRequestsToMe] = await Promise.allSettled([
+          postService.fetchAllPosts(),
+          socialAccountService.fetchRequestToMe(),
+        ]);
+
+        if (activeRequestsToMe.status === 'fulfilled') setActiveRequestsToMe(activeRequestsToMe.value || []);
+
+        if (isMounted && postsRes.status === 'fulfilled') {
+          const posts = postsRes.value || [];
           dispatch({
             type: "SET_POSTS",
-            payload: response,
+            payload: posts,
           });
         }
+
       } catch (err: unknown) {
-        console.error('Error during fetching posts:', err);
+        console.error('Error during fetching posts and user data:', err);
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -61,7 +91,7 @@ function HomePage() {
       }
     };
 
-    fetchPosts();
+    loadData();
 
     return () => {
       isMounted = false;
@@ -208,6 +238,59 @@ function HomePage() {
             </Button>
           ) : (
             <>
+              <Dialog open={isRequestDialogOpen} onOpenChange={setIsRequestDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="outline" className="relative">
+                    <Mail className="h-4 w-4" />
+                    {activeRequestsToMe.length > 0 && (
+                      <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">
+                  {activeRequestsToMe.length}
+                </span>
+                    )}
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Currents Requests</DialogTitle>
+                    <DialogDescription>
+                      Requests to get access to your social accounts data.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="flex flex-col gap-3 py-4">
+                    {activeRequestsToMe.length > 0 ? (
+                      activeRequestsToMe.map((acc) => (
+                        <div
+                          key={acc.id}
+                          className="flex items-center justify-between p-3 border rounded-lg"
+                        >
+                          <div>
+                            <p className="font-semibold">{acc.client.username}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(acc.createdAt).toLocaleString('pl-PL', {
+                                dateStyle: 'short',
+                                timeStyle: 'short',
+                              })}
+                            </p>
+                          </div>
+                          <Link
+                            to={`/profile/${acc.client.id}`}
+                            className="inline-flex items-center gap-1 font-semibold hover:underline text-primary"
+                          >
+                            <ArrowUpRight className="h-4 w-4" />
+                            <span>Visit profile</span>
+                          </Link>
+                        </div>
+                      ))
+                    ) : (
+                      <span  className="text-sm text-muted-foreground text-center py-4">
+                      You don't have any requests yet.
+                    </span>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Button
                 size="sm"
                 variant="outline"

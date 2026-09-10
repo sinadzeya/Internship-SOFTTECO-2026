@@ -3,12 +3,18 @@ import {
   ForbiddenException,
   Logger,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SocialAccount } from './entities/social-accounts.entity';
-import { SocialAccountAccess } from './entities/social-accounts-access.entity';
-import { AddSocialAccountDto, GrantAccessDto } from './dto/social-account.dto';
+import { SocialAccountAccess } from './entities/social-accounts-accesses.entity';
+import {
+  AddSocialAccountDto,
+  CreateSocialAccountRequestDto,
+  GrantAccessDto,
+} from './dto/social-account.dto';
+import { SocialAccountRequest } from './entities/social-accounts-request.entity';
 
 @Injectable()
 export class SocialAccountService {
@@ -19,6 +25,8 @@ export class SocialAccountService {
     private readonly accountRepository: Repository<SocialAccount>,
     @InjectRepository(SocialAccountAccess)
     private readonly accessRepository: Repository<SocialAccountAccess>,
+    @InjectRepository(SocialAccountRequest)
+    private readonly requestRepository: Repository<SocialAccountRequest>,
   ) {}
 
   async addAccount(userId: string, dto: AddSocialAccountDto) {
@@ -170,5 +178,125 @@ export class SocialAccountService {
         },
       },
     });
+  }
+
+  async createRequest(
+    clientId: string,
+    dto: CreateSocialAccountRequestDto,
+  ): Promise<SocialAccountRequest> {
+    this.logger.debug(
+      `Start add social account request process for user: ${clientId}`,
+    );
+
+    const existingAccess = await this.accessRepository.findOne({
+      where: {
+        owner: { id: dto.ownerId },
+        client: { id: clientId },
+        clientHasAccess: true,
+      },
+    });
+
+    if (existingAccess) {
+      this.logger.warn(
+        `Request creation rejected: Client ${clientId} already has active access to owner ${dto.ownerId}`,
+      );
+      throw new ConflictException(
+        'You already have access to this user accounts',
+      );
+    }
+
+    const existingPendingRequest = await this.requestRepository.findOne({
+      where: {
+        owner: { id: dto.ownerId },
+        client: { id: clientId },
+        fulfilled: false,
+      },
+    });
+
+    if (existingPendingRequest) {
+      this.logger.warn(
+        `Request creation rejected: Pending request already exists from client ${clientId} to owner ${dto.ownerId}`,
+      );
+      throw new ConflictException('A request to this user is already pending');
+    }
+
+    const request = this.requestRepository.create({
+      owner: { id: dto.ownerId },
+      client: { id: clientId },
+      fulfilled: false,
+    });
+
+    const savedRequest = await this.requestRepository.save(request);
+    this.logger.log(
+      `Social account request added successfully for user: ${clientId}`,
+    );
+
+    return savedRequest;
+  }
+
+  async getRequestsForOwner(ownerId: string): Promise<SocialAccountRequest[]> {
+    this.logger.debug(`Fetching all social accounts request for: ${ownerId}`);
+    return await this.requestRepository.find({
+      where: {
+        owner: { id: ownerId },
+        fulfilled: false,
+      },
+      relations: {
+        client: true,
+      },
+      select: {
+        id: true,
+        owner: {
+          id: true,
+          username: true,
+          email: true,
+        },
+        client: {
+          id: true,
+          username: true,
+          email: true,
+        },
+        fulfilled: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async markAsFulfilled(
+    userId: string,
+    requestId: string,
+  ): Promise<SocialAccountRequest> {
+    this.logger.debug(
+      `Start fulfill request process for request: ${requestId}`,
+    );
+    const request = await this.requestRepository.findOne({
+      where: { id: requestId },
+      relations: { owner: true },
+    });
+
+    if (!request) {
+      this.logger.warn(
+        `Fetching failed: Request with id ${requestId} does not exist`,
+      );
+      throw new NotFoundException(
+        `Request with id ${requestId} does not exist`,
+      );
+    }
+
+    if (request.owner.id !== userId) {
+      this.logger.warn(
+        `Update forbidden: User ${userId} tried to fulfill request addressed to ${request.owner.id}`,
+      );
+      throw new ForbiddenException(
+        'You can only fulfill request addressed to you',
+      );
+    }
+
+    request.fulfilled = true;
+
+    const savedRequest = await this.requestRepository.save(request);
+    this.logger.log(`Request ${requestId} fulfilled successfully`);
+
+    return savedRequest;
   }
 }

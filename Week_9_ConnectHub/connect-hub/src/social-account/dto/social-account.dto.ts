@@ -28,3 +28,9 @@ export class GrantAccessDto {
   @IsBoolean()
   clientHasAccess!: boolean;
 }
+
+export class CreateSocialAccountRequestDto {
+  @IsUUID()
+  @IsNotEmpty()
+  ownerId!: string;
+}

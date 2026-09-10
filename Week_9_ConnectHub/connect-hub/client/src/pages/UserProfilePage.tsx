@@ -2,7 +2,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppState } from '@/store/useStore.ts';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import { AlertCircle, ArrowLeft, Loader2, Mail, UserIcon } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowLeft,
+  Loader2,
+  Mail,
+  UserIcon,
+  UserPlus,
+} from 'lucide-react';
 import {
   Card,
   CardContent, CardDescription,
@@ -27,6 +34,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { authService } from '@/services/auth.service.ts';
+import { isAxiosError } from 'axios';
+import { toast } from 'sonner';
 
 export function UserProfilePage() {
 
@@ -41,9 +52,9 @@ export function UserProfilePage() {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [updatingAccess, setUpdatingAccess] = useState<string | null>(null);
-
   const [sharedWithMeAccesses, setSharedWithMeAccesses] = useState<SocialAccountAccessDto[]>([]);
-  const [isSharedWithMeDialogOpen, setIsSharedWithMeDialogOpen] = useState<boolean>(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isAuthenticated = Boolean(accessToken);
   const isUserProfile = Boolean(user?.id && String(user.id) === String(id));
@@ -136,6 +147,16 @@ export function UserProfilePage() {
         clientHasAccess: !currentAccessStatus,
       });
 
+      const requests = await socialAccountService.fetchRequestToMe();
+
+      const matchingRequest = requests.find(
+        (req) => req.client.id === id && !req.fulfilled
+      );
+
+      if (matchingRequest) {
+        await socialAccountService.fulfillRequest(matchingRequest.id);
+      }
+
       const updatedShared = await socialAccountService.fetchSharedByMe();
       setSharedAccesses(updatedShared);
     } catch (err) {
@@ -160,6 +181,46 @@ export function UserProfilePage() {
       acc.clientHasAccess
   );
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      dispatch({ type: "LOGOUT" });
+    } catch (error) {
+      console.error("Error during Log Out:", error);
+    }
+  };
+
+  const handleRequest = async () => {
+    if (!id) return;
+
+    setIsSubmitting(true);
+    try {
+      await socialAccountService.createRequestToUser({ ownerId: id });
+      toast.success('Request sent successfully!');
+    } catch (error: unknown) {
+      console.error("Error during creation:", error);
+
+      if (isAxiosError(error) && error.response) {
+        const statusCode = error.response.status;
+        const message = error.response.data?.message;
+
+        const formattedMessage = Array.isArray(message)
+          ? message.join(', ')
+          : message;
+
+        if (statusCode === 409) {
+          toast.warning(formattedMessage || 'A request already exists or access is already granted.');
+        } else {
+          toast.error('Failed to send request. Please try again.');
+        }
+      } else {
+        toast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
 
     <main data-layout="page-center-dymanic">
@@ -174,108 +235,129 @@ export function UserProfilePage() {
 
       <header data-layout="top-right-nav">
         <div data-layout="actions-cluster">
-          {!isUserProfile && (
-          <>
-            <Dialog open={isSharedWithMeDialogOpen} onOpenChange={setIsSharedWithMeDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" variant="outline" className="relative">
-                  <Mail className="h-4 w-4" />
-                  {accountsSharedWithMeByThisUser.length > 0 && (
-                    <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">
-                  {accountsSharedWithMeByThisUser.length}
-                </span>
-                  )}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Shared Contacts</DialogTitle>
-                  <DialogDescription>
-                    Social accounts shared with you by {userInfo?.username}.
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="flex flex-col gap-3 py-4">
-                  {accountsSharedWithMeByThisUser.length > 0 ? (
-                    accountsSharedWithMeByThisUser.map((acc) => (
-                      <div
-                        key={acc.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
-                      >
-                        <div>
-                          <p className="font-semibold">{acc.socialAccount.platform}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {acc.socialAccount.accountName}
-                          </p>
-                        </div>
-                        <Badge variant="outline">Accessible</Badge>
-                      </div>
-                    ))
-                  ) : (
-                      <Link className="text-sm text-muted-foreground hover:underline" to={`/request-access/${id}`}>
-                        This user hasn't shared any accounts with you yet. Click to sent a request.
-                      </Link>
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
-
+          {!isUserProfile ? (
+            <>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isSubmitting}
+                onClick={handleRequest}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <UserPlus className="h-4 w-4" />
+                )}
+              </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline">
                   Manage Contacts
                 </Button>
               </DialogTrigger>
+
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Share Social Accounts</DialogTitle>
+                  <DialogTitle>Social Connections</DialogTitle>
                   <DialogDescription>
-                    Select which platforms you want to grant or revoke access to for {userInfo?.username}.
+                    Manage access rights and shared accounts with {userInfo?.username}.
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="flex flex-col gap-3 py-4">
-                  {socialAccounts.length > 0 ? (
-                    socialAccounts.map((account) => {
-                      const hasAccess = isAccountShared(account.id);
-                      const isPending = updatingAccess === account.id;
+                <Tabs defaultValue="shared-with-me" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="shared-with-me">
+                      Shared with Me ({accountsSharedWithMeByThisUser.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="grant-access">
+                      Grant Access
+                    </TabsTrigger>
+                  </TabsList>
 
-                      return (
+                  <TabsContent value="shared-with-me" className="flex flex-col gap-3 py-4">
+                    {accountsSharedWithMeByThisUser.length > 0 ? (
+                      accountsSharedWithMeByThisUser.map((acc) => (
                         <div
-                          key={account.id}
+                          key={acc.id}
                           className="flex items-center justify-between p-3 border rounded-lg"
                         >
                           <div>
-                            <p className="font-semibold">{account.platform}</p>
-                            <p className="text-xs text-muted-foreground">{account.accountName}</p>
+                            <p className="font-semibold">{acc.socialAccount.platform}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {acc.socialAccount.accountName}
+                            </p>
                           </div>
-
-                          <Button
-                            size="sm"
-                            variant={hasAccess ? 'destructive' : 'default'}
-                            disabled={isPending}
-                            onClick={() => handleToggleAccess(account.id, hasAccess)}
-                          >
-                            {isPending ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : hasAccess ? (
-                              'Revoke'
-                            ) : (
-                              'Grant Access'
-                            )}
+                          <Button size="sm" variant="outline" disabled className="opacity-100 cursor-default">
+                            Accessible
                           </Button>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <Link className="text-sm text-muted-foreground hover:underline" to={"/access"}>
-                      You haven't added any social accounts yet.  Click to add your social accounts.
-                    </Link>
-                  )}
-                </div>
+                      ))
+                    ) : (
+                      <Button
+                        className="text-sm text-muted-foreground hover:underline text-center py-4"
+                        disabled={isSubmitting}
+                        onClick={handleRequest}
+                      >
+                        This user hasn't shared any accounts with you yet. Click to send a request.
+                      </Button>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="grant-access" className="flex flex-col gap-3 py-4">
+                    {socialAccounts.length > 0 ? (
+                      socialAccounts.map((account) => {
+                        const hasAccess = isAccountShared(account.id);
+                        const isPending = updatingAccess === account.id;
+
+                        return (
+                          <div
+                            key={account.id}
+                            className="flex items-center justify-between p-3 border rounded-lg"
+                          >
+                            <div>
+                              <p className="font-semibold">{account.platform}</p>
+                              <p className="text-xs text-muted-foreground">{account.accountName}</p>
+                            </div>
+
+                            <Button
+                              size="sm"
+                              variant={hasAccess ? 'destructive' : 'default'}
+                              disabled={isPending}
+                              onClick={() => handleToggleAccess(account.id, hasAccess)}
+                            >
+                              {isPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : hasAccess ? (
+                                'Revoke Access'
+                              ) : (
+                                'Grant Access'
+                              )}
+                            </Button>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <Link
+                        className="text-sm text-muted-foreground hover:underline text-center py-4"
+                        to={"/access"}
+                      >
+                        You haven't added any social accounts yet. Click to add your social accounts.
+                      </Link>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </DialogContent>
             </Dialog>
-          </>
+            </>
+          ) : (
+            <>
+              <Button size="sm" variant="outline" onClick={() => navigate("/access")}>
+                Contact data
+              </Button>
+              <Button size="sm" variant="outline" onClick={handleLogout}>
+                Log Out
+              </Button>
+            </>
           )}
         </div>
       </header>

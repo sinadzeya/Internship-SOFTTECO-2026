@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SocialAccountAccess } from './social-accounts-access.entity';
+import { SocialAccountAccess } from './social-accounts-accesses.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity('social_accounts')

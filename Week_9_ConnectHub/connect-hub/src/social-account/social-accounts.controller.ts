@@ -1,8 +1,21 @@
-import { Body, Controller, Get, Post, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Req,
+  Patch,
+  Param,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SocialAccountService } from './social-account.service';
 import type { RequestWithUser } from '../auth/types/request-with-user.type';
-import { AddSocialAccountDto, GrantAccessDto } from './dto/social-account.dto';
+import {
+  AddSocialAccountDto,
+  CreateSocialAccountRequestDto,
+  GrantAccessDto,
+} from './dto/social-account.dto';
 
 @Controller('social-accounts')
 @UseGuards(JwtAuthGuard)
@@ -32,5 +45,23 @@ export class SocialAccountController {
   @Get('shared-with-me')
   getSharedWithMe(@Req() req: RequestWithUser) {
     return this.socialAccountService.getSharedWithMe(req.user.userId);
+  }
+
+  @Post('requests')
+  async createRequest(
+    @Req() req: RequestWithUser,
+    @Body() dto: CreateSocialAccountRequestDto,
+  ) {
+    return await this.socialAccountService.createRequest(req.user.userId, dto);
+  }
+
+  @Get('requests-to-me')
+  async getRequestsForOwner(@Req() req: RequestWithUser) {
+    return await this.socialAccountService.getRequestsForOwner(req.user.userId);
+  }
+
+  @Patch('requests/:id/fulfill')
+  async markAsFulfilled(@Req() req: RequestWithUser, @Param('id') id: string) {
+    return await this.socialAccountService.markAsFulfilled(req.user.userId, id);
   }
 }

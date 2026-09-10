@@ -19,15 +19,23 @@ export interface GrantAccessDto {
   clientHasAccess: boolean;
 }
 
+export interface CreateSocialAccountRequestDto {
+  ownerId: string;
+}
+
+export interface SocialAccountRequestDto {
+  id: string;
+  owner: UserData;
+  client: UserData;
+  fulfilled: boolean;
+  createdAt: string;
+}
+
 export interface SocialAccountAccessDto {
   id: string;
   clientHasAccess: boolean;
   createdAt: string;
-  client: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  client: UserData;
   socialAccount: {
     id: string;
     platform: string;
@@ -57,4 +65,16 @@ export const socialAccountService = {
     const { data } = await api.get<SocialAccountAccessDto[]>("/api/social-accounts/shared-by-me");
     return data;
   },
+  async createRequestToUser(dto: CreateSocialAccountRequestDto): Promise<SocialAccountRequestDto> {
+    const { data } = await api.post<SocialAccountRequestDto>("/api/social-accounts/requests", dto);
+    return data;
+  },
+  async fetchRequestToMe(): Promise<SocialAccountRequestDto[]> {
+    const { data } = await api.get<SocialAccountRequestDto[]>("/api/social-accounts/requests-to-me");
+    return data;
+  },
+  async fulfillRequest(requestId: string): Promise<SocialAccountRequestDto> {
+    const { data } = await api.patch<SocialAccountRequestDto>(`/api/social-accounts/requests/${requestId}/fulfill`);
+    return data;
+  }
 }
