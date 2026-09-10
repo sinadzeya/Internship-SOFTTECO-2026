@@ -21,7 +21,13 @@ import { Badge } from '@/components/ui/badge.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { type UserData, userService } from '@/services/user.service.ts';
-import { type PostData, postService } from '@/services/post.service.ts';
+import {
+  POST_CATEGORY_LABELS,
+  PostCategory,
+  type PostData,
+  postService,
+  type UpdatePostDto,
+} from '@/services/post.service.ts';
 import {
   type SocialAccountAccessDto,
   socialAccountService,
@@ -38,6 +44,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.t
 import { authService } from '@/services/auth.service.ts';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select.tsx';
+import { Textarea } from '@/components/ui/textarea.tsx';
 
 export function UserProfilePage() {
 
@@ -60,8 +74,15 @@ export function UserProfilePage() {
   const isUserProfile = Boolean(user?.id && String(user.id) === String(id));
 
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editSubmitting, setEditSubmitting] = useState<boolean>(false);
+  const [editFormData, setEditFormData] = useState<UpdatePostDto>({
+    title: '',
+    content: '',
+    category: PostCategory.DISCUSSION,
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -218,6 +239,57 @@ export function UserProfilePage() {
       }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleStartEdit = (post: PostData) => {
+    setEditingId(post.id);
+    setEditFormData({
+      title: post.title,
+      content: post.content,
+      category: post.category,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditFormData({ title: '', content: '', category: PostCategory.DISCUSSION });
+  };
+
+  const handleRemove = async (postId: string) => {
+    if (!id) return;
+
+    try {
+      await postService.deletePost(postId);
+
+      toast.success('Post removed successfully');
+      await loadData(id);
+    } catch (err: unknown) {
+      console.error('Error during deletion of the post:', err);
+
+      if (isAxiosError(err) && err.response) {
+        const message = err.response.data?.message;
+        toast.error(message || 'Failed to delete post.');
+      } else {
+        toast.error('Failed to delete post. Please try again.');
+      }
+    }
+  };
+
+  const handleSaveEdit = async (postId: string) => {
+    if (!id) return;
+
+    try {
+      setEditSubmitting(true);
+      await postService.updatePost(postId, editFormData);
+      toast.success('Post updated successfully!');
+      setEditingId(null);
+      await loadData(id);
+    } catch (err: unknown) {
+      console.error('Error updating post:', err);
+      toast.error('Failed to update post.');
+    } finally {
+      setEditSubmitting(false);
     }
   };
 
@@ -411,25 +483,118 @@ export function UserProfilePage() {
       <div className="w-full max-w-xl pb-10">
         {userPosts?.length > 0 ? (
           <ul className="flex flex-col justify-center gap-10">
-            {userPosts.map((post) => (
-              <Card key={post.id}>
-                <CardHeader>
-                  <CardTitle>{post.title}</CardTitle>
-                  <CardDescription>
-                    <Link
-                      to={`/profile/${post.user.id}`}
-                      className="hover:underline hover:text-primary cursor-pointer transition-colors"
-                    >
-                      {post.user.username}
-                    </Link>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>{post.content}</CardContent>
-                <CardContent>
-                  <Badge variant="secondary">{post.category}</Badge>
-                </CardContent>
-              </Card>
-            ))}
+            {userPosts.map((post) => {
+              const isEditing = editingId === post.id;
+
+              return (
+                <Card key={post.id}>
+                  {isEditing ? (
+
+                    <CardContent className="pt-3 space-y-3">
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium">Title</label>
+                        <Textarea
+                          value={editFormData.title}
+                          onChange={(e) =>
+                            setEditFormData((prev) => ({ ...prev, title: e.target.value }))
+                          }
+                          rows={3}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium">Content</label>
+                        <Textarea
+                          value={editFormData.content}
+                          onChange={(e) =>
+                            setEditFormData((prev) => ({ ...prev, content: e.target.value }))
+                          }
+                          rows={6}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium">Category</label>
+                        <Select
+                          value={editFormData.category}
+                          onValueChange={(value: PostCategory) =>
+                            setEditFormData((prev) => ({ ...prev, category: value }))
+                          }
+                        >
+                          <SelectTrigger id="category" className="w-full">
+                            <SelectValue placeholder="Select a tag" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60 overflow-y-auto">
+                            {Object.entries(PostCategory).map(([key, value]) => (
+                              <SelectItem key={key} value={value}>
+                                {POST_CATEGORY_LABELS[value] || value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+
+                      <div className="flex items-center gap-2 pt-2">
+                        <Button
+                          size="sm"
+                          disabled={editSubmitting}
+                          onClick={() => handleSaveEdit(post.id)}
+                        >
+                          {editSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={editSubmitting}
+                          onClick={handleCancelEdit}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </CardContent>
+
+                    ) : (
+                      <>
+                        <CardHeader>
+                          <CardTitle>{post.title}</CardTitle>
+                          <CardDescription>
+                            <Link
+                              to={`/profile/${post.user.id}`}
+                              className="hover:underline hover:text-primary cursor-pointer transition-colors"
+                            >
+                              {post.user.username}
+                            </Link>
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>{post.content}</CardContent>
+                        <CardContent className="flex items-center justify-between gap-4">
+                          <Badge variant="secondary">{post.category}</Badge>
+                          {isUserProfile && (
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleStartEdit(post)}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleRemove(post.id)}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          )}
+                        </CardContent>
+                      </>
+                  )}
+                </Card>
+              );
+            })}
           </ul>
         ) : (
           <Alert>

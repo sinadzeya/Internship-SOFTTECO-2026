@@ -37,6 +37,9 @@ export class PostService {
       relations: {
         user: true,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
   }
 
