@@ -19,8 +19,7 @@ export function SocialAccountsPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { user, socialAccounts, accessToken } = useAppState();
-  const isAuthenticated = Boolean(accessToken && user);
+  const { user, socialAccounts } = useAppState();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -146,16 +145,6 @@ export function SocialAccountsPage() {
       isMounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <main data-layout="page-center-dymanic">

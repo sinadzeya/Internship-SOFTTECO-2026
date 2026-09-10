@@ -56,7 +56,7 @@ import { Textarea } from '@/components/ui/textarea.tsx';
 export function UserProfilePage() {
 
   const { id } = useParams<{ id: string }>();
-  const { user, socialAccounts, accessToken } = useAppState();
+  const { user, socialAccounts } = useAppState();
 
   const [userInfo, setUserInfo] = useState<UserData>();
   const [userPosts, setUsersPosts] = useState<PostData[]>([]);
@@ -70,7 +70,6 @@ export function UserProfilePage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isAuthenticated = Boolean(accessToken);
   const isUserProfile = Boolean(user?.id && String(user.id) === String(id));
 
   const dispatch = useAppDispatch();
@@ -83,12 +82,6 @@ export function UserProfilePage() {
     content: '',
     category: PostCategory.DISCUSSION,
   });
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   const loadData = async (profileId: string) => {
     setLoading(true);
@@ -154,8 +147,6 @@ export function UserProfilePage() {
       </div>
     );
   }
-
-  if (!isAuthenticated) return null;
 
   const handleToggleAccess = async (socialAccountId: string, currentAccessStatus: boolean) => {
     if (!id) return;

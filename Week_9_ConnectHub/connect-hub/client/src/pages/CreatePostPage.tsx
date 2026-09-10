@@ -1,6 +1,6 @@
 import { useAppState } from '@/store/useStore.ts';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import { AlertCircle, ArrowLeft} from 'lucide-react';
 import {
@@ -28,8 +28,7 @@ import {
 } from '@/components/ui/select.tsx';
 
 export function CreatePostPage(){
-  const { user, accessToken } = useAppState();
-  const isAuthenticated = Boolean(accessToken);
+  const { user } = useAppState();
 
   const navigate = useNavigate();
 
@@ -72,18 +71,6 @@ export function CreatePostPage(){
       setLoading(false);
     }
   };
-
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
 
   return (
