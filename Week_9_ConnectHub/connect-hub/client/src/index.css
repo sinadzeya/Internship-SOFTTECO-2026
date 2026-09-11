@@ -10,7 +10,7 @@
     @apply relative min-h-screen flex flex-col items-center justify-center p-6 space-y-12;
 }
 
-[data-layout="page-center-dymanic"] {
+[data-layout="page-center-dynamic"] {
     @apply relative min-h-screen flex flex-col items-center justify-start p-6 space-y-12;
 }
 

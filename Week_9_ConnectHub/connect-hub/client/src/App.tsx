@@ -10,10 +10,20 @@ import { UserProfilePage } from '@/pages/UserProfilePage.tsx';
 import { SocialAccountsPage } from '@/pages/SocialAccountsPage.tsx';
 import { ProtectedRoute } from '@/components/ProtectedRoute.tsx';
 import { Toaster } from 'sonner';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, //  5 min
+      gcTime: 1000 * 60 * 10,    // 10 min
+    },
+  },
+});
 
 export default function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -29,7 +39,7 @@ export default function App() {
         </Routes>
       </BrowserRouter>
       <Toaster position="bottom-left" richColors />
-    </>
+    </QueryClientProvider>
   );
 }
 

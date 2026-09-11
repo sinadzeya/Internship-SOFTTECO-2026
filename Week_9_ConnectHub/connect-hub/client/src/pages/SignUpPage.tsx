@@ -16,12 +16,15 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { setAccessToken } from '@/lib/axios.ts';
 import { userService } from '@/services/user.service.ts';
 import { useAppDispatch, useAppState } from '@/store/useStore.ts';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function SignUpPage() {
   const navigate = useNavigate();
 
   const { loading, error } = useAppState();
   const dispatch = useAppDispatch();
+
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<RegisterUserDto>({
     email: "",
@@ -57,6 +60,8 @@ export function SignUpPage() {
           accessToken: response.accessToken
         },
       });
+
+      await queryClient.invalidateQueries();
 
       navigate("/home");
     } catch (err: unknown) {

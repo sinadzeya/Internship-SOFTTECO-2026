@@ -2,7 +2,7 @@ import { useAppState } from '@/store/useStore.ts';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import { AlertCircle, ArrowLeft} from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -26,19 +26,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select.tsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function CreatePostPage(){
   const { user } = useAppState();
-
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<CreatePostDto>({
     title: "",
     content: "",
     category: PostCategory.DISCUSSION,
+  });
+
+  const createPostMutation = useMutation({
+    mutationFn: (newPost: CreatePostDto) => postService.create(newPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      navigate('/home');
+    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,24 +64,11 @@ export function CreatePostPage(){
 
   const handleCreatePost = async (e: React.SubmitEvent) => {
     e.preventDefault();
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      await postService.create(formData);
-      navigate('/home');
-    } catch (err: unknown) {
-      console.error('Error during creation:', err);
-      setError('Failed to create post. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    createPostMutation.mutate(formData);
   };
 
-
   return (
-    <main data-layout="page-center">
+    <main data-layout="page-center-dynamic">
       <header data-layout="top-left-nav">
         <div data-layout="actions-cluster">
           <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
@@ -88,11 +82,11 @@ export function CreatePostPage(){
       {user ? (
         <div className="w-full max-w-xl pt-25 space-y-4">
 
-          {error && (
+          {createPostMutation.isError && (
             <Alert variant="destructive">
               <AlertCircle/>
               <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>Failed to create post. Please try again.</AlertDescription>
             </Alert>
           )}
 
@@ -159,11 +153,14 @@ export function CreatePostPage(){
                   </Select>
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? "Creating..." : "Create"}
+                <Button type="submit" disabled={createPostMutation.isPending}>
+                  {createPostMutation.isPending ? (
+                    <>
+                      Creating...
+                    </>
+                  ) : (
+                    'Create'
+                  )}
                 </Button>
 
               </form>

@@ -1,12 +1,11 @@
-import { useAppDispatch, useAppState } from '@/store/useStore.ts';
+import { useAppState } from '@/store/useStore.ts';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.tsx';
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   type AddSocialAccountDto,
   type SocialAccountData,
-  socialAccountService,
   type UpdateSocialAccountDto,
 } from '@/services/social-account.service.ts';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
@@ -14,15 +13,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input.tsx';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
+import { useSocialAccounts } from '@/hooks/useSocialAccounts.ts';
 
 export function SocialAccountsPage() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const { user } = useAppState();
 
-  const { user, socialAccounts } = useAppState();
+  const { accounts, isLoading, addAccount, removeAccount, updateAccount } = useSocialAccounts();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<AddSocialAccountDto>({
@@ -31,7 +29,6 @@ export function SocialAccountsPage() {
   });
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editSubmitting, setEditSubmitting] = useState<boolean>(false);
   const [editFormData, setEditFormData] = useState<UpdateSocialAccountDto>({
     platform: '',
     accountName: '',
@@ -44,41 +41,38 @@ export function SocialAccountsPage() {
     }));
   };
 
-  const handleAddSocialAccess = async (e: React.SubmitEvent) => {
+  const handleAddSocialAccess = (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      await socialAccountService.addAccount(formData);
-      await loadData();
-      setFormData({ platform: '', accountName: '' });
-    } catch (err: unknown) {
-      console.error('Error during creation:', err);
-      setError('Failed to add contact data. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
+    addAccount.mutate(formData, {
+      onSuccess: () => {
+        setFormData({ platform: '', accountName: '' });
+        toast.success('Social account added successfully!');
+      },
+      onError: (err: unknown) => {
+        console.error('Error during creation:', err);
+        setError('Failed to add contact data. Please try again.');
+      },
+    });
   };
 
-  const handleRemove = async (socialAccountId: string) => {
-    try {
-      await socialAccountService.removeAccount(socialAccountId);
-
-      toast.success('Social account removed successfully');
-
-      await loadData();
-    } catch (err: unknown) {
-      console.error('Error during deletion of the social account:', err);
-
-      if (isAxiosError(err) && err.response) {
-        const message = err.response.data?.message;
-        toast.error(message || 'Failed to delete social account.');
-      } else {
-        toast.error('Failed to delete social account. Please try again.');
-      }
-    }
+  const handleRemove = (socialAccountId: string) => {
+    removeAccount.mutate(socialAccountId, {
+      onSuccess: () => {
+        toast.success('Social account removed successfully');
+      },
+      onError: (err: unknown) => {
+        console.error('Error during deletion of the social account:', err);
+        if (isAxiosError(err) && err.response) {
+          const message = err.response.data?.message;
+          toast.error(message || 'Failed to delete social account.');
+        } else {
+          toast.error('Failed to delete social account. Please try again.');
+        }
+      },
+    });
   };
 
   const handleStartEdit = (account: SocialAccountData) => {
@@ -94,60 +88,24 @@ export function SocialAccountsPage() {
     setEditFormData({ platform: '', accountName: '' });
   };
 
-  const handleSaveEdit = async (socialAccountId: string) => {
-    try {
-      setEditSubmitting(true);
-      await socialAccountService.updateAccount(socialAccountId, editFormData);
-      toast.success('Social account updated successfully!');
-      setEditingId(null);
-      await loadData();
-    } catch (err: unknown) {
-      console.error('Error updating account:', err);
-      toast.error('Failed to update account.');
-    } finally {
-      setEditSubmitting(false);
-    }
-  };
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
-
-      const myAccountsRes = await socialAccountService.fetchMyAccounts();
-
-      if (myAccountsRes) {
-        const freshAccounts = myAccountsRes || [];
-        dispatch({
-          type: "SET_USER_SOCIAL_ACCOUNTS",
-          payload: freshAccounts,
-        });
+  const handleSaveEdit = (socialAccountId: string) => {
+    updateAccount.mutate(
+      { id: socialAccountId, data: editFormData },
+      {
+        onSuccess: () => {
+          toast.success('Social account updated successfully!');
+          setEditingId(null);
+        },
+        onError: (err: unknown) => {
+          console.error('Error updating account:', err);
+          toast.error('Failed to update account.');
+        },
       }
-
-    } catch (err: unknown) {
-      console.error('Error fetching profile data:', err);
-    } finally {
-      setLoading(false);
-    }
+    );
   };
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      if (isMounted) {
-        await loadData();
-      }
-    };
-
-    void fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
-    <main data-layout="page-center-dymanic">
+    <main data-layout="page-center-dynamic">
       <header data-layout="top-left-nav">
         <div data-layout="actions-cluster">
           <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
@@ -207,10 +165,9 @@ export function SocialAccountsPage() {
                   />
                 </div>
 
-                <Button type="submit" disabled={submitting}>
-                  {submitting ? (
+                <Button type="submit" disabled={addAccount.isPending}>
+                  {addAccount.isPending ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Adding...
                     </>
                   ) : (
@@ -221,15 +178,15 @@ export function SocialAccountsPage() {
             </CardContent>
           </Card>
 
-          {loading ? (
+          {isLoading ? (
             <div className="flex justify-center py-6">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           ) : (
             <div className="w-full max-w-xl pt-5 pb-10">
-              {socialAccounts?.length > 0 ? (
+              {accounts?.length > 0 ? (
                 <ul className="flex flex-col justify-center gap-4">
-                  {socialAccounts.map((account) => {
+                  {accounts.map((account) => {
                     const isEditing = editingId === account.id;
 
                     return (
@@ -260,15 +217,15 @@ export function SocialAccountsPage() {
                             <div className="flex items-center gap-2 pt-2">
                               <Button
                                 size="sm"
-                                disabled={editSubmitting}
+                                disabled={updateAccount.isPending}
                                 onClick={() => handleSaveEdit(account.id)}
                               >
-                                {editSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                                {updateAccount.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
                               </Button>
                               <Button
                                 size="sm"
                                 variant="outline"
-                                disabled={editSubmitting}
+                                disabled={updateAccount.isPending}
                                 onClick={handleCancelEdit}
                               >
                                 Cancel

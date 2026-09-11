@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { postService } from '@/services/post.service.ts';
 import { Button } from '@/components/ui/button.tsx';
 import {
@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
-import { useAppDispatch, useAppState } from '@/store/useStore.ts';
+import { useAppState } from '@/store/useStore.ts';
 import { Input } from '@/components/ui/input.tsx';
 import { Field } from '@/components/ui/field.tsx';
 import {
@@ -32,72 +32,38 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import {
-  type SocialAccountRequestDto,
   socialAccountService,
 } from '@/services/social-account.service.ts';
+import { useQuery } from '@tanstack/react-query';
 
 function HomePage() {
   const navigate = useNavigate();
-
-  const { user, posts, accessToken } = useAppState();
+  const { user, accessToken } = useAppState();
   const isAuthenticated = Boolean(accessToken && user);
 
-  const hasPostsInStore = posts && posts.length > 0;
-  const [loading, setLoading] = useState<boolean>(!hasPostsInStore);
+  const { data: posts = [], isLoading: isLoadingPosts } = useQuery({
+    queryKey: ['posts'],
+    queryFn: async () => {
+      const res = await postService.fetchAllPosts();
+      return res || [];
+    },
+  });
+
+  const { data: activeRequestsToMe = [] } = useQuery({
+    queryKey: ['socialAccountRequests'],
+    queryFn: async () => {
+      const res = await socialAccountService.fetchRequestToMe();
+      return res || [];
+    },
+    enabled: isAuthenticated,
+  });
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeQuery, setActiveQuery] = useState<string>('');
-
-  const [activeRequestsToMe, setActiveRequestsToMe] = useState<SocialAccountRequestDto[]>([]);
   const [isRequestDialogOpen, setIsRequestDialogOpen] = useState<boolean>(false);
-
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = Array.from(new Set(posts?.map((post) => post.category) || []));
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    let isMounted = true;
-    
-    const loadData = async () => {
-      if (!hasPostsInStore) {
-        setLoading(true);
-      }
-
-      try {
-
-        const [postsRes, activeRequestsToMe] = await Promise.allSettled([
-          postService.fetchAllPosts(),
-          socialAccountService.fetchRequestToMe(),
-        ]);
-
-        if (activeRequestsToMe.status === 'fulfilled') setActiveRequestsToMe(activeRequestsToMe.value || []);
-
-        if (isMounted && postsRes.status === 'fulfilled') {
-          const posts = postsRes.value || [];
-          dispatch({
-            type: "SET_POSTS",
-            payload: posts,
-          });
-        }
-
-      } catch (err: unknown) {
-        console.error('Error during fetching posts and user data:', err);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadData();
-
-    return () => {
-      isMounted = false;
-    };
-
-  }, [dispatch]);
 
   const handleSearch = () => {
     setActiveQuery(searchQuery);
@@ -121,7 +87,7 @@ function HomePage() {
     return matchesCategory && matchesQuery;
   }) || [];
 
-  if (loading && !hasPostsInStore) {
+  if (isLoadingPosts) {
     return (
       <div data-layout="page-center">
       <Card data-layout="elements-full-width">
@@ -138,7 +104,7 @@ function HomePage() {
   }
 
   return (
-    <main data-layout="page-center-dymanic">
+    <main data-layout="page-center-dynamic">
       <header data-layout="top-left-nav">
         <div
           data-layout="actions-cluster"

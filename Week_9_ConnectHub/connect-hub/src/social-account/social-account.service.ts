@@ -314,6 +314,7 @@ export class SocialAccountService {
       },
       relations: {
         client: true,
+        owner: true,
       },
       select: {
         id: true,

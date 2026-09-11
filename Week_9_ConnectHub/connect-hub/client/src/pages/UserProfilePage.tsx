@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppState } from '@/store/useStore.ts';
-import { useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import {
   AlertCircle,
@@ -20,7 +20,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
-import { type UserData, userService } from '@/services/user.service.ts';
 import {
   POST_CATEGORY_LABELS,
   PostCategory,
@@ -29,7 +28,6 @@ import {
   type UpdatePostDto,
 } from '@/services/post.service.ts';
 import {
-  type SocialAccountAccessDto,
   socialAccountService,
 } from '@/services/social-account.service.ts';
 import {
@@ -52,28 +50,29 @@ import {
   SelectValue,
 } from '@/components/ui/select.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
+import { useProfileData } from '@/hooks/useProfileData.ts';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function UserProfilePage() {
-
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { user, socialAccounts } = useAppState();
 
-  const [userInfo, setUserInfo] = useState<UserData>();
-  const [userPosts, setUsersPosts] = useState<PostData[]>([]);
+  const queryClient = useQueryClient();
 
-  const [sharedAccesses, setSharedAccesses] = useState<SocialAccountAccessDto[]>([]);
+  const {
+    loading,
+    userInfo,
+    userPosts,
+    sharedAccesses,
+    sharedWithMeAccesses,
+    refreshData,
+  } = useProfileData(id);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [updatingAccess, setUpdatingAccess] = useState<string | null>(null);
-  const [sharedWithMeAccesses, setSharedWithMeAccesses] = useState<SocialAccountAccessDto[]>([]);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isUserProfile = Boolean(user?.id && String(user.id) === String(id));
-
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editSubmitting, setEditSubmitting] = useState<boolean>(false);
@@ -83,54 +82,76 @@ export function UserProfilePage() {
     category: PostCategory.DISCUSSION,
   });
 
-  const loadData = async (profileId: string) => {
-    setLoading(true);
-    try {
-      const [userRes, postsRes, myAccountsRes, sharedRes, sharedWithMeRes] = await Promise.allSettled([
-        userService.fetchUserInfo(profileId),
-        postService.fetchPostByUserId(profileId),
-        socialAccountService.fetchMyAccounts(),
-        socialAccountService.fetchSharedByMe(),
-        socialAccountService.fetchSharedWithMe(),
-      ]);
+  const requestMutation = useMutation({
+    mutationFn: (ownerId: string) => socialAccountService.createRequestToUser({ ownerId }),
+    onSuccess: async () => {
+      toast.success('Request sent successfully!');
+      await queryClient.invalidateQueries({ queryKey: ['socialAccountRequests'] });
+      await queryClient.invalidateQueries({ queryKey: ['socialAccounts'] });
+      await queryClient.invalidateQueries({ queryKey: ['posts'] });
+    },
+    onError: (error: unknown) => {
+      if (isAxiosError(error) && error.response) {
+        const statusCode = error.response.status;
+        const message = error.response.data?.message;
+        const formattedMessage = Array.isArray(message) ? message.join(', ') : message;
 
-      if (userRes.status === 'fulfilled') setUserInfo(userRes.value);
-      if (postsRes.status === 'fulfilled') setUsersPosts(postsRes.value || []);
-      if (sharedRes.status === 'fulfilled') setSharedAccesses(sharedRes.value || []);
-      if (sharedWithMeRes.status === 'fulfilled') setSharedWithMeAccesses(sharedWithMeRes.value || []);
-
-      if (myAccountsRes.status === 'fulfilled') {
-        const freshAccounts = myAccountsRes.value || [];
-        dispatch({
-          type: "SET_USER_SOCIAL_ACCOUNTS",
-          payload: freshAccounts,
-        });
+        if (statusCode === 409) {
+          toast.warning(formattedMessage || 'A request already exists or access is already granted.');
+        } else {
+          toast.error('Failed to send request. Please try again.');
+        }
+      } else {
+        toast.error('An unexpected error occurred.');
       }
+    },
+  });
 
-    } catch (err: unknown) {
-      console.error('Error fetching profile data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const toggleAccessMutation = useMutation({
+    mutationFn: async ({ socialAccountId, currentAccessStatus }: { socialAccountId: string; currentAccessStatus: boolean }) => {
+      if (!id) return;
 
-  useEffect(() => {
-    if (!id) return;
+      await socialAccountService.grantOrUpdateAccess({
+        clientId: id,
+        socialAccountId,
+        clientHasAccess: !currentAccessStatus,
+      });
 
-    let isMounted = true;
+      const requests = await socialAccountService.fetchRequestToMe();
+      const matchingRequest = requests.find((req) => req.client.id === id && !req.fulfilled);
 
-    const fetchData = async () => {
-      if (isMounted) {
-        await loadData(id);
+      if (matchingRequest) {
+        await socialAccountService.fulfillRequest(matchingRequest.id);
       }
-    };
+    },
+    onSuccess: async() => {
+      toast.success('Access permissions updated successfully!');
+      await queryClient.invalidateQueries({ queryKey: ['socialAccountRequests'] });
+      await queryClient.invalidateQueries({ queryKey: ['socialAccounts'] });
+    },
+    onError: (err) => {
+      console.error('Error toggling access:', err);
+      toast.error('Failed to update access permissions.');
+    },
+  });
 
-    void fetchData();
+  const isAccountShared = useCallback(
+    (socialAccountId: string) => {
+      return sharedAccesses.some(
+        (acc) =>
+          acc.socialAccount.id === socialAccountId &&
+          String(acc.client?.id) === String(id) &&
+          acc.clientHasAccess
+      );
+    },
+    [sharedAccesses, id]
+  );
 
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
+  const accountsSharedWithMeByThisUser = useMemo(() => {
+    return sharedWithMeAccesses.filter(
+      (acc) => String(acc.socialAccount?.owner?.id) === String(id) && acc.clientHasAccess
+    );
+  }, [sharedWithMeAccesses, id]);
 
   if (loading) {
     return (
@@ -148,50 +169,9 @@ export function UserProfilePage() {
     );
   }
 
-  const handleToggleAccess = async (socialAccountId: string, currentAccessStatus: boolean) => {
-    if (!id) return;
-    setUpdatingAccess(socialAccountId);
-
-    try {
-      await socialAccountService.grantOrUpdateAccess({
-        clientId: id,
-        socialAccountId: socialAccountId,
-        clientHasAccess: !currentAccessStatus,
-      });
-
-      const requests = await socialAccountService.fetchRequestToMe();
-
-      const matchingRequest = requests.find(
-        (req) => req.client.id === id && !req.fulfilled
-      );
-
-      if (matchingRequest) {
-        await socialAccountService.fulfillRequest(matchingRequest.id);
-      }
-
-      const updatedShared = await socialAccountService.fetchSharedByMe();
-      setSharedAccesses(updatedShared);
-    } catch (err) {
-      console.error('Error toggling access:', err);
-    } finally {
-      setUpdatingAccess(null);
-    }
+  const handleToggleAccess = (socialAccountId: string, currentAccessStatus: boolean) => {
+    toggleAccessMutation.mutate({ socialAccountId, currentAccessStatus });
   };
-
-  const isAccountShared = (socialAccountId: string) => {
-    return sharedAccesses.some(
-      (acc) =>
-        acc.socialAccount.id === socialAccountId &&
-        String(acc.client?.id) === String(id) &&
-        acc.clientHasAccess,
-    );
-  };
-
-  const accountsSharedWithMeByThisUser = sharedWithMeAccesses.filter(
-    (acc) =>
-      String(acc.socialAccount?.owner?.id) === String(id) &&
-      acc.clientHasAccess
-  );
 
   const handleLogout = async () => {
     try {
@@ -202,34 +182,9 @@ export function UserProfilePage() {
     }
   };
 
-  const handleRequest = async () => {
-    if (!id) return;
-
-    setIsSubmitting(true);
-    try {
-      await socialAccountService.createRequestToUser({ ownerId: id });
-      toast.success('Request sent successfully!');
-    } catch (error: unknown) {
-      console.error("Error during creation:", error);
-
-      if (isAxiosError(error) && error.response) {
-        const statusCode = error.response.status;
-        const message = error.response.data?.message;
-
-        const formattedMessage = Array.isArray(message)
-          ? message.join(', ')
-          : message;
-
-        if (statusCode === 409) {
-          toast.warning(formattedMessage || 'A request already exists or access is already granted.');
-        } else {
-          toast.error('Failed to send request. Please try again.');
-        }
-      } else {
-        toast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setIsSubmitting(false);
+  const handleRequest = () => {
+    if (id) {
+      requestMutation.mutate(id);
     }
   };
 
@@ -252,9 +207,8 @@ export function UserProfilePage() {
 
     try {
       await postService.deletePost(postId);
-
       toast.success('Post removed successfully');
-      await loadData(id);
+      await refreshData();
     } catch (err: unknown) {
       console.error('Error during deletion of the post:', err);
 
@@ -275,7 +229,7 @@ export function UserProfilePage() {
       await postService.updatePost(postId, editFormData);
       toast.success('Post updated successfully!');
       setEditingId(null);
-      await loadData(id);
+      await refreshData();
     } catch (err: unknown) {
       console.error('Error updating post:', err);
       toast.error('Failed to update post.');
@@ -286,7 +240,7 @@ export function UserProfilePage() {
 
   return (
 
-    <main data-layout="page-center-dymanic">
+    <main data-layout="page-center-dynamic">
       <header data-layout="top-left-nav">
         <div data-layout="actions-cluster">
           <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
@@ -303,10 +257,10 @@ export function UserProfilePage() {
               <Button
                 size="sm"
                 variant="outline"
-                disabled={isSubmitting}
+                disabled={requestMutation.isPending}
                 onClick={handleRequest}
               >
-                {isSubmitting ? (
+                {requestMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <UserPlus className="h-4 w-4" />
@@ -337,7 +291,7 @@ export function UserProfilePage() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="shared-with-me" className="flex flex-col gap-3 py-4">
+                  <TabsContent value="shared-with-me" className="flex flex-col gap-3 py-4 max-h-[300px] overflow-y-auto pr-1">
                     {accountsSharedWithMeByThisUser.length > 0 ? (
                       accountsSharedWithMeByThisUser.map((acc) => (
                         <div
@@ -357,8 +311,9 @@ export function UserProfilePage() {
                       ))
                     ) : (
                       <Button
-                        className="text-sm text-muted-foreground hover:underline text-center py-4"
-                        disabled={isSubmitting}
+                        variant="ghost"
+                        className="h-auto w-full whitespace-normal flex flex-col items-center text-sm text-muted-foreground hover:bg-transparent hover:text-muted-foreground hover:underline text-center py-4"
+                        disabled={requestMutation.isPending}
                         onClick={handleRequest}
                       >
                         This user hasn't shared any accounts with you yet. Click to send a request.
@@ -366,11 +321,13 @@ export function UserProfilePage() {
                     )}
                   </TabsContent>
 
-                  <TabsContent value="grant-access" className="flex flex-col gap-3 py-4">
+                  <TabsContent value="grant-access" className="flex flex-col gap-3 py-4 max-h-[300px] overflow-y-auto pr-1">
                     {socialAccounts.length > 0 ? (
                       socialAccounts.map((account) => {
                         const hasAccess = isAccountShared(account.id);
-                        const isPending = updatingAccess === account.id;
+                        const isPending =
+                          toggleAccessMutation.isPending &&
+                          toggleAccessMutation.variables?.socialAccountId === account.id;
 
                         return (
                           <div
@@ -400,12 +357,13 @@ export function UserProfilePage() {
                         );
                       })
                     ) : (
-                      <Link
-                        className="text-sm text-muted-foreground hover:underline text-center py-4"
-                        to={"/access"}
+                      <Button
+                        variant="ghost"
+                        className="h-auto w-full whitespace-normal flex flex-col items-center text-sm text-muted-foreground hover:bg-transparent hover:text-muted-foreground hover:underline text-center py-4"
+                        onClick={() => navigate("/access")}
                       >
                         You haven't added any social accounts yet. Click to add your social accounts.
-                      </Link>
+                      </Button>
                     )}
                   </TabsContent>
                 </Tabs>
