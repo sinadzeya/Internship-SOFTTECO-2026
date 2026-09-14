@@ -10,7 +10,11 @@ async function bootstrap() {
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.enableCors({
-    origin: true,
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://internship-softteco-2026-final-back.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
