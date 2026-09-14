@@ -1,22 +1,21 @@
 import { useAppState } from '@/store/useStore.ts';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.tsx';
-import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import {
   type AddSocialAccountDto,
   type SocialAccountData,
   type UpdateSocialAccountDto,
 } from '@/services/social-account.service.ts';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { useSocialAccounts } from '@/hooks/useSocialAccounts.ts';
+import { BackButtonHeader } from '@/components/custom/BackButtonHeader.tsx';
+import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
 
 export function SocialAccountsPage() {
-  const navigate = useNavigate();
   const { user } = useAppState();
 
   const { accounts, isLoading, addAccount, removeAccount, updateAccount } = useSocialAccounts();
@@ -106,37 +105,34 @@ export function SocialAccountsPage() {
 
   return (
     <main data-layout="page-center-dynamic">
-      <header data-layout="top-left-nav">
-        <div data-layout="actions-cluster">
-          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading"/>
-            Back
-          </Button>
-        </div>
-      </header>
+      <BackButtonHeader />
 
       {user ? (
         <div className="w-full max-w-xl pt-20 space-y-4">
           {error && (
-            <Alert variant="destructive">
-              <AlertCircle />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <StatusAlert
+              variant="destructive"
+              title="Error"
+              description={error}
+            />
           )}
 
           <Card className="shadow-md space-y-4">
             <CardHeader>
               <CardTitle>Add Social Account</CardTitle>
               <CardDescription>
-                Add contact details for your social profiles so others can request access.
+                Add contact details for your social profiles so others can
+                request access.
               </CardDescription>
             </CardHeader>
 
             <CardContent>
               <form onSubmit={handleAddSocialAccess} data-layout="stack-form">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="platform" className="block text-sm font-medium">
+                  <label
+                    htmlFor="platform"
+                    className="block text-sm font-medium"
+                  >
                     Platform
                   </label>
                   <Input
@@ -151,7 +147,10 @@ export function SocialAccountsPage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="accountName" className="block text-sm font-medium">
+                  <label
+                    htmlFor="accountName"
+                    className="block text-sm font-medium"
+                  >
                     Your Account Name
                   </label>
                   <Input
@@ -166,13 +165,7 @@ export function SocialAccountsPage() {
                 </div>
 
                 <Button type="submit" disabled={addAccount.isPending}>
-                  {addAccount.isPending ? (
-                    <>
-                      Adding...
-                    </>
-                  ) : (
-                    'Add Account'
-                  )}
+                  {addAccount.isPending ? <>Adding...</> : 'Add Account'}
                 </Button>
               </form>
             </CardContent>
@@ -192,24 +185,33 @@ export function SocialAccountsPage() {
                     return (
                       <Card key={account.id}>
                         {isEditing ? (
-
                           <CardContent className="pt-3 space-y-3">
                             <div className="flex flex-col gap-1">
-                              <label className="text-xs font-medium">Platform</label>
+                              <label className="text-xs font-medium">
+                                Platform
+                              </label>
                               <Input
                                 value={editFormData.platform}
                                 onChange={(e) =>
-                                  setEditFormData((prev) => ({ ...prev, platform: e.target.value }))
+                                  setEditFormData((prev) => ({
+                                    ...prev,
+                                    platform: e.target.value,
+                                  }))
                                 }
                               />
                             </div>
 
                             <div className="flex flex-col gap-1">
-                              <label className="text-xs font-medium">Account Name</label>
+                              <label className="text-xs font-medium">
+                                Account Name
+                              </label>
                               <Input
                                 value={editFormData.accountName}
                                 onChange={(e) =>
-                                  setEditFormData((prev) => ({ ...prev, accountName: e.target.value }))
+                                  setEditFormData((prev) => ({
+                                    ...prev,
+                                    accountName: e.target.value,
+                                  }))
                                 }
                               />
                             </div>
@@ -220,7 +222,11 @@ export function SocialAccountsPage() {
                                 disabled={updateAccount.isPending}
                                 onClick={() => handleSaveEdit(account.id)}
                               >
-                                {updateAccount.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                                {updateAccount.isPending ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Save'
+                                )}
                               </Button>
                               <Button
                                 size="sm"
@@ -236,7 +242,9 @@ export function SocialAccountsPage() {
                           <>
                             <CardHeader>
                               <CardTitle>{account.platform}</CardTitle>
-                              <CardDescription>{account.accountName}</CardDescription>
+                              <CardDescription>
+                                {account.accountName}
+                              </CardDescription>
                             </CardHeader>
                             <CardContent className="flex items-center gap-2">
                               <Button
@@ -261,21 +269,20 @@ export function SocialAccountsPage() {
                   })}
                 </ul>
               ) : (
-                <Alert>
-                  <AlertCircle />
-                  <AlertTitle>No data</AlertTitle>
-                  <AlertDescription>No social accounts found.</AlertDescription>
-                </Alert>
+                <StatusAlert
+                  title="No data"
+                  description="No social accounts available yet."
+                />
               )}
             </div>
           )}
         </div>
       ) : (
-        <Alert variant="destructive">
-          <AlertCircle />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Failed to load user data.</AlertDescription>
-        </Alert>
+        <StatusAlert
+          variant="destructive"
+          title="Error"
+          description="Failed to load user data."
+        />
       )}
     </main>
   );

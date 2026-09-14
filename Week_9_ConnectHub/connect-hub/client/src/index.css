@@ -30,14 +30,18 @@
     @apply px-4 py-3;
 }
 
+[data-style="accent-border"] {
+    @apply border border-[var(--deep-space-blue)]
+}
+
 [data-style="title-prominent"] {
-    --hero-title-color: var(--tiger-orange);
-    color: var(--hero-title-color);
+    color: var(--tiger-orange);
     @apply text-4xl font-extrabold tracking-tight sm:text-5xl
 }
 
 [data-style="subtitle-prominent"] {
-    @apply text-muted-foreground text-lg
+    color: var(--deep-space-blue);
+    @apply text-lg
 }
 
 [data-layout="actions-cluster"] {

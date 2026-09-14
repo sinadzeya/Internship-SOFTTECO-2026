@@ -49,7 +49,7 @@ export function LandingPage() {
       </header>
 
       <section data-layout="stack-centered" className="pt-20 md:pt-0">
-        <Badge data-layout="stack-badge" variant="outline">
+        <Badge data-layout="stack-badge" data-style="accent-border" variant="outline">
           Welcome w ConnectHub
         </Badge>
 
@@ -72,7 +72,7 @@ export function LandingPage() {
       </section>
 
       <section data-layout="grid-adaptive" className="pb-10 md:pt-0">
-        <Card>
+        <Card data-style="accent-border">
           <CardHeader>
             <CardTitle>Discover Passions</CardTitle>
             <CardDescription>
@@ -84,7 +84,7 @@ export function LandingPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card data-style="accent-border">
           <CardHeader>
             <CardTitle>Privacy & Control</CardTitle>
             <CardDescription>
@@ -96,7 +96,7 @@ export function LandingPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card data-style="accent-border">
           <CardHeader>
             <CardTitle>Modern Design</CardTitle>
             <CardDescription>

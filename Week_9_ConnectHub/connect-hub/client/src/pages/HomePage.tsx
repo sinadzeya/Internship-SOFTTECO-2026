@@ -2,16 +2,13 @@ import { useState } from 'react';
 import { postService } from '@/services/post.service.ts';
 import { Button } from '@/components/ui/button.tsx';
 import {
-  AlertCircle,
   ArrowLeft,
   ArrowUpRight,
-  Loader2,
   Mail,
   Search,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { useAppState } from '@/store/useStore.ts';
 import { Input } from '@/components/ui/input.tsx';
@@ -35,6 +32,8 @@ import {
   socialAccountService,
 } from '@/services/social-account.service.ts';
 import { useQuery } from '@tanstack/react-query';
+import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
+import { LoadingCard } from '@/components/custom/LoadingCard.tsx';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -88,19 +87,7 @@ function HomePage() {
   }) || [];
 
   if (isLoadingPosts) {
-    return (
-      <div data-layout="page-center">
-      <Card data-layout="elements-full-width">
-        <CardHeader>
-          <CardTitle>ConnectHub</CardTitle>
-          <CardDescription>Loading posts...</CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
-          <Loader2 className="animate-spin" />
-        </CardContent>
-      </Card>
-    </div>
-    );
+    return <LoadingCard />;
   }
 
   return (
@@ -300,11 +287,10 @@ function HomePage() {
             ))}
           </ul>
         ) : (
-          <Alert>
-            <AlertCircle />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>No posts available.</AlertDescription>
-          </Alert>
+          <StatusAlert
+            title="No data"
+            description="No posts available yet."
+          />
         )}
       </div>
     </main>

@@ -3,8 +3,6 @@ import { useAppDispatch, useAppState } from '@/store/useStore.ts';
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import {
-  AlertCircle,
-  ArrowLeft,
   Loader2,
   Mail,
   UserIcon,
@@ -19,7 +17,6 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import {
   POST_CATEGORY_LABELS,
   PostCategory,
@@ -52,6 +49,9 @@ import {
 import { Textarea } from '@/components/ui/textarea.tsx';
 import { useProfileData } from '@/hooks/useProfileData.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BackButtonHeader } from '@/components/custom/BackButtonHeader.tsx';
+import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
+import { LoadingCard } from '@/components/custom/LoadingCard.tsx';
 
 export function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -154,19 +154,7 @@ export function UserProfilePage() {
   }, [sharedWithMeAccesses, id]);
 
   if (loading) {
-    return (
-      <div data-layout="page-center">
-        <Card data-layout="elements-full-width">
-          <CardHeader>
-            <CardTitle>ConnectHub</CardTitle>
-            <CardDescription>Loading user data...</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Loader2 className="animate-spin" />
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <LoadingCard description="Loading user data..."/>
   }
 
   const handleToggleAccess = (socialAccountId: string, currentAccessStatus: boolean) => {
@@ -241,14 +229,7 @@ export function UserProfilePage() {
   return (
 
     <main data-layout="page-center-dynamic">
-      <header data-layout="top-left-nav">
-        <div data-layout="actions-cluster">
-          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading"/>
-            Back
-          </Button>
-        </div>
-      </header>
+      <BackButtonHeader />
 
       <header data-layout="top-right-nav">
         <div data-layout="actions-cluster">
@@ -385,7 +366,7 @@ export function UserProfilePage() {
 
 
       {userInfo ? (
-        <div className="w-full max-w-xl md:pt-25 pt-15">
+        <div className="w-full max-w-xl pt-20 space-y-4">
           <Card className="shadow-md">
             <CardHeader>
               <Avatar className="h-16 w-16">
@@ -418,91 +399,81 @@ export function UserProfilePage() {
                 <span className="font-medium text-foreground">{userInfo.email}</span>
               </div>
             </CardContent>
-
           </Card>
-        </div>
-      ) : (
-        <Alert variant="destructive">
-          <AlertCircle/>
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Failed to load user data.</AlertDescription>
-        </Alert>
-      )}
 
-      <div className="w-full max-w-xl pb-10">
         {userPosts?.length > 0 ? (
-          <ul className="flex flex-col justify-center gap-10">
-            {userPosts.map((post) => {
-              const isEditing = editingId === post.id;
+          <div className="w-full max-w-xl pt-5 pb-10">
+            <ul className="flex flex-col justify-center gap-4">
+              {userPosts.map((post) => {
+                const isEditing = editingId === post.id;
 
-              return (
-                <Card key={post.id}>
-                  {isEditing ? (
+                return (
+                  <Card key={post.id}>
+                    {isEditing ? (
 
-                    <CardContent className="pt-3 space-y-3">
+                      <CardContent className="pt-3 space-y-3">
+                        <div className="flex flex-col gap-1">
+                          <label className="text-xs font-medium">Title</label>
+                          <Textarea
+                            value={editFormData.title}
+                            onChange={(e) =>
+                              setEditFormData((prev) => ({ ...prev, title: e.target.value }))
+                            }
+                            rows={3}
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-xs font-medium">Title</label>
-                        <Textarea
-                          value={editFormData.title}
-                          onChange={(e) =>
-                            setEditFormData((prev) => ({ ...prev, title: e.target.value }))
-                          }
-                          rows={3}
-                        />
-                      </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-xs font-medium">Content</label>
+                          <Textarea
+                            value={editFormData.content}
+                            onChange={(e) =>
+                              setEditFormData((prev) => ({ ...prev, content: e.target.value }))
+                            }
+                            rows={6}
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-xs font-medium">Content</label>
-                        <Textarea
-                          value={editFormData.content}
-                          onChange={(e) =>
-                            setEditFormData((prev) => ({ ...prev, content: e.target.value }))
-                          }
-                          rows={6}
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <label className="text-xs font-medium">Category</label>
-                        <Select
-                          value={editFormData.category}
-                          onValueChange={(value: PostCategory) =>
-                            setEditFormData((prev) => ({ ...prev, category: value }))
-                          }
-                        >
-                          <SelectTrigger id="category" className="w-full">
-                            <SelectValue placeholder="Select a tag" />
-                          </SelectTrigger>
-                          <SelectContent className="max-h-60 overflow-y-auto">
-                            {Object.entries(PostCategory).map(([key, value]) => (
-                              <SelectItem key={key} value={value}>
-                                {POST_CATEGORY_LABELS[value] || value}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-xs font-medium">Category</label>
+                          <Select
+                            value={editFormData.category}
+                            onValueChange={(value: PostCategory) =>
+                              setEditFormData((prev) => ({ ...prev, category: value }))
+                            }
+                          >
+                            <SelectTrigger id="category" className="w-full">
+                              <SelectValue placeholder="Select a tag" />
+                            </SelectTrigger>
+                            <SelectContent className="max-h-60 overflow-y-auto">
+                              {Object.entries(PostCategory).map(([key, value]) => (
+                                <SelectItem key={key} value={value}>
+                                  {POST_CATEGORY_LABELS[value] || value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
 
 
-                      <div className="flex items-center gap-2 pt-2">
-                        <Button
-                          size="sm"
-                          disabled={editSubmitting}
-                          onClick={() => handleSaveEdit(post.id)}
-                        >
-                          {editSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          disabled={editSubmitting}
-                          onClick={handleCancelEdit}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </CardContent>
+                        <div className="flex items-center gap-2 pt-2">
+                          <Button
+                            size="sm"
+                            disabled={editSubmitting}
+                            onClick={() => handleSaveEdit(post.id)}
+                          >
+                            {editSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={editSubmitting}
+                            onClick={handleCancelEdit}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </CardContent>
 
                     ) : (
                       <>
@@ -540,20 +511,26 @@ export function UserProfilePage() {
                           )}
                         </CardContent>
                       </>
-                  )}
-                </Card>
-              );
-            })}
-          </ul>
+                    )}
+                  </Card>
+                );
+              })}
+            </ul>
+          </div>
         ) : (
-          <Alert>
-            <AlertCircle />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>No posts available.</AlertDescription>
-          </Alert>
+          <StatusAlert
+            title="No data"
+            description="No posts available yet."
+          />
         )}
       </div>
-
+      ) : (
+        <StatusAlert
+          variant="destructive"
+          title="Error"
+          description="Failed to load user data."
+        />
+      )}
     </main>
   );
 }

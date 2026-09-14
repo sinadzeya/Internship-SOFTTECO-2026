@@ -14,12 +14,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import axios from 'axios';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import { setAccessToken } from '@/lib/axios.ts';
 import { userService } from '@/services/user.service.ts';
 import { useAppDispatch, useAppState } from '@/store/useStore.ts';
 import { useQueryClient } from '@tanstack/react-query';
+import { BackButtonHeader } from '@/components/custom/BackButtonHeader.tsx';
+import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
 
 export function SignInPage() {
   const navigate = useNavigate();
@@ -90,22 +90,15 @@ export function SignInPage() {
   return (
 
     <main data-layout="page-center">
-      <header data-layout="top-left-nav">
-        <div data-layout="actions-cluster">
-          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading"/>
-            Back
-          </Button>
-        </div>
-      </header>
+      <BackButtonHeader />
 
       <div data-layout="elements-full-width">
       {error && (
-        <Alert variant="destructive">
-          <AlertCircle/>
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <StatusAlert
+          variant="destructive"
+          title="Error"
+          description={error}
+        />
       )}
 
       <Card data-layout="auth-card">

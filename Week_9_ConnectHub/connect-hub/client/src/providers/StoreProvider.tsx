@@ -9,16 +9,9 @@ import {
 } from '@/store/context.tsx';
 import axios from 'axios';
 import { setAccessToken } from '@/lib/axios.ts';
-import { Loader2 } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card.tsx';
 import { userService } from '@/services/user.service.ts';
 import { StateContext, DispatchContext } from '@/store/useStore.ts';
+import { LoadingCard } from '@/components/custom/LoadingCard.tsx';
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -69,19 +62,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   if (state.isInitializing) {
-    return (
-      <div data-layout="page-center">
-        <Card data-layout="elements-full-width">
-          <CardHeader>
-            <CardTitle>ConnectHub</CardTitle>
-            <CardDescription>Initialising session...</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Loader2 className="animate-spin" />
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <LoadingCard description="Initialising session..."/>;
   }
 
   return (

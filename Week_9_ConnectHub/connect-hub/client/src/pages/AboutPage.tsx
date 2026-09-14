@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button.tsx';
 import { useAppState } from '@/store/useStore.ts';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, HeartHandshake, Lightbulb, ShieldUser } from 'lucide-react';
+import { HeartHandshake, Lightbulb, ShieldUser } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
+import { BackButtonHeader } from '@/components/custom/BackButtonHeader.tsx';
 
 
 export function AboutPage() {
@@ -20,17 +21,7 @@ export function AboutPage() {
 
   return (
     <main data-layout="page-center">
-      <header data-layout="top-left-nav">
-        <div
-          data-layout="actions-cluster"
-          className="flex flex-col md:flex-row items-start md:items-center gap-3"
-        >
-          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading" />
-            Back
-          </Button>
-        </div>
-      </header>
+      <BackButtonHeader />
 
       <div className="w-full text-center max-w-xl pt-25 pb-10">
         <Card className="border-0 border-none outline-none ring-0 shadow-none flex flex-col items-center p-6 space-y-6">

@@ -2,7 +2,6 @@ import { useAppState } from '@/store/useStore.ts';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card.tsx';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
 import {
   type CreatePostDto,
   POST_CATEGORY_LABELS,
@@ -27,6 +25,8 @@ import {
   SelectValue,
 } from '@/components/ui/select.tsx';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BackButtonHeader } from '@/components/custom/BackButtonHeader.tsx';
+import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
 
 export function CreatePostPage(){
   const { user } = useAppState();
@@ -69,25 +69,17 @@ export function CreatePostPage(){
 
   return (
     <main data-layout="page-center-dynamic">
-      <header data-layout="top-left-nav">
-        <div data-layout="actions-cluster">
-          <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft data-layout="icon-leading"/>
-            Back
-          </Button>
-        </div>
-      </header>
-
+      <BackButtonHeader />
 
       {user ? (
-        <div className="w-full max-w-xl pt-25 space-y-4">
+        <div className="w-full max-w-xl pt-20 space-y-4">
 
           {createPostMutation.isError && (
-            <Alert variant="destructive">
-              <AlertCircle/>
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>Failed to create post. Please try again.</AlertDescription>
-            </Alert>
+            <StatusAlert
+              variant="destructive"
+              title="Error"
+              description="Failed to create post. Please try again."
+            />
           )}
 
           <Card className="space-y-4">
@@ -168,11 +160,11 @@ export function CreatePostPage(){
           </Card>
         </div>
       ) : (
-        <Alert variant="destructive">
-          <AlertCircle/>
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Failed to load user data.</AlertDescription>
-        </Alert>
+        <StatusAlert
+          variant="destructive"
+          title="Error"
+          description="Failed to load user data."
+        />
       )}
 
     </main>
