@@ -99,9 +99,9 @@ export function SignUpPage() {
           />
         )}
 
-      <Card data-layout="auth-card">
+      <Card data-layout="shadow-md space-y-4">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+          <CardTitle data-style="text-accent">Sign Up</CardTitle>
           <CardDescription>
             Create an account to join ConnectHub
           </CardDescription>
@@ -110,8 +110,10 @@ export function SignUpPage() {
         <CardContent>
           <form onSubmit={handleSignUp} data-layout="stack-form">
 
-            <div>
-              <label htmlFor="name">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="name"
+                     data-style="text-accent"
+              >
                 Username
               </label>
               <Input
@@ -125,8 +127,10 @@ export function SignUpPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="email">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email"
+                     data-style="text-accent"
+              >
                 Email
               </label>
               <Input
@@ -140,8 +144,10 @@ export function SignUpPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="password">
+            <div className="flex flex-col gap-2 pb-2">
+              <label htmlFor="password"
+                     data-style="text-accent"
+              >
                 Password
               </label>
               <Input
@@ -156,15 +162,16 @@ export function SignUpPage() {
             </div>
 
             <Button
+              data-style="button-slightly-accent"
               type="submit"
               disabled={loading}
             >
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
 
-            <p>
+            <p className="text-muted-foreground">
               Already have an account?{" "}
-              <Button variant="link" size="sm" onClick={() => navigate("/login")}>
+              <Button variant="link" data-style="text-accent" size="sm" onClick={() => navigate("/login")}>
                 Sign In
               </Button>
             </p>

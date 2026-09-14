@@ -101,9 +101,9 @@ export function SignInPage() {
         />
       )}
 
-      <Card data-layout="auth-card">
+      <Card data-layout="shadow-md space-y-4">
         <CardHeader>
-          <CardTitle>Sign In</CardTitle>
+          <CardTitle data-style="text-accent">Sign In</CardTitle>
           <CardDescription>
             Login to find your people with ConnectHub
           </CardDescription>
@@ -112,8 +112,10 @@ export function SignInPage() {
         <CardContent>
           <form onSubmit={handleSignIn} data-layout="stack-form">
 
-            <div>
-              <label htmlFor="email">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email"
+                     data-style="text-accent"
+              >
                 Email
               </label>
               <Input
@@ -127,8 +129,10 @@ export function SignInPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="password">
+            <div className="flex flex-col gap-2 pb-2">
+              <label htmlFor="password"
+                     data-style="text-accent"
+              >
                 Password
               </label>
               <Input
@@ -143,6 +147,7 @@ export function SignInPage() {
             </div>
 
             <Button
+              data-style="button-slightly-accent"
               type="submit"
               disabled={loading}
             >

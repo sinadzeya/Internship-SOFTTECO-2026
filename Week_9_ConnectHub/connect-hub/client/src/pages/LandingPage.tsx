@@ -49,7 +49,7 @@ export function LandingPage() {
       </header>
 
       <section data-layout="stack-centered" className="pt-20 md:pt-0">
-        <Badge data-layout="stack-badge" data-style="accent-border" variant="outline">
+        <Badge className="px-4 py-3" data-style="border-accent" variant="outline">
           Welcome w ConnectHub
         </Badge>
 
@@ -57,12 +57,12 @@ export function LandingPage() {
           Social discovery platform
         </h1>
 
-        <p data-style="subtitle-prominent">
+        <p data-style="subtitle">
           Find people based on your current passions
         </p>
 
         <div data-layout="actions-cluster">
-          <Button size="lg" onClick={() => navigate("/home")}>
+          <Button data-style="button-accent" size="lg" onClick={() => navigate("/home")}>
             Start Now
           </Button>
           <Button size="lg" variant="outline" onClick={() => navigate("/about")}>
@@ -72,10 +72,10 @@ export function LandingPage() {
       </section>
 
       <section data-layout="grid-adaptive" className="pb-10 md:pt-0">
-        <Card data-style="accent-border">
+        <Card>
           <CardHeader>
-            <CardTitle>Discover Passions</CardTitle>
-            <CardDescription>
+            <CardTitle data-style="text-accent">Discover Passions</CardTitle>
+            <CardDescription data-style="text-slightly-accent">
               Explore interest-based posts and share what inspires you.
             </CardDescription>
           </CardHeader>
@@ -84,10 +84,10 @@ export function LandingPage() {
           </CardContent>
         </Card>
 
-        <Card data-style="accent-border">
+        <Card>
           <CardHeader>
-            <CardTitle>Privacy & Control</CardTitle>
-            <CardDescription>
+            <CardTitle data-style="text-accent">Privacy & Control</CardTitle>
+            <CardDescription data-style="text-slightly-accent">
               Decide who you connect with and what you share.
             </CardDescription>
           </CardHeader>
@@ -96,10 +96,10 @@ export function LandingPage() {
           </CardContent>
         </Card>
 
-        <Card data-style="accent-border">
+        <Card>
           <CardHeader>
-            <CardTitle>Modern Design</CardTitle>
-            <CardDescription>
+            <CardTitle data-style="text-accent">Modern Design</CardTitle>
+            <CardDescription data-style="text-slightly-accent">
               A clean, clear, and intuitive experience.
             </CardDescription>
           </CardHeader>

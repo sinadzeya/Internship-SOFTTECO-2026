@@ -249,7 +249,7 @@ export function UserProfilePage() {
               </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" variant="outline">
+                <Button data-style="button-accent" size="sm" variant="outline">
                   Manage Contacts
                 </Button>
               </DialogTrigger>
@@ -322,7 +322,7 @@ export function UserProfilePage() {
 
                             <Button
                               size="sm"
-                              variant={hasAccess ? 'destructive' : 'default'}
+                              data-style={hasAccess ? 'button-no-accent' : 'button-accent'}
                               disabled={isPending}
                               onClick={() => handleToggleAccess(account.id, hasAccess)}
                             >
@@ -353,7 +353,7 @@ export function UserProfilePage() {
             </>
           ) : (
             <>
-              <Button size="sm" variant="outline" onClick={() => navigate("/access")}>
+              <Button  data-style="button-accent" size="sm" variant="outline" onClick={() => navigate("/access")}>
                 Contact data
               </Button>
               <Button size="sm" variant="outline" onClick={handleLogout}>
@@ -375,28 +375,26 @@ export function UserProfilePage() {
                 </AvatarFallback>
               </Avatar>
 
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <CardTitle className="text-2xl font-bold">{userInfo.username}</CardTitle>
-                  <Badge variant="secondary">User</Badge>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 my-2">
+                  <CardTitle data-style="text-accent" className="text-2xl font-semibold">{userInfo.username}</CardTitle>
+                  <Badge data-style="badge-accent" variant="secondary">User</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">{userInfo.email}</p>
+                <Separator />
               </div>
             </CardHeader>
 
-            <Separator />
-
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <UserIcon className="h-4 w-4 text-primary" />
-                <span>Username:</span>
-                <span className="font-medium text-foreground">{userInfo.username}</span>
+                <UserIcon data-style="text-accent" className="h-4 w-4 text-primary" />
+                <span className="font-semibold" data-style="text-accent">Username:</span>
+                <span>{userInfo.username}</span>
               </div>
 
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4 text-primary" />
-                <span>E-mail:</span>
-                <span className="font-medium text-foreground">{userInfo.email}</span>
+                <Mail data-style="text-accent" className="h-4 w-4 text-primary" />
+                <span className="font-semibold" data-style="text-accent">E-mail:</span>
+                <span>{userInfo.email}</span>
               </div>
             </CardContent>
           </Card>
@@ -478,8 +476,8 @@ export function UserProfilePage() {
                     ) : (
                       <>
                         <CardHeader>
-                          <CardTitle>{post.title}</CardTitle>
-                          <CardDescription>
+                          <CardTitle data-style="text-prominent">{post.title}</CardTitle>
+                          <CardDescription data-style="text-accent">
                             <Link
                               to={`/profile/${post.user.id}`}
                               className="hover:underline hover:text-primary cursor-pointer transition-colors"
@@ -487,12 +485,13 @@ export function UserProfilePage() {
                               {post.user.username}
                             </Link>
                           </CardDescription>
+                          <Separator className="my-2" />
                         </CardHeader>
                         <CardContent>{post.content}</CardContent>
                         <CardContent className="flex items-center justify-between gap-4">
-                          <Badge variant="secondary">{post.category}</Badge>
+                          <Badge data-style="badge-accent">{post.category}</Badge>
                           {isUserProfile && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center my-2 gap-2">
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -502,7 +501,7 @@ export function UserProfilePage() {
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
+                                variant="secondary"
                                 onClick={() => handleRemove(post.id)}
                               >
                                 Remove

@@ -34,6 +34,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { StatusAlert } from '@/components/custom/StatusAlert.tsx';
 import { LoadingCard } from '@/components/custom/LoadingCard.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -247,6 +248,7 @@ function HomePage() {
               <Button
                 size="sm"
                 variant="outline"
+                data-style="button-slightly-accent"
                 onClick={() => navigate('/create')}
               >
                 Create
@@ -254,6 +256,7 @@ function HomePage() {
               <Button
                 size="sm"
                 variant="outline"
+                data-style="button-accent"
                 onClick={() => navigate(`/profile/${user?.id}`)}
               >
                 Profile
@@ -269,8 +272,8 @@ function HomePage() {
             {filteredPosts.map((post) => (
               <Card key={post.id}>
                 <CardHeader>
-                  <CardTitle>{post.title}</CardTitle>
-                  <CardDescription>
+                  <CardTitle data-style="text-prominent" >{post.title}</CardTitle>
+                  <CardDescription data-style="text-accent">
                     <Link
                       to={`/profile/${post.user.id}`}
                       className="hover:underline hover:text-primary cursor-pointer transition-colors"
@@ -278,10 +281,11 @@ function HomePage() {
                       {post.user.username}
                     </Link>
                   </CardDescription>
+                  <Separator className="my-2" />
                 </CardHeader>
                 <CardContent>{post.content}</CardContent>
                 <CardContent>
-                  <Badge variant="secondary">{post.category}</Badge>
+                  <Badge data-style="badge-accent" variant="secondary">{post.category}</Badge>
                 </CardContent>
               </Card>
             ))}

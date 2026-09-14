@@ -82,9 +82,9 @@ export function CreatePostPage(){
             />
           )}
 
-          <Card className="space-y-4">
+          <Card className="shadow-md space-y-4">
             <CardHeader>
-              <CardTitle>Create</CardTitle>
+              <CardTitle data-style="text-accent">Create</CardTitle>
               <CardDescription>
                 Create a new post to start discussion with ConnectHub
               </CardDescription>
@@ -94,7 +94,10 @@ export function CreatePostPage(){
               <form onSubmit={handleCreatePost} data-layout="stack-form">
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="title" className="block text-sm font-medium">
+                  <label htmlFor="title"
+                         className="block text-sm font-medium"
+                         data-style="text-accent"
+                  >
                     Title
                   </label>
                   <Input
@@ -109,7 +112,10 @@ export function CreatePostPage(){
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="content" className="block text-sm font-medium">
+                  <label htmlFor="content"
+                         className="block text-sm font-medium"
+                         data-style="text-accent"
+                  >
                     Content
                   </label>
                   <Textarea
@@ -123,8 +129,11 @@ export function CreatePostPage(){
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="category" className="block text-sm font-medium">
+                <div className="flex flex-col gap-2 pb-4">
+                  <label htmlFor="category"
+                         className="block text-sm font-medium"
+                         data-style="text-accent"
+                  >
                     Category
                   </label>
                   <Select
@@ -145,7 +154,7 @@ export function CreatePostPage(){
                   </Select>
                 </div>
 
-                <Button type="submit" disabled={createPostMutation.isPending}>
+                <Button data-style="button-slightly-accent" type="submit" disabled={createPostMutation.isPending}>
                   {createPostMutation.isPending ? (
                     <>
                       Creating...

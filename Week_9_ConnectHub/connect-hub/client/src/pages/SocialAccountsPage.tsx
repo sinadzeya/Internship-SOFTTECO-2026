@@ -119,7 +119,7 @@ export function SocialAccountsPage() {
 
           <Card className="shadow-md space-y-4">
             <CardHeader>
-              <CardTitle>Add Social Account</CardTitle>
+              <CardTitle data-style="text-accent" >Add Social Account</CardTitle>
               <CardDescription>
                 Add contact details for your social profiles so others can
                 request access.
@@ -128,10 +128,12 @@ export function SocialAccountsPage() {
 
             <CardContent>
               <form onSubmit={handleAddSocialAccess} data-layout="stack-form">
+
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="platform"
                     className="block text-sm font-medium"
+                    data-style="text-accent"
                   >
                     Platform
                   </label>
@@ -146,10 +148,11 @@ export function SocialAccountsPage() {
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 pb-4">
                   <label
                     htmlFor="accountName"
                     className="block text-sm font-medium"
+                    data-style="text-accent"
                   >
                     Your Account Name
                   </label>
@@ -164,7 +167,7 @@ export function SocialAccountsPage() {
                   />
                 </div>
 
-                <Button type="submit" disabled={addAccount.isPending}>
+                <Button data-style="button-slightly-accent" type="submit" disabled={addAccount.isPending}>
                   {addAccount.isPending ? <>Adding...</> : 'Add Account'}
                 </Button>
               </form>
@@ -256,7 +259,7 @@ export function SocialAccountsPage() {
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
+                                variant="secondary"
                                 onClick={() => handleRemove(account.id)}
                               >
                                 Remove

@@ -42,28 +42,29 @@ export function AboutPage() {
             <HeartHandshake className="h-5 w-5" />
             <ShieldUser className="h-5 w-5" />
           </div>
+
           <CardContent className="space-y-4 ">
             Share what drives you and find like-minded people safely.
           </CardContent>
 
           <Card className="p-4 flex items-center justify-between">
             <div className="space-y-1">
-              <h2 className="font-semibold">Ready to find your circle?</h2>
+              <h2 className="font-semibold" data-style="text-accent">Ready to find your circle?</h2>
               <p className="text-xs text-muted-foreground">
                 Join ConnectHub today and start sharing your passions
               </p>
             </div>
             {isAuthenticated ? (
-              <Button size="sm" onClick={() => navigate('/home')}>
+              <Button data-style="button-accent" size="sm" onClick={() => navigate('/home')}>
                 Get Started
               </Button>
             ) : (
-              <Button size="sm" onClick={() => navigate('/register')}>
+              <Button data-style="button-accent" size="sm" onClick={() => navigate('/register')}>
                 Get Started
               </Button>
             )}
           </Card>
-          <Badge variant="secondary">
+          <Badge data-style="badge-accent" variant="secondary">
             <a
               href="https://linkedin.com/in/nadzeya-silchankava"
               target="_blank"
