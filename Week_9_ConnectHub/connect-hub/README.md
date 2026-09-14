@@ -38,6 +38,7 @@ Copy the `.env.example` file to create your own `.env` configuration file:
 ```env
 # Server
 PORT=3000
+VITE_API_URL=
 
 # Database
 DATABASE_URL=

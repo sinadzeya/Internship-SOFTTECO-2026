@@ -28,7 +28,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         const{ data }  = await axios.post(
-          `${import.meta.env.API_URL || "http://localhost:3000"}/api/auth/refresh`,
+          `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/auth/refresh`,
           {},
           {
             headers: { Authorization: `Bearer ${refreshToken}` },

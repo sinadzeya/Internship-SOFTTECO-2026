@@ -9,8 +9,6 @@ import { HTTPLoggerMiddleware } from './http-logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { SocialAccountModule } from './social-account/social-account.module';
 
 @Module({
