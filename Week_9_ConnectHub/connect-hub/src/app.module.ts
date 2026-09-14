@@ -47,13 +47,6 @@ import { SocialAccountModule } from './social-account/social-account.module';
             }),
           ),
         }),
-        new winston.transports.File({
-          filename: 'logs/app.log',
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
-          ),
-        }),
       ],
     }),
     ServeStaticModule.forRoot({
