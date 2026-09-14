@@ -49,10 +49,6 @@ import { SocialAccountModule } from './social-account/social-account.module';
         }),
       ],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client', 'dist'),
-      exclude: ['/api/(.*)'],
-    }),
     AuthModule,
     UserModule,
     PostModule,
