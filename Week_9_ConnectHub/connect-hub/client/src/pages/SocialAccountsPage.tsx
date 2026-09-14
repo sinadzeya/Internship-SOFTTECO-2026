@@ -189,8 +189,10 @@ export function SocialAccountsPage() {
                       <Card key={account.id}>
                         {isEditing ? (
                           <CardContent className="pt-3 space-y-3">
-                            <div className="flex flex-col gap-1">
-                              <label className="text-xs font-medium">
+                            <div className="flex flex-col gap-2">
+                              <label className="text-sm font-medium"
+                                     data-style="text-accent"
+                              >
                                 Platform
                               </label>
                               <Input
@@ -204,8 +206,10 @@ export function SocialAccountsPage() {
                               />
                             </div>
 
-                            <div className="flex flex-col gap-1">
-                              <label className="text-xs font-medium">
+                            <div className="flex flex-col gap-2">
+                              <label className="text-sm font-medium"
+                                     data-style="text-accent"
+                              >
                                 Account Name
                               </label>
                               <Input
@@ -222,6 +226,7 @@ export function SocialAccountsPage() {
                             <div className="flex items-center gap-2 pt-2">
                               <Button
                                 size="sm"
+                                data-style="button-slightly-accent"
                                 disabled={updateAccount.isPending}
                                 onClick={() => handleSaveEdit(account.id)}
                               >
@@ -233,7 +238,7 @@ export function SocialAccountsPage() {
                               </Button>
                               <Button
                                 size="sm"
-                                variant="outline"
+                                data-style="button-no-accent"
                                 disabled={updateAccount.isPending}
                                 onClick={handleCancelEdit}
                               >
@@ -244,7 +249,7 @@ export function SocialAccountsPage() {
                         ) : (
                           <>
                             <CardHeader>
-                              <CardTitle>{account.platform}</CardTitle>
+                              <CardTitle data-style="text-accent" >{account.platform}</CardTitle>
                               <CardDescription>
                                 {account.accountName}
                               </CardDescription>

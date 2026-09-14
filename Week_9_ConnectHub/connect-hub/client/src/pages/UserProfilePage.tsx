@@ -410,8 +410,13 @@ export function UserProfilePage() {
                     {isEditing ? (
 
                       <CardContent className="pt-3 space-y-3">
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-medium">Title</label>
+                        <div className="flex flex-col gap-2">
+                          <label
+                            className="text-sm font-medium"
+                            data-style="text-accent"
+                          >
+                            Title
+                          </label>
                           <Textarea
                             value={editFormData.title}
                             onChange={(e) =>
@@ -421,8 +426,12 @@ export function UserProfilePage() {
                           />
                         </div>
 
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-medium">Content</label>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-sm font-medium"
+                                 data-style="text-accent"
+                          >
+                            Content
+                          </label>
                           <Textarea
                             value={editFormData.content}
                             onChange={(e) =>
@@ -432,8 +441,13 @@ export function UserProfilePage() {
                           />
                         </div>
 
-                        <div className="flex flex-col gap-1">
-                          <label className="text-xs font-medium">Category</label>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-sm font-medium"
+                                 data-style="text-accent"
+                          >
+                            Category
+                          </label>
+
                           <Select
                             value={editFormData.category}
                             onValueChange={(value: PostCategory) =>
@@ -457,6 +471,7 @@ export function UserProfilePage() {
                         <div className="flex items-center gap-2 pt-2">
                           <Button
                             size="sm"
+                            data-style="button-slightly-accent"
                             disabled={editSubmitting}
                             onClick={() => handleSaveEdit(post.id)}
                           >
@@ -464,6 +479,7 @@ export function UserProfilePage() {
                           </Button>
                           <Button
                             size="sm"
+                            data-style="button-no-accent"
                             variant="outline"
                             disabled={editSubmitting}
                             onClick={handleCancelEdit}

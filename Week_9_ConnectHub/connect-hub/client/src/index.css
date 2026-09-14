@@ -39,7 +39,7 @@
 }
 
 [data-style="text-prominent"] {
-    @apply font-extrabold text-[var(--tiger-orange)]
+    @apply font-extrabold text-[var(--tiger-orange-tinted)]
 }
 
 [data-style="badge-accent"] {
@@ -91,13 +91,10 @@
 :root {
     /*https://coolors.co/palette/8ecae6-219ebc-023047-ffb703-fb8500*/
 
-    --sky-blue: rgba(142, 202, 230, 1);
-    --sky-blue-tinted: rgba(247, 251, 253, 1);
     --blue-green: rgba(33, 158, 188, 1);
     --deep-space-blue: rgba(2, 48, 71, 1);
-    --amber-flame: rgba(255, 183, 3, 1);
     --tiger-orange: rgba(251, 133, 0, 1);
-
+    --tiger-orange-tinted: rgba(232, 124, 0, 1);
 
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
