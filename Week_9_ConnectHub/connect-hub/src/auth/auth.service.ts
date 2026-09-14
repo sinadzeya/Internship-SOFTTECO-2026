@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
 import { LoginUserDto, RegisterUserDto } from './dto/auth.dto';
 import { AccessToken } from './types/access-token.type';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
