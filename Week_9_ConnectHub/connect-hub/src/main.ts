@@ -15,6 +15,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://internship-softteco-2026-final-back.vercel.app',
       'https://internship-softteco-2026-ivwnt2vtz-nadzeya2.vercel.app',
+      'https://internship-softteco-2026.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
